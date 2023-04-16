@@ -1,0 +1,11 @@
+{
+	"@metadata": {
+		"authors": [
+			"BadDog"
+		]
+	},
+	"sandboxlink-desc": "Dodaje link do korisničkog igrališta u meniju s osobnim alatkama",
+	"sandboxlink-subpage-name": "igralište",
+	"sandboxlink-portlet-label": "Igralište",
+	"tooltip-pt-sandbox": "Vaše igralište"
+}

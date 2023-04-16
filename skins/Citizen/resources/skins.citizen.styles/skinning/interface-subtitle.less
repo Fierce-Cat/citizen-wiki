@@ -1,0 +1,35 @@
+/*
+ * Citizen
+ *
+ * Module: mediawiki.skinning.interface-subtitle
+ * Version: REL1_39
+ *
+ * Date: 2022-11-15
+*/
+
+#siteSub {
+	display: block;
+	margin-top: var( --space-xxs );
+}
+
+#siteSub,
+#contentSub,
+#contentSub2 {
+	color: var( --color-base--subtle );
+	font-size: 0.8125rem;
+	line-height: var( --line-height-xs );
+}
+
+#contentSub,
+#contentSub2 {
+	margin-bottom: var( --space-md );
+}
+
+// Reduced spacing if both sub1 and 2 exists
+#contentSub + #contentSub2 {
+	margin-top: ~'calc( var( --space-xs ) * -1 )';
+}
+
+span.subpages {
+	display: block;
+}

@@ -1,0 +1,24 @@
+{
+	"@metadata": {
+		"authors": [
+			"Alistair3149",
+			"Chaduvari",
+			"Veeven"
+		]
+	},
+	"citizen-languages-toggle": "మరిన్ని భాషలు",
+	"citizen-actions-more-toggle": "మరిన్ని చర్యలు",
+	"citizen-sitestats-articles-label": "వ్యాసాలు",
+	"citizen-sitestats-users-label": "వాడుకరులు",
+	"citizen-sitestats-edits-label": "మార్పులు",
+	"citizen-page-info-lastmod": "చివరి మార్పు",
+	"citizen-action-addsection": "అంశాన్ని చేర్చు",
+	"citizen-jumptotop": "తిరిగి పైకి",
+	"citizen-tagline-ns-project": "{{SITENAME}} గురించిన సమాచారం",
+	"citizen-tagline-ns-template": "మూస పేజీ",
+	"citizen-tagline-ns-help": "సహాయం పేజీ",
+	"citizen-tagline-ns-category": "వర్గం పేజీ",
+	"prefs-citizen-theme-label": "అలంకారం",
+	"prefs-citizen-theme-option-light": "వెలుతురు",
+	"prefs-citizen-theme-option-dark": "చీకటి"
+}

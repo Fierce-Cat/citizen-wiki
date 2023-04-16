@@ -1,0 +1,31 @@
+{
+	"@metadata": {
+		"authors": [
+			"Chrumps",
+			"Rail",
+			"Railfail536"
+		]
+	},
+	"usergroups": "Zarządzanie grupami użytkowników",
+	"usergroups-desc": "Wprowadza łatwe zarządzanie uprawnieniami przypisywanymi do poszczególnych grup użytkowników",
+	"usergroupnameexists-error": "Nie można utworzyć nowej grupy użytkowników o tej nazwie, ponieważ już istnieje.",
+	"usergroups-createnew": "(stwórz nową…)",
+	"usergroups-editgroup-delete": "Usuń tę grupę użytkowników <span class=\"important\" style=\"color:red\">(<strong>Ostrzeżenie</strong> Ta operacja jest nieodwracalna. Aby odtworzyć tę klasę, należy [[Special:UserGroups/new|utworzyć nową]].)</span>",
+	"usergroups-editgroup-desc": "Wybierz grupę użytkowników z poniższej listy lub stwórz nową wybierając opcję „stwórz nową…”.",
+	"usergroups-editgroup-newgroup": "Wprowadź nazwę swojej nowej grupy użytkowników:",
+	"usergroups-editgroup-reason": "Powód:",
+	"usergroups-editgroup-save": "Zapisz zmiany",
+	"usergroups-editgroup-userrights": "Wszystkie dostępne uprawnienia",
+	"usergroups-log-name": "Rejestr grup użytkowników",
+	"usergroups-log-header": "Poniżej znajduje się rejestr zmian w uprawnieniach poszczególnych grup użytkowników.",
+	"usergroups-log-none": "(brak)",
+	"usergroups-log-revoke": "typ odwołania",
+	"action-modifygroups": "modyfikowania grup użytkowników",
+	"invalidusergroupname-title": "Nieprawidłowa nazwa grupy użytkowników",
+	"invalidusergroupname-error": "Wprowadzona nazwa nowej grupy użytkowników jest nieprawidłowa.\n\n[[Special:UserGroups|Powrót]].",
+	"nosuchusergroup": "Nie znaleziono grupy użytkowników „$1”. Czy chcesz [[Special:UserGroups/new|utworzyć]] tą nową grupę użytkowników?",
+	"right-modifygroups": "Tworzenie, modyfikowanie i usuwanie grup użytkowników",
+	"logentry-usergroups-create": "$1 {{GENDER:$2|stworzył|stworzyła|stworzył(a)}} nową $7 grupę użytkowników „$4” zawierającą: $5",
+	"logentry-usergroups-delete": "$1 {{GENDER:$2|usunął|usunęła}} grupę użytkowników „$4”.",
+	"logentry-usergroups-modify": "$1 {{GENDER:$2|zmienił|zmieniła|zmienił(a)}} grupę użytkowników „$4”. $7 Dodano $5; Usunięto $6"
+}

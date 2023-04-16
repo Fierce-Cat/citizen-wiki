@@ -1,0 +1,32 @@
+{
+	"@metadata": {
+		"authors": [
+			"Bugoslav"
+		]
+	},
+	"usergroups": "Upravljanje suradničkim skupinama",
+	"usergroups-desc": "Omogućava preciznije određivanje suradničkih prava koja se mogu dodijeliti suradničkim skupinama",
+	"usergroupnameexists-error": "Ne možete stvoriti novu suradničku skupinu s ovim imenom jer skupina već postoji.",
+	"usergroups-createnew": "(stvori novu…)",
+	"usergroups-editgroup-delete": "Izbriši ovu suradničku skupinu <span class=\"important\" style=\"color:red\">(<strong>Upozorenje</strong>: Ova je radnja nepovratna. Da biste ponovo stvorili ovaj razred, morate [[Special:UserGroups/new|načiniti novi]].)</span>",
+	"usergroups-editgroup-desc": "Izaberite suradničku skupinu s nižega padajućeg izbornika ili stvorite novu uz pomoć mogućnosti »stvori novu...«.",
+	"usergroups-editgroup-newgroup": "Upišite Vaš naziv nove suradničke skupine:",
+	"usergroups-editgroup-reason": "Osnova:",
+	"usergroups-editgroup-revoke": "Postavi ovu suradničku skupinu na način da umjesto dodjeljivanja prava oduzima ista.",
+	"usergroups-editgroup-save": "Spremi promjene",
+	"usergroups-editgroup-userrights": "Sva dostupna prava",
+	"usergroups-log-name": "Evidencija suradničkih skupina",
+	"usergroups-log-header": "Ova evidencija bilježi promjene suradničkih prava za svaku od suradničkih skupina.",
+	"usergroups-log-none": "(nema)",
+	"usergroups-log-revoke": "oduzimajuća vrsta",
+	"usergroups-log-revoke-switchon": "Promijenjeno na oduzimajuću vrstu;",
+	"usergroups-log-revoke-switchoff": "Promijenjeno na neoduzimajuću vrstu;",
+	"action-modifygroups": "mijenjanje suradničkih skupina",
+	"invalidusergroupname-title": "Nevrijedeće ime suradničke skupine",
+	"invalidusergroupname-error": "Uneseno ime nove suradničke skupine nije vrijedeće.\n\n[[Special:UserGroups|Natrag]].",
+	"nosuchusergroup": "Nije pronađena suradnička skupina naziva »$1«. Jeste li možda željeli [[Special:UserGroups/new|stvoriti]] neku novu suradničku skupinu?",
+	"right-modifygroups": "Stvaranje, mijenjanje i brisanje suradničkih skupina",
+	"logentry-usergroups-create": "$1 {{GENDER:$2|stvorio|stvorila}} je novu $7suradničku skupinu »$4« koja sadržava: $5",
+	"logentry-usergroups-delete": "$1 {{GENDER:$2|izbrisao|izbrisala}} je suradničku skupinu »$4«.",
+	"logentry-usergroups-modify": "$1 {{GENDER:$2|izmijenio|izmijenila}} je suradničku skupinu »$4«. $7Dodano $5; Uklonjeno $6"
+}

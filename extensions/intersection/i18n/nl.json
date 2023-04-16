@@ -1,0 +1,15 @@
+{
+	"@metadata": {
+		"authors": [
+			"Mainframe98",
+			"SPQRobin",
+			"Siebrand"
+		]
+	},
+	"intersection-desc": "Geeft als uitvoer een ongenummerde lijst met de meest recent toegevoegde items in een categorie, of een combinatie van categorieën",
+	"intersection_toomanycats": "Fout: te veel categorieën!",
+	"intersection_noresults": "Geen enkele pagina voldoet aan deze criteria.",
+	"intersection_noincludecats": "Fout: u moet ten minste een categorie of een naamruimte opgeven!",
+	"intersection_pcerror": "Deze lijst kan niet worden weergegeven omdat de servers overbelast zijn. Probeer het later opnieuw.",
+	"intersection-category": "Pagina's die DynamicPageList gebruiken"
+}

@@ -1,0 +1,16 @@
+{
+	"@metadata": {
+		"authors": [
+			"ಮಲ್ನಾಡಾಚ್ ಕೊಂಕ್ಣೊ"
+		]
+	},
+	"usergroups": "ಬಳಕೆದಾರ ಗುಂಪುಗಳ ನಿರ್ವಹಣೆ",
+	"usergroups-editgroup-newgroup": "ನಿಮ್ಮ ಹೊಸ ಬಳಕೆದಾರ ಗುಂಪಿನ ಹೆಸರನ್ನು ನಮೂದಿಸಿ:",
+	"usergroups-editgroup-reason": "ಕಾರಣ:",
+	"usergroups-editgroup-save": "ಬದಲಾವಣೆಗಳನ್ನು ಉಳಿಸಿ",
+	"usergroups-editgroup-userrights": "ಲಭ್ಯವಿರುವ ಎಲ್ಲಾ ಅನುಮತಿಗಳು",
+	"usergroups-log-name": "ಬಳಕೆದಾರ ಗುಂಪುಗಳ ದಾಖಲೆ",
+	"usergroups-log-none": "(ಯಾವೂ ಇಲ್ಲ)",
+	"action-modifygroups": "ಬಳಕೆದಾರ ಗುಂಪುಗಳನ್ನು ಬದಲಾಯಿಸಿ",
+	"invalidusergroupname-title": "ಅಮಾನ್ಯ ಬಳಕೆದಾರ ಗುಂಪಿನ ಹೆಸರು"
+}

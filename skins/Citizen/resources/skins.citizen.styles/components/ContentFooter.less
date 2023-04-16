@@ -1,0 +1,25 @@
+.mw-body-footer {
+	display: flex;
+	flex-direction: column;
+	gap: var( --space-xl );
+	grid-area: footer;
+	line-height: var( --line-height-sm );
+}
+
+.page-info {
+	display: flex;
+	flex-wrap: wrap;
+	font-size: 0.8125rem;
+	gap: var( --space-xl );
+
+	&__item {
+		display: flex;
+		flex-direction: column;
+		gap: var( --space-xs );
+	}
+
+	&__label {
+		color: var( --color-base--subtle );
+		letter-spacing: 0.05em;
+	}
+}

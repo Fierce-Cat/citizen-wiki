@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Yupik"
+		]
+	},
+	"usergroups-createnew": "(raaj ođđ...)",
+	"usergroups-editgroup-reason": "Mäinn:",
+	"usergroups-editgroup-save": "Ruõkk muttsid",
+	"right-modifygroups": "Raajjâd, muʹtted leʹbe jaukkeed õõʹnnijooukid",
+	"logentry-usergroups-delete": "$1 {{GENDER:$2|jaukkii}} õõʹnnijoouk \"$4\"."
+}

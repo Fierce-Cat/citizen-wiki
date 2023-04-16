@@ -1,0 +1,39 @@
+{
+	"@metadata": {
+		"authors": [
+			"Alistair3149",
+			"Beta16",
+			"GpieroMW",
+			"Pierpao",
+			"Stefano"
+		]
+	},
+	"citizen.css": "/* Gli stili CSS inseriti qui vengono caricati dagli utenti che usano il tema Citizen */",
+	"citizen.js": "/* Il codice JavaScript inserito qui viene caricato dagli utenti che usano il tema Citizen */",
+	"citizen-languages-toggle": "Altre lingue",
+	"citizen-actions-more-toggle": "Altre azioni",
+	"citizen-sitestats-articles-label": "voci",
+	"citizen-sitestats-images-label": "file",
+	"citizen-sitestats-users-label": "utenti",
+	"citizen-sitestats-edits-label": "modifiche",
+	"citizen-page-info-lastmod": "Ultima modifica",
+	"citizen-footer-desc": "Modifica questo testo in [[MediaWiki:Citizen-footer-desc]]",
+	"citizen-footer-tagline": "Modifica questo testo in [[MediaWiki:Citizen-footer-tagline]]",
+	"citizen-action-addsection": "Aggiungi argomento",
+	"citizen-jumptotop": "Torna all'inizio",
+	"citizen-search-mediasearch-empty": "Ricerca file multimediali",
+	"citizen-tagline-ns-talk": "Pagina di discussione su {{SUBJECTPAGENAME}}",
+	"citizen-tagline-ns-project": "Informazioni su {{SITENAME}}",
+	"citizen-tagline-ns-file": "File su {{SITENAME}}",
+	"citizen-tagline-ns-mediawiki": "Pagina di interfaccia MediaWiki",
+	"citizen-tagline-ns-template": "Pagina del template",
+	"citizen-tagline-ns-help": "Pagina d'aiuto",
+	"citizen-tagline-ns-category": "Pagina della categoria",
+	"prefs-citizen-theme-label": "Tema",
+	"prefs-citizen-theme-option-auto": "Automatico",
+	"prefs-citizen-theme-option-light": "Chiaro",
+	"prefs-citizen-theme-option-dark": "Scuro",
+	"prefs-citizen-fontsize-label": "Dimensione carattere",
+	"prefs-citizen-pagewidth-label": "Larghezza pagina",
+	"prefs-citizen-lineheight-label": "Altezza linea"
+}

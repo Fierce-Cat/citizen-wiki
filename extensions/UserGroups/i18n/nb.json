@@ -1,0 +1,33 @@
+{
+	"@metadata": {
+		"authors": [
+			"Jon Harald Søby",
+			"EdoAug"
+		]
+	},
+	"usergroups": "Brukergruppebehandling",
+	"usergroups-desc": "Gir finere kontroll over hvilke brukerrettigheter som kan registreres for hvilke brukergrupper",
+	"usergroupnameexists-error": "Du kan ikke opprette en ny brukergruppe med dette navnet fordi det allerede fins.",
+	"usergroups-createnew": "(opprett ny …)",
+	"usergroups-editgroup-delete": "Slett denne brukergruppa <span class=\"important\" style=\"color:red;\">(<strong>Advarsel</strong>: Dette kan ikke gjøres om. For å gjenopprette denne kassen må du [[Special:UserGroups/new|lage en ny]].)</span>",
+	"usergroups-editgroup-desc": "Velg ei brukergruppe fra nedtrekksmenyen nedenfor, eller opprett din egen med valget «opprett ny …».",
+	"usergroups-editgroup-newgroup": "Skriv inn navnet på den nye brukergruppa:",
+	"usergroups-editgroup-reason": "Årsak:",
+	"usergroups-editgroup-revoke": "Sett denne brukergruppa til å fjerne i stedet for å gi tillatelser",
+	"usergroups-editgroup-save": "Lagre endringer",
+	"usergroups-editgroup-userrights": "Alle tilgjengelige tillatelser",
+	"usergroups-log-name": "Brukergruppelogg",
+	"usergroups-log-header": "Denne loggen registrerer endringer i brukerrettighetene til hver brukergruppe.",
+	"usergroups-log-none": "(ingen)",
+	"usergroups-log-revoke": "fjerningstype",
+	"usergroups-log-revoke-switchon": "Endret til fjerningstype;",
+	"usergroups-log-revoke-switchoff": "Endret til ikke-fjerningstype;",
+	"action-modifygroups": "endre brukergrupper",
+	"invalidusergroupname-title": "Ugyldig brukergruppenavn",
+	"invalidusergroupname-error": "Navnet du har skrevet inn for den nye brukergruppa er ugyldig.\n\n[[Special:UserGroups|Tilbake]].",
+	"nosuchusergroup": "Ingen brukergruppe med navn «$1» ble funet. Ønsket du kanskje å [[Special:UserGroups/new|opprette]] dette som ei ny gruppe?",
+	"right-modifygroups": "Opprette, endre og slette brukergrupper",
+	"logentry-usergroups-create": "$1 {{GENDER:$2|opprettet}} den nye $7brukergruppa «$4» som inneholder: $5",
+	"logentry-usergroups-delete": "$1 {{GENDER:$2|slettet}} brukergruppa «$4».",
+	"logentry-usergroups-modify": "$1 {{GENDER:$2|endret}} brukergruppa «$4». $7 La til $5; Fjernet $6"
+}

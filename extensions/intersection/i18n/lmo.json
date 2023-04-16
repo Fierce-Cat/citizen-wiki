@@ -1,0 +1,14 @@
+{
+	"@metadata": {
+		"authors": [
+			"Salvemm el lombard"
+		]
+	},
+	"intersection-desc": "El mostra una lista pontada cont i element pussee recent miss in una categoria o che partegnen a l'interferenza infra diverse categorie.",
+	"intersection_toomanycats": "Erorː Trope categorieǃ",
+	"intersection_noresults": "A gh'è n'è minga de pagine che sodisfen sti criteri chì.",
+	"intersection_noincludecats": "Errore: A gh'è besogn de includ almanch una categoria opur specificà un spazzi di nom.",
+	"intersection_pcerror": "La lista la po vesser minga visualizzada perchè el server l'è stracaregh. Per piesè, prova anmò pussee tard.",
+	"intersection-category": "Pagine che droven la DynamicPageList",
+	"intersection-category-desc": "La pagina la gh'ha dent un'eticheta <code><nowiki><DynamicPageList></nowiki></code>"
+}

@@ -1,0 +1,17 @@
+{
+	"@metadata": {
+		"authors": [
+			"Saederup92"
+		]
+	},
+	"citizen-sitestats-articles-label": "artikler",
+	"citizen-sitestats-images-label": "filer",
+	"citizen-sitestats-users-label": "brugere",
+	"citizen-sitestats-edits-label": "redigeringer",
+	"citizen-action-addsection": "Tilføj emne",
+	"citizen-tagline-ns-help": "Hjælpeside",
+	"prefs-citizen-theme-label": "Tema",
+	"prefs-citizen-theme-option-auto": "Automatisk",
+	"prefs-citizen-theme-option-light": "Lys",
+	"prefs-citizen-theme-option-dark": "Mørk"
+}

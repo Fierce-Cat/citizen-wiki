@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"BaRaN6161 TURK",
+			"ToprakM"
+		]
+	},
+	"sandboxlink-desc": "Kişisel araçlar menüsüne kullanıcının kişisel deneme tahtasına bağlantı ekler",
+	"sandboxlink-subpage-name": "deneme tahtası",
+	"sandboxlink-portlet-label": "Deneme tahtası",
+	"tooltip-pt-sandbox": "Deneme tahtanız"
+}

@@ -1,0 +1,33 @@
+{
+	"@metadata": {
+		"authors": [
+			"Meno25",
+			"ديفيد"
+		]
+	},
+	"usergroups": "إدارة مجموعات المستخدمين",
+	"usergroups-desc": "يوفر رقابة أفضل على ما يمكن تسجيله من صلاحيات المستخدمين مع أي مجموعات المستخدمين",
+	"usergroupnameexists-error": "لا يمكنك إنشاء مجموعة مستخدمين جديدة بهذا الاسم لأنها موجودة بالفعل.",
+	"usergroups-createnew": "(إنشاء جديدة...)",
+	"usergroups-editgroup-delete": "حذف مجموعة المستخدمين هذه <span class=\"important\" style=\"color:red\">(<strong>تحذير </strong>: هذا لا رجعة فيه، لإعادة إنشاء هذه الفئة; يجب عليك [[Special:UserGroups/new|إنشاء واحدة جديدة]].)</span>",
+	"usergroups-editgroup-desc": "حدد مجموعة مستخدمين من القائمة المنسدلة أدناه، أو أنشئ مجموعة خاصة بك مع خيار \"إنشاء جديدة...\".",
+	"usergroups-editgroup-newgroup": "أدخل اسم مجموعة المستخدم الجديدة الخاصة بك:",
+	"usergroups-editgroup-reason": "السبب:",
+	"usergroups-editgroup-revoke": "عيِّن مجموعة المستخدمين هذه لإلغائها بدلا من منح الصلاحيات",
+	"usergroups-editgroup-save": "حفظ التغييرات",
+	"usergroups-editgroup-userrights": "كل الصلاحيات المتاحة",
+	"usergroups-log-name": "سجل مجموعات المستخدمين",
+	"usergroups-log-header": "يسجل هذا السجل صلاحيات المستخدم لكل مجموعة مستخدمين.",
+	"usergroups-log-none": "(لا شيء)",
+	"usergroups-log-revoke": "نوع الإبطال",
+	"usergroups-log-revoke-switchon": "تم التحويل إلى نوع الإبطال،",
+	"usergroups-log-revoke-switchoff": "تم التحويل إلى نوع غير الإبطال",
+	"action-modifygroups": "تعديل مجموعات المستخدمين",
+	"invalidusergroupname-title": "اسم مجموعة مستخدم غير صالح",
+	"invalidusergroupname-error": "الاسم الذي أدخلته لمجموعة المستخدمين الجديدة غير صالح.\n\n[[Special:UserGroups|العودة]].",
+	"nosuchusergroup": "لم يتم العثور على مجموعة مستخدمين تسمى \"$1\"، ربما أردت [[Special:UserGroups/new| إنشاء]] مجموعة المستخدم الجديدة هذه؟",
+	"right-modifygroups": "إنشاء وتعديل وحذف مجموعات المستخدمين",
+	"logentry-usergroups-create": "$1 {{GENDER:$2| تم إنشاء}} مجموعة مستخدمين جديدة $7 أمريكية \" $4 \" تحتوي على: $5",
+	"logentry-usergroups-delete": "$1 {{GENDER:$2|حذف|حذفت}} مجموعة المستخدمين \"$4\".",
+	"logentry-usergroups-modify": "$1 {{GENDER:$2| تعديل}} مجموعة المستخدمين \" $4 \". تمت إضافة $7 $5 ؛ تمت إزالة $6"
+}

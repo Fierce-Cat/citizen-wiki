@@ -1,0 +1,23 @@
+.citizen-siteStats {
+	display: flex;
+	font-size: 0.875rem; // TODO: Put this in variable
+	gap: var( --space-md );
+
+	&__item {
+		display: flex;
+		align-items: center;
+		gap: var( --space-xs );
+	}
+
+	.citizen-ui-icon {
+		width: 0.875rem;
+		height: 0.875rem;
+	}
+}
+
+/* Can't display all in one line so let's hide file */
+@media ( max-width: 480px ) {
+	#citizen-siteStats__item--images {
+		display: none;
+	}
+}

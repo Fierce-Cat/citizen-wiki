@@ -1,0 +1,11 @@
+{
+	"@metadata": {
+		"authors": [
+			"NMW03",
+			"Wertuose"
+		]
+	},
+	"intersection_toomanycats": "Xəta: Kateqoriya sayı həddindən çoxdur!",
+	"intersection_noresults": "Heç bir səhifə bu kriteriyaya cavab vermir.",
+	"intersection_noincludecats": "Xəta: Siz ən azı bir kateqoriya əlavə etməli və ya adlar fəzası müəyyənləşdirməlisiniz!"
+}

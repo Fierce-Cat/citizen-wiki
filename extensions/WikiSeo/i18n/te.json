@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"AVVK Chaitanya",
+			"Veeven"
+		]
+	},
+	"wiki-seo-pageinfo-below": "సమాచారం ఇస్తున్నది [https://www.mediawiki.org/wiki/Extension:WikiSEO Extension:WikiSEO]",
+	"wiki-seo-param-title": "పేజీ శీర్షిక:",
+	"wiki-seo-param-type": "వ్యాస రకం:",
+	"wiki-seo-param-site_name": "సైటు పేరు:"
+}

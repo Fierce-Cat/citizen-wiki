@@ -1,0 +1,15 @@
+{
+	"@metadata": {
+		"authors": [
+			"Dbc334",
+			"Eleassar"
+		]
+	},
+	"intersection-desc": "Izpiše seznam zadnjih predmetov v kategoriji ali presek več kategorij",
+	"intersection_toomanycats": "Napaka: Preveč kategorij!",
+	"intersection_noresults": "Nobena stran ne ustreza merilom.",
+	"intersection_noincludecats": "Napaka: Vključiti morate vsaj eno kategorijo ali določiti imenski prostor!",
+	"intersection_pcerror": "Tega seznama ni mogoče prikazati, ker so strežniki preobremenjeni. Poskusite znova pozneje.",
+	"intersection-category": "Strani, ki uporabljajo DynamicPageList",
+	"intersection-category-desc": "Ta stran vključuje značko <code><nowiki><DynamicPageList></nowiki></code>"
+}

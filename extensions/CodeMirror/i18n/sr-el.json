@@ -1,0 +1,10 @@
+{
+	"@metadata": {
+		"authors": [
+			"Obsuser"
+		]
+	},
+	"codemirror-desc": "Omogućava isticanje sintakse u uređivaču vikiteksta",
+	"codemirror-toggle-label": "Isticanje sintakse",
+	"prefs-accessibility": "Pristupačnost"
+}

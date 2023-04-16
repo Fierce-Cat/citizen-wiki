@@ -1,0 +1,52 @@
+html {
+	font-size: @html-font-size;
+}
+
+html,
+body {
+	font-family: var( --font-family-base );
+	font-weight: var( --font-weight-normal );
+	/*
+	 * TODO: Revisit this when italic VF is better supported
+	 * Don't let browser faux font styles and weight
+	 * 1. We are already using VF
+	 * 2. Not all font styles apply to some languages (e.g. Italic is different in ZH)
+	 */
+	// font-synthesis: none;
+}
+
+input {
+	font-family: var( --font-family-base ); // Override browser's default
+}
+
+b,
+strong {
+	font-weight: var( --font-weight-semibold );
+}
+
+cite {
+	font-style: inherit;
+}
+
+blockquote {
+	font-style: italic;
+
+	cite {
+		font-size: 0.8125rem;
+		font-style: normal;
+	}
+}
+
+sub,
+sup {
+	font-size: 80%;
+}
+
+.mw-logo-wordmark {
+	font-weight: var( --font-weight-semibold );
+}
+
+.citizen-body,
+.mw-body-content {
+	line-height: var( --line-height );
+}

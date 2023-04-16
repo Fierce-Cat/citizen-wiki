@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Matma Rex",
+			"Saederup92"
+		]
+	},
+	"sandboxlink-desc": "Tilføjer et link til en brugers personlige sandkasse til menuen for personlige værktøjer",
+	"sandboxlink-subpage-name": "sandkasse",
+	"sandboxlink-portlet-label": "Sandkasse",
+	"tooltip-pt-sandbox": "Din sandkasse"
+}

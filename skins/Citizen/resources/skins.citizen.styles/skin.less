@@ -1,0 +1,62 @@
+// Citizen main styles
+
+@import '../variables.less';
+@import '../mixins.less';
+
+// Common styles
+@import 'fonts.less';
+@import 'common/cssvariables.less';
+@import 'common/typography.less';
+@import 'skinning/elements.less';
+// FIXME: It is not great to load both Parsoid and Parsoid legacy media styles
+// Maybe there is a way to detect it without introducing a new RL module?
+@import 'skinning/content.media-common.less';
+@import 'skinning/content.thumbnails-common.less';
+@import 'skinning/i18n-all-lists-margins.less';
+@import 'skinning/interface-subtitle.less';
+
+@media screen {
+	@import 'layout.less';
+	@import 'common/theme.less';
+	@import 'common/common.less';
+	@import 'common/content.less';
+	@import 'common/scrollbar.less';
+	@import 'common/hacks.less';
+	@import 'common/progressbar.less';
+
+	// Components
+	@import 'components/Header.less';
+	@import 'components/Drawer.less';
+	@import 'components/Drawer__button.less';
+	@import 'components/Usermenu.less';
+	@import 'components/Search.less';
+	@import 'components/Search__button.less';
+	@import 'components/Pagetools.less';
+	@import 'components/Menu.less';
+	@import 'components/ContentHeader.less';
+	@import 'components/ContentFooter.less';
+	@import 'components/Footer.less';
+	@import 'components/TableOfContents.less';
+	@import 'components/StickyHeader.less';
+	@import 'components/Sitestats.less';
+	@import 'components/Sections.less';
+
+	// Mediawiki.skinning
+	// This get loaded regardless so we don't have to use skinStyles to target them
+	// It is organized to be same as core because naming is hard :'(
+	// @see https://github.com/wikimedia/mediawiki/commits/master/resources/src/mediawiki.skinning
+	@import 'skinning/content.body.less';
+	@import 'skinning/content.links.less';
+	@import 'skinning/content.externallinks.less';
+	@import 'skinning/content.tables.less';
+	@import 'skinning/content.media-screen.less';
+	@import 'skinning/content.thumbnails-screen.less';
+	@import 'skinning/interface-edit-section-links.less';
+	@import 'skinning/interface-message-box.less';
+	@import 'skinning/interface-site-notice.less';
+	@import 'skinning/interface.category.less';
+}
+
+@media print {
+	@import 'common/print.less';
+}

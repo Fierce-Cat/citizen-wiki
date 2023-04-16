@@ -1,0 +1,20 @@
+{
+	"@metadata": {
+		"authors": [
+			"Macofe",
+			"Malikxan",
+			"Sociologist"
+		]
+	},
+	"templatesandbox": "Andozalar uchun qumloq",
+	"templatesandbox-legend": "Andozalar uchun qumloq",
+	"templatesandbox-submit": "Koʻrish",
+	"templatesandbox-title-output": "Andozalar uchun qumloq: $1",
+	"templatesandbox-editform-legend": "Bu andoza foydalanilgan sahifani koʻrib chiqish",
+	"templatesandbox-editform-page-label": "Sahifa nomi",
+	"templatesandbox-editform-view-label": "Koʻrib chiqish",
+	"templatesandbox-previewnote": "'''Diqqat! Bu shunchaki [[:$1]] sahifasini koʻrib chiqish.''' Andozaga kiritgan oʻzgartirishlaringiz hali saqlangani yoʻq!",
+	"templatesandbox-editform-need-template": "Bu andoza foydalanilgan sahifani koʻrib chiqish uchun andoza nomi koʻrsatilishi lozim.",
+	"templatesandbox-editform-need-title": "Bu andoza foydalanilgan sahifani koʻrib chiqish uchun oʻsha sahifa nomi koʻrsatilishi lozim.",
+	"templatesandbox-editform-invalid-template": "Koʻrsatilgan andoza nomi notoʻgʻri."
+}

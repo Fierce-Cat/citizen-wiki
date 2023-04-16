@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Pyscowicz",
+			"Zache"
+		]
+	},
+	"sandboxlink-desc": "Lisää käyttäjän työkaluvalikkoon hänen hiekkalaatikkoonsa osoittavan linkin.",
+	"sandboxlink-subpage-name": "hiekkalaatikko",
+	"sandboxlink-portlet-label": "Hiekkalaatikko",
+	"tooltip-pt-sandbox": "Hiekkalaatikkosi"
+}

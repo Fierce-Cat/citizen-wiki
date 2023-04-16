@@ -1,0 +1,14 @@
+{
+	"@metadata": {
+		"authors": [
+			"Diki Ananta",
+			"Meursault2004",
+			"NoiX180",
+			"Sumbukompor"
+		]
+	},
+	"intersection-desc": "Ngasilaké sawijining daftar item paling anyar ing sawijining kategori utawa gabungan sawetara kategori",
+	"intersection_toomanycats": "Kasalahan: Kakèhan kategori!",
+	"intersection_noresults": "Ora ana kaca sing padha karo syarat.",
+	"intersection_noincludecats": "Masalah: Kowé kudu mènèhi saorané siji kategori, utawa mènèhi siji mandhala aran!"
+}

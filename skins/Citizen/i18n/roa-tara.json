@@ -1,0 +1,38 @@
+{
+	"@metadata": {
+		"authors": [
+			"Joetaras"
+		]
+	},
+	"citizen-skin-desc": "'Nu skin responsive sveluppate pa Uicchi Star Citizen",
+	"citizen.css": "/* Tutte le CSS aqquà avène carecate pe le utinde ca ausane 'a masckere Citizen */",
+	"citizen.js": "/* Tutte le JavaScript aqquà avène carecate pe le utinde ca ausane 'a masckere Citizen */",
+	"citizen-drawer-toggle": "Live/mitte 'u menù",
+	"citizen-usermenu-toggle": "Live/mitte 'u menù personale",
+	"citizen-search-toggle": "Live/mitte 'a recerche",
+	"citizen-sitestats-articles-label": "vôsce",
+	"citizen-sitestats-images-label": "fail",
+	"citizen-sitestats-users-label": "utinde",
+	"citizen-sitestats-edits-label": "cangiaminde",
+	"citizen-footer-desc": "Cange stu teste sus a [[MediaWiki:Citizen-footer-desc]]",
+	"citizen-footer-tagline": "Cange stu teste sus a [[MediaWiki:Citizen-footer-tagline]]",
+	"citizen-action-addsection": "Aggiunge 'n'argomende",
+	"citizen-jumptotop": "Tuèrne sus",
+	"citizen-search-fulltext": "Cirche le pàggene ca tènene",
+	"citizen-search-empty-desc": "Scrive pe accumenzà 'a recerche",
+	"citizen-tagline-ns-talk": "Pàgene de le 'ngazzaminde de {{SUBJECTPAGENAME}}",
+	"citizen-tagline-ns-project": "'Mbormaizune sus a {{SITENAME}}",
+	"citizen-tagline-ns-file": "Fail sus a {{SITENAME}}",
+	"citizen-tagline-ns-mediawiki": "Pàgene de inderfacce de MediaUicchi",
+	"citizen-tagline-ns-template": "Pàgene d'u template",
+	"citizen-tagline-ns-help": "Pàgene d'ajute",
+	"citizen-tagline-ns-category": "Pàgene d'a categorije",
+	"prefs-citizen-theme-label": "Teme",
+	"prefs-citizen-theme-option-auto": "Auto",
+	"prefs-citizen-theme-option-light": "Chiare",
+	"prefs-citizen-theme-option-dark": "Scure",
+	"prefs-citizen-fontsize-label": "Dimenzione d'u carattere",
+	"prefs-citizen-pagewidth-label": "Larghezze d'a pàgene",
+	"prefs-citizen-lineheight-label": "Iertezze d'a linèe",
+	"prefs-citizen-resetbutton-label": "Azzere a le predefinite"
+}

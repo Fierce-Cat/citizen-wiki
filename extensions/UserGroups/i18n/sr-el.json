@@ -1,0 +1,34 @@
+{
+	"@metadata": {
+		"authors": [
+			"Kizule",
+			"Milicevic01",
+			"Zoranzoki21"
+		]
+	},
+	"usergroups": "Upravljanje korisničkim grupama",
+	"usergroups-desc": "Omogućava detaljnije upravljanje pravima koja možete dodeliti korisničkim grupama.",
+	"usergroupnameexists-error": "Korisnička grupa već postoji.",
+	"usergroups-createnew": "(napravi novu…)",
+	"usergroups-editgroup-delete": "Brisanje korisničke grupe <span class=\"important\" style=\"color:red\">(<strong>Upozorenje</strong>: Ova radnja je nepovratna. Da biste ponovo kreirali ovu klasu, morate [[Special:UserGroups/new|napraviti novu grupu]].)</span>",
+	"usergroups-editgroup-desc": "Izaberite korisničku grupu sa padajućeg menija ispod ili napravite novu pomoću opcije „napravi novu“.",
+	"usergroups-editgroup-newgroup": "Unesite ime nove korisničke grupe:",
+	"usergroups-editgroup-reason": "Razlog:",
+	"usergroups-editgroup-revoke": "Podesi korisničku grupu tako da oduzima umesto što dodeljuje prava",
+	"usergroups-editgroup-save": "Sačuvaj izmene",
+	"usergroups-editgroup-userrights": "Sve dostupne dozvole",
+	"usergroups-log-name": "Dnevnik korisničkih grupa",
+	"usergroups-log-header": "Ovaj dnevnik snima promene u korisničkim pravima svake grupe.",
+	"usergroups-log-none": "(nema)",
+	"usergroups-log-revoke": "oduzimanje",
+	"usergroups-log-revoke-switchon": "Promenjeno na oduzimanje;",
+	"usergroups-log-revoke-switchoff": "Promenjeno na dodeljivanje;",
+	"action-modifygroups": "izmenjujete korisničke grupe",
+	"invalidusergroupname-title": "Nevalidno ime korisničke grupe",
+	"invalidusergroupname-error": "Navedeno ime nove korisničke grupe je neispravno.\n\n[[Special:UserGroups|Nazad]].",
+	"nosuchusergroup": "Nije pronađena korisnička grupa pod imenom „$1“. Da li ste želeli da [[Special:UserGroups/new|napravite]] novu korisničku grupu?",
+	"right-modifygroups": "pravljenje, promena i brisanje korisničkih grupa",
+	"logentry-usergroups-create": "$1 je {{GENDER:$2|napravio|napravila}} novu $7 korisničku grupu „$4” koja sadrži: $5",
+	"logentry-usergroups-delete": "$1 je {{GENDER:$2|obrisao|obrisala}} korisničku grupu „$4“.",
+	"logentry-usergroups-modify": "$1 je {{GENDER:$2|izmenio|izmenila}} korisničku grupu „$4”. $7 Dodato $5; Uklonjeno $6"
+}

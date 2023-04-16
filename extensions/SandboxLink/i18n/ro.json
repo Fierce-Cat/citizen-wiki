@@ -1,0 +1,11 @@
+{
+	"@metadata": {
+		"authors": [
+			"Strainu"
+		]
+	},
+	"sandboxlink-desc": "Adaugă o legătură către pagina personală de teste a utilizatorului în meniul cu unelte",
+	"sandboxlink-subpage-name": "teste",
+	"sandboxlink-portlet-label": "Teste",
+	"tooltip-pt-sandbox": "Pagina dumneavoastră de teste"
+}

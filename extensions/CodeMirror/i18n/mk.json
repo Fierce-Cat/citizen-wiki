@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Bjankuloski06"
+		]
+	},
+	"codemirror-desc": "Дава потцртување на синтаксата во уредувачот на викитекст",
+	"codemirror-toggle-label": "Истакнување на синтакса",
+	"codemirror-prefs-colorblind": "Овозможи истакнување на синтакса при уредување за далтонисти",
+	"codemirror-prefs-colorblind-help": "Ако користите алатка за истакнување на синтакса, оваа можност нема да работи.",
+	"prefs-accessibility": "Пристапност"
+}

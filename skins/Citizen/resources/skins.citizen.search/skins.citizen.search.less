@@ -1,0 +1,223 @@
+@import '../variables.less';
+@import '../mixins.less';
+
+.citizen-typeahead {
+	position: absolute;
+	overflow: auto;
+	width: 100%;
+	max-height: ~'calc( var( --header-card-maxheight ) - var( --height-search-bar ) )';
+	box-sizing: content-box; // Magic to align with search input
+	margin: 0 0 0 -1px; // Reset <ol> styles, fix alignment
+	border-bottom-left-radius: var( --border-radius--medium );
+	border-bottom-right-radius: var( --border-radius--medium );
+	overscroll-behavior: contain;
+	.citizen-card( false );
+	.citizen-card-hide( 50% 0, Y, false );
+	// Well this won't be loaded before .citizen-animation-ready anyways
+	.citizen-card-transition();
+
+	&__item {
+		.citizen-typeahead {
+			&__thumbnail {
+				margin-right: var( --space-sm );
+
+				&.citizen-ui-icon {
+					width: 100%; // reset width
+				}
+			}
+
+			&__text {
+				white-space: nowrap;
+			}
+		}
+
+		&--active {
+			background-color: var( --background-color-primary--hover );
+		}
+
+		&--hidden {
+			display: none;
+		}
+
+		&-sm {
+			.citizen-typeahead {
+				&__content {
+					padding: var( --space-sm ) 0;
+					border-top: 1px solid var( --border-color-base );
+				}
+
+				&__thumbnail {
+					height: var( --size-icon );
+					background-color: transparent;
+				}
+
+				&__description {
+					color: var( --color-base );
+				}
+			}
+
+			+ .citizen-typeahead__item-sm {
+				.citizen-typeahead__content {
+					border-top: 0;
+				}
+			}
+		}
+
+		&-md {
+			.citizen-typeahead {
+				&__thumbnail {
+					background-color: #eaecf0;
+					background-position: center;
+					background-size: cover;
+
+					&.citizen-ui-icon {
+						height: 60px;
+						background-color: var( --color-surface-3 );
+
+						&::before {
+							background-size: 20px;
+						}
+					}
+				}
+			}
+		}
+
+		&-lg {
+			.citizen-typeahead {
+				&__content {
+					flex-direction: column;
+					padding: var( --space-xl ) 0;
+					text-align: center;
+				}
+
+				&__thumbnail {
+					margin-bottom: var( --space-sm );
+				}
+			}
+		}
+	}
+
+	&__content {
+		display: flex;
+		align-items: center;
+		padding: var( --space-xs ) 0;
+		margin: 0 var( --space-sm );
+		color: var( --color-base );
+	}
+
+	&__thumbnail {
+		overflow: hidden;
+		width: 100%;
+		max-width: 70px;
+		height: 60px;
+		flex-shrink: 0;
+		border-radius: var( --border-radius--medium );
+
+		&.citizen-ui-icon::before {
+			background-size: contain;
+		}
+	}
+
+	&__text {
+		overflow: hidden;
+		flex-grow: 1;
+	}
+
+	&__header {
+		display: flex;
+		justify-content: space-between;
+	}
+
+	&__title {
+		flex-shrink: 0;
+		color: var( --color-base--emphasized );
+		font-weight: var( --font-weight-semibold );
+	}
+
+	&__highlight {
+		color: var( --color-base--subtle );
+		font-weight: var( --font-weight-medium );
+	}
+
+	&__query {
+		color: var( --color-base--emphasized );
+		font-weight: var( --font-weight-semibold );
+	}
+
+	&__label {
+		display: flex;
+		margin-left: var( --space-xs );
+		color: var( --color-base );
+		font-size: 0.8125rem;
+		gap: var( --space-xxs );
+
+		.citizen-ui-icon {
+			width: 0.8125rem;
+			height: 0.8125rem;
+			margin-right: var( --space-xxs );
+		}
+	}
+
+	&__labelItem {
+		display: flex;
+		align-items: center;
+	}
+
+	&__description {
+		margin-top: 0.1rem;
+		color: var( --color-base--subtle );
+		font-size: 0.8125rem;
+	}
+
+	&__title,
+	&__description {
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	&__actions {
+		position: absolute;
+		right: var( --space-sm );
+	}
+
+	&__keyboard {
+		display: none;
+		padding: 0 8px;
+		border-radius: var( --border-radius--small );
+		background-color: var( --color-surface-1 );
+	}
+
+	.citizen-search__card--expanded & {
+		.citizen-card-show( false );
+	}
+}
+
+// Merge searchform with typeahead
+.citizen-search__card {
+	&&--expanded {
+		border-bottom-color: transparent;
+		border-bottom-left-radius: 0;
+		border-bottom-right-radius: 0;
+
+		.citizen-typeahead {
+			border-top-color: transparent; // Reset citizen-card style
+		}
+	}
+}
+
+// HACK: This is as close as we can to detect whether there is a keyboard in CSS
+@media ( hover: hover ) and ( pointer: fine ) {
+	.citizen-typeahead {
+		&__item--active {
+			.citizen-typeahead__keyboard {
+				display: block;
+			}
+		}
+	}
+}
+
+// HACK: Hide default MW search suggestion if it somehow loaded
+// This should be removed when we switch to vue search
+.suggestions {
+	display: none !important;
+}

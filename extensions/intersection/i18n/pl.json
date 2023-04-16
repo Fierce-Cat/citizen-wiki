@@ -1,0 +1,17 @@
+{
+	"@metadata": {
+		"authors": [
+			"BeginaFelicysym",
+			"Openbk",
+			"Rail",
+			"Sp5uhe"
+		]
+	},
+	"intersection-desc": "Zwraca listę wypunktowaną najnowszych elementów w jednej kategorii lub części wspólnej kilku kategorii",
+	"intersection_toomanycats": "Błąd – zbyt wiele kategorii!",
+	"intersection_noresults": "Brak stron spełniających kryteria.",
+	"intersection_noincludecats": "Błąd – musisz wybrać co najmniej jedną kategorię lub określić przestrzeń nazw!",
+	"intersection_pcerror": "Ta lista nie może zostać wyświetlona z racji na przeciążenie serwerów. Spróbuj ponownie później.",
+	"intersection-category": "Strony używające DynamicPageList",
+	"intersection-category-desc": "Strona zawiera znacznik <code><nowiki><DynamicPageList></nowiki></code>"
+}

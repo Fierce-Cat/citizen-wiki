@@ -1,0 +1,157 @@
+/*
+ * Framework
+*/
+html {
+	box-sizing: border-box;
+	// Not ideal but it works
+	scroll-padding-top: 6rem;
+}
+
+html,
+body {
+	min-height: 100vh;
+	padding: 0;
+	margin: 0;
+	accent-color: var( --color-primary );
+	background: var( --color-surface-0 );
+	color: var( --color-base );
+}
+
+// Apply border-box universally unless overwritten
+*,
+*::before,
+*::after {
+	box-sizing: inherit;
+}
+
+:focus {
+	outline-color: var( --color-primary );
+}
+
+// For some reason just overriding the outline-color is not enough
+:focus-visible {
+	outline: 2px solid var( --color-primary );
+	outline-offset: 1px;
+}
+
+input,
+select,
+textarea {
+	border: 1px solid var( --border-color-base );
+	background-color: var( --color-surface-1 );
+	color: var( --color-base--emphasized );
+}
+
+textarea {
+	width: 100%;
+}
+
+blockquote {
+	margin: var( --space-md );
+	color: var( --color-base--subtle );
+
+	cite {
+		display: block;
+		margin-top: var( --space-sm );
+
+		&::before {
+			content: '— ';
+		}
+	}
+}
+
+sup,
+sub {
+	line-height: 1;
+}
+
+th {
+	font-weight: var( --font-weight-semibold );
+}
+
+td {
+	> p,
+	> ul,
+	> ol {
+		&:first-child {
+			margin-top: 0; // Remove margin for the first element in td
+		}
+	}
+}
+
+.nowrap {
+	white-space: nowrap;
+}
+
+/*
+ * Content
+*/
+.mw-body,
+.parsoid-body {
+	direction: ltr;
+}
+
+// TODO: Think of better places to put indicators;
+.mw-indicators {
+	display: flex;
+	align-items: center;
+	padding-left: 10px;
+	border-left: 1px solid var( --border-color-base );
+	margin-left: 10px;
+	font-size: 0.875rem;
+}
+
+video {
+	max-width: 100%; // Prevent overflow
+}
+
+.skin-citizen-dark {
+	color-scheme: dark;
+
+	.mw-indicator {
+		filter: invert( 1 ) hue-rotate( 180deg );
+
+		// Have to hardcode the color since the filter breaks the color
+		a {
+			color: @color-primary;
+
+			&:hover {
+				color: @color-primary--hover;
+			}
+
+			&:active {
+				color: @color-primary--active;
+			}
+		}
+	}
+}
+
+@media ( hover: none ) {
+	a,
+	button,
+	label {
+		// Remove the 300ms delay in click event (T118509)
+		touch-action: manipulation;
+	}
+}
+
+@media ( max-width: @width-breakpoint-tablet ) {
+	.mw-body,
+	.parsoid-body {
+		overflow-x: hidden; // fallback if clip is not supported
+		overflow-x: clip; // avoid breaking layout in smaller screen sizes
+	}
+
+	table {
+		display: block;
+	}
+}
+
+@media ( min-width: @width-breakpoint-tablet ) {
+	// Delay scroll animation won't happen on load
+	// Use it only for larger viewport as it is very costly
+	// on mobile devices
+	html.citizen-animations-ready {
+		scroll-behavior: smooth;
+	}
+}

@@ -1,0 +1,32 @@
+{
+	"@metadata": {
+		"authors": [
+			"McDutchie"
+		]
+	},
+	"usergroups": "Gestion de gruppos de usatores",
+	"usergroups-desc": "Fornir un controlo plus precise sur qual derectos de usator pote esser registrate con qual gruppos de usator",
+	"usergroupnameexists-error": "Tu non pote crear un nove gruppo de usatores con iste nomine perque illo ja existe.",
+	"usergroups-createnew": "(crear un nove…)",
+	"usergroups-editgroup-delete": "Deler iste gruppo de usatores <span class=\"important\" style=\"color:red\">(<strong>Attention</strong>: Isto es irreversibile. Pro recrear iste classe, tu debe [[Special:UserGroups/new|crear un nove]].)</span>",
+	"usergroups-editgroup-desc": "Selige un gruppo de usatores del menu disrolante hic infra, o crea le tue con le option \"crear nove…\".",
+	"usergroups-editgroup-newgroup": "Insere le nomine de tu nove gruppo de usatores:",
+	"usergroups-editgroup-reason": "Motivo:",
+	"usergroups-editgroup-revoke": "Definir iste gruppo de usatores pro revocar in vice de conceder permissiones",
+	"usergroups-editgroup-save": "Salveguardar modificationes",
+	"usergroups-editgroup-userrights": "Tote le permissiones disponibile",
+	"usergroups-log-name": "Registro de gruppos de usatores",
+	"usergroups-log-header": "Iste registro monstra le cambiamentos de derectos de usator de cata gruppo de usatores.",
+	"usergroups-log-none": "(necun)",
+	"usergroups-log-revoke": "typo revocation",
+	"usergroups-log-revoke-switchon": "Cambiate al typo revocation;",
+	"usergroups-log-revoke-switchoff": "Cambiate al typo non revocation;",
+	"action-modifygroups": "modificar gruppos de usatores",
+	"invalidusergroupname-title": "Nomine de gruppo de usatores non valide",
+	"invalidusergroupname-error": "Le nomine que tu ha inserite pro tu nove gruppo de usatores non es valide.\n\n[[Special:UserGroups|Retornar]].",
+	"nosuchusergroup": "Non ha essite trovate alcun gruppo de usatores appellate \"$1\". Voleva tu [[Special:UserGroups/new|crear]] iste nove gruppo de usatores?",
+	"right-modifygroups": "Crear, modificar e deler gruppos de usatores",
+	"logentry-usergroups-create": "$1 {{GENDER:$2|ha create}} le nove gruppo de usatores $7 \"$4\" continente: $5",
+	"logentry-usergroups-delete": "$1 {{GENDER:$2|ha delite}} le gruppo de usatores \"$4\".",
+	"logentry-usergroups-modify": "$1 {{GENDER:$2|ha modificate}} le gruppo de usatores \"$4\". $7 Addite $5; Removite $6"
+}

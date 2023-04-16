@@ -1,0 +1,92 @@
+.citizen-sections-enabled {
+	.section {
+		&-heading {
+			cursor: pointer;
+			// So that double clicking won't highlight everything
+			user-select: none;
+
+			&--collapsed {
+				.section-indicator {
+					transform: rotate3d( 1, 0, 0, 180deg );
+				}
+
+				.mw-headline,
+				/* T13555 */
+				.mw-heading h1,
+				.mw-heading h2 {
+					opacity: var( --opacity-icon-base );
+				}
+			}
+
+			.mw-headline,
+			/* T13555 */
+			.mw-heading h1,
+			.mw-heading h2 {
+				transition: @transition-opacity;
+
+				&:hover {
+					opacity: var( --opacity-icon-base--hover );
+				}
+
+				&:active {
+					opacity: var( --opacity-icon-base--active );
+				}
+			}
+		}
+
+		&-indicator {
+			width: 1rem;
+			height: 1rem;
+			margin-right: var( --space-md );
+			cursor: pointer;
+			transition: @transition-transform;
+		}
+
+		// Fix button alignment
+		&-heading,
+		&-subheading {
+			display: flex;
+			align-items: center;
+
+			// Right-align the editsection
+			.mw-headline {
+				flex-grow: 1;
+			}
+		}
+
+		&-collapsible {
+			&--collapsed {
+				display: none;
+			}
+		}
+	}
+}
+
+// Hide indicator when client is noscript
+.client-nojs {
+	.section {
+		&-indicator {
+			display: none;
+		}
+	}
+}
+
+// Fix hover state on touch devices
+@media ( hover: none ) {
+	.citizen-sections-enabled .section {
+		&-heading .mw-headline,
+		&-indicator {
+			&:hover,
+			&:active {
+				opacity: 1;
+			}
+		}
+
+		&-heading--collapsed .mw-headline {
+			&:hover,
+			&:active {
+				opacity: var( --opacity-icon-base );
+			}
+		}
+	}
+}
