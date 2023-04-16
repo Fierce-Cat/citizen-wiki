@@ -37,8 +37,8 @@ $wgResourceBasePath = $wgScriptPath;
 ## The URL paths to the logo.  Make sure you change this from the default,
 ## or else you'll overwrite your logo when you upgrade!
 $wgLogos = [
-	'1x' => "$wgResourceBasePath/resources/assets/change-your-logo.svg",
-	'icon' => "$wgResourceBasePath/resources/assets/change-your-logo.svg",
+	'1x' => "$wgResourceBasePath/resources/assets/sitelogo.svg",
+	'icon' => "$wgResourceBasePath/resources/assets/sitelogo.svg",
 ];
 
 ## UPO means: this is also a user preference option
@@ -90,7 +90,7 @@ $wgPingback = true;
 $wgLanguageCode = "zh-cn";
 
 # Time zone
-$wgLocaltimezone = "UTC";
+$wgLocaltimezone = "PRC";
 
 ## Set $wgCacheDirectory to a writable directory on the web server
 ## to make your wiki go slightly faster. The directory should not
@@ -123,7 +123,97 @@ $wgGroupPermissions['*']['edit'] = false;
 
 ## Default skin: you can change the default skin. Use the internal symbolic
 ## names, e.g. 'vector' or 'monobook':
-$wgDefaultSkin = "vector";
+$wgDefaultSkin = "Citizen";
+
+# Enabled skins.
+# The following skins were automatically enabled:
+wfLoadSkin( 'Citizen' );
+
+# Enabled extensions. Most of the extensions are enabled by adding
+# wfLoadExtension( 'ExtensionName' );
+# to LocalSettings.php. Check specific extension documentation for more details.
+# The following extensions were automatically enabled:
+wfLoadExtension( 'AbuseFilter' );
+# wfLoadExtension( 'AWS' );
+wfLoadExtension( 'CategoryTree' );
+wfLoadExtension( 'Cite' );
+wfLoadExtension( 'CiteThisPage' );
+wfLoadExtension( 'CodeEditor' );
+wfLoadExtension( 'CodeMirror' );
+wfLoadExtension( 'ConfirmEdit' );
+wfLoadExtension( 'DynamicPageList3' );
+wfLoadExtension( 'Gadgets' );
+wfLoadExtension( 'ImageMap' );
+wfLoadExtension( 'InputBox' );
+wfLoadExtension( 'intersection' );
+wfLoadExtension( 'Interwiki' );
+wfLoadExtension( 'Loops' );
+wfLoadExtension( 'Math' );
+wfLoadExtension( 'MultimediaViewer' );
+wfLoadExtension( 'Nuke' );
+wfLoadExtension( 'OATHAuth' );
+wfLoadExtension( 'PageImages' );
+wfLoadExtension( 'ParserFunctions' );
+wfLoadExtension( 'PdfHandler' );
+wfLoadExtension( 'Poem' );
+wfLoadExtension( 'Renameuser' );
+wfLoadExtension( 'ReplaceText' );
+wfLoadExtension( 'SandboxLink' );
+wfLoadExtension( 'Scribunto' );
+wfLoadExtension( 'SecureLinkFixer' );
+wfLoadExtension( 'ShortDescription' );
+wfLoadExtension( 'SpamBlacklist' );
+wfLoadExtension( 'SyntaxHighlight_GeSHi' );
+wfLoadExtension( 'TemplateData' );
+wfLoadExtension( 'TemplateSandbox' );
+wfLoadExtension( 'TemplateStyles' );
+wfLoadExtension( 'TemplateStylesExtender' );
+wfLoadExtension( 'TextExtracts' );
+wfLoadExtension( 'TitleBlacklist' );
+wfLoadExtension( 'UserGroups' );
+wfLoadExtension( 'VisualEditor' );
+wfLoadExtension( 'WikiEditor' );
+wfLoadExtension( 'WikiSeo' );
+wfLoadExtension( 'Elastica' );
+wfLoadExtension( 'CirrusSearch' );
+
+$wgDefaultUserOptions['usebetatoolbar'] = 1; // user option provided by WikiEditor extension
+$wgGroupPermissions['*']['edit'] = false;
+unset( $wgGroupPermissions['user'] );
+# End of automatically generated settings.
+# Add more configuration options below.
+$wgGroupPermissions['确认用户']['browsearchive'] = true;
+$wgGroupPermissions['确认用户']['createpage'] = true;
+$wgGroupPermissions['确认用户']['createtalk'] = true;
+$wgGroupPermissions['确认用户']['delete'] = true;
+$wgGroupPermissions['确认用户']['deletedhistory'] = true;
+$wgGroupPermissions['确认用户']['deletedtext'] = true;
+$wgGroupPermissions['确认用户']['deleterevision'] = true;
+$wgGroupPermissions['确认用户']['import'] = true;
+$wgGroupPermissions['确认用户']['importupload'] = true;
+$wgGroupPermissions['确认用户']['managechangetags'] = true;
+$wgGroupPermissions['确认用户']['mergehistory'] = true;
+$wgGroupPermissions['确认用户']['minoredit'] = true;
+$wgGroupPermissions['确认用户']['move'] = true;
+$wgGroupPermissions['确认用户']['move-categorypages'] = true;
+$wgGroupPermissions['确认用户']['move-subpages'] = true;
+$wgGroupPermissions['确认用户']['movefile'] = true;
+$wgGroupPermissions['确认用户']['noratelimit'] = true;
+$wgGroupPermissions['确认用户']['read'] = true;
+$wgGroupPermissions['确认用户']['reupload'] = true;
+$wgGroupPermissions['确认用户']['rollback'] = true;
+$wgGroupPermissions['确认用户']['writeapi'] = true;
+$wgGroupPermissions['确认用户']['edit'] = true;
+$wgGroupPermissions['确认用户']['editinterface'] = true;
+$wgGroupPermissions['确认用户']['editmyoptions'] = true;
+$wgGroupPermissions['确认用户']['editmyprivateinfo'] = true;
+$wgGroupPermissions['确认用户']['editmywatchlist'] = true;
+# 启用VisualEditor的Wikitext
+$wgVisualEditorEnableWikitext = true;
+# 启用编辑模式选择列表
+$wgVisualEditorUseSingleEditTab = true;
+# 关闭默认编辑完毕监视页面
+$wgDefaultUserOptions['watchdefault'] = 0;
 
 # End of automatically generated settings.
 # Add more configuration options below.
