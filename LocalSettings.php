@@ -27,6 +27,8 @@ $wgSitename = $_ENV["SiteName"];
 ## (like /w/index.php/Page_title to /wiki/Page_title) please see:
 ## https://www.mediawiki.org/wiki/Manual:Short_URL
 $wgScriptPath = "";
+$wgArticlePath = "/$1";
+$wgUsePathInfo = true;
 
 ## The protocol and server name to use in fully-qualified URLs
 $wgServer = $_ENV["Server"];
@@ -92,7 +94,7 @@ $wgPingback = true;
 $wgLanguageCode = "zh-cn";
 
 # Time zone
-$wgLocaltimezone = "UTC";
+$wgLocaltimezone = "PRC";
 
 ## Set $wgCacheDirectory to a writable directory on the web server
 ## to make your wiki go slightly faster. The directory should not
