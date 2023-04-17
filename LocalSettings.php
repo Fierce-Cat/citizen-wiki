@@ -167,6 +167,7 @@ wfLoadExtension( 'Renameuser' );
 wfLoadExtension( 'ReplaceText' );
 wfLoadExtension( 'SandboxLink' );
 wfLoadExtension( 'Scribunto' );
+$wgScribuntoDefaultEngine = 'luastandalone';
 wfLoadExtension( 'SecureLinkFixer' );
 wfLoadExtension( 'ShortDescription' );
 wfLoadExtension( 'SpamBlacklist' );
