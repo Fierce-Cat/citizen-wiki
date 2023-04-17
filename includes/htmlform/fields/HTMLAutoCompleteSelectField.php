@@ -44,7 +44,6 @@ class HTMLAutoCompleteSelectField extends HTMLTextField {
 
 		if ( array_key_exists( 'autocomplete-data-messages', $this->mParams ) ) {
 			foreach ( $this->mParams['autocomplete-data-messages'] as $key => $value ) {
-				// @phan-suppress-next-line PhanTypeMismatchArgument False positive, $key is documented as string
 				$key = $this->msg( $key )->plain();
 				$this->autocompleteData[$key] = strval( $value );
 			}
@@ -54,7 +53,7 @@ class HTMLAutoCompleteSelectField extends HTMLTextField {
 			}
 		}
 		if ( !is_array( $this->autocompleteData ) || !$this->autocompleteData ) {
-			throw new MWException( 'HTMLAutoCompleteSelectField called without any autocompletions' );
+			throw new InvalidArgumentException( 'HTMLAutoCompleteSelectField called without any autocompletions' );
 		}
 
 		$this->getOptions();

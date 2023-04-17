@@ -19,7 +19,6 @@
  *
  * @file
  * @ingroup Maintenance
- * @phan-file-suppress PhanInvalidCommentForDeclarationType False negative about `@var`
  */
 
 /**
@@ -65,7 +64,7 @@ class MWDoxygenFilter {
 				$output .= $token;
 				continue;
 			}
-			list( $id, $content ) = $token;
+			[ $id, $content ] = $token;
 			switch ( $id ) {
 				case T_DOC_COMMENT:
 					// Escape slashes so that references to namespaces are not

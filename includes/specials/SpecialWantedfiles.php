@@ -24,9 +24,13 @@
  * @author Soxred93 <soxred93@gmail.com>
  */
 
+namespace MediaWiki\Specials;
+
 use MediaWiki\Cache\LinkBatchFactory;
-use MediaWiki\MediaWikiServices;
 use MediaWiki\Page\PageReferenceValue;
+use MediaWiki\Title\Title;
+use RepoGroup;
+use WantedQueryPage;
 use Wikimedia\Rdbms\ILoadBalancer;
 
 /**
@@ -34,29 +38,25 @@ use Wikimedia\Rdbms\ILoadBalancer;
  *
  * @ingroup SpecialPage
  */
-class WantedFilesPage extends WantedQueryPage {
+class SpecialWantedFiles extends WantedQueryPage {
 
 	/** @var RepoGroup */
 	private $repoGroup;
 
 	/**
-	 * @param RepoGroup|string $repoGroup
-	 * @param ILoadBalancer|null $loadBalancer
-	 * @param LinkBatchFactory|null $linkBatchFactory
+	 * @param RepoGroup $repoGroup
+	 * @param ILoadBalancer $loadBalancer
+	 * @param LinkBatchFactory $linkBatchFactory
 	 */
 	public function __construct(
-		$repoGroup,
-		ILoadBalancer $loadBalancer = null,
-		LinkBatchFactory $linkBatchFactory = null
+		RepoGroup $repoGroup,
+		ILoadBalancer $loadBalancer,
+		LinkBatchFactory $linkBatchFactory
 	) {
-		parent::__construct( is_string( $repoGroup ) ? $repoGroup : 'Wantedfiles' );
-		// This class is extended and therefor fallback to global state - T265301
-		$services = MediaWikiServices::getInstance();
-		$this->repoGroup = $repoGroup instanceof RepoGroup
-			? $repoGroup
-			: $services->getRepoGroup();
-		$this->setDBLoadBalancer( $loadBalancer ?? $services->getDBLoadBalancer() );
-		$this->setLinkBatchFactory( $linkBatchFactory ?? $services->getLinkBatchFactory() );
+		parent::__construct( 'Wantedfiles' );
+		$this->repoGroup = $repoGroup;
+		$this->setDBLoadBalancer( $loadBalancer );
+		$this->setLinkBatchFactory( $linkBatchFactory );
 	}
 
 	protected function getPageHeader() {
@@ -175,3 +175,9 @@ class WantedFilesPage extends WantedQueryPage {
 		return 'maintenance';
 	}
 }
+
+/**
+ * Retain the old class name for backwards compatibility.
+ * @deprecated since 1.40
+ */
+class_alias( SpecialWantedFiles::class, 'WantedFilesPage' );

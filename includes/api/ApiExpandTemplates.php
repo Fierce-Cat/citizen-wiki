@@ -21,6 +21,7 @@
  */
 
 use MediaWiki\Revision\RevisionStore;
+use MediaWiki\Title\Title;
 use Wikimedia\ParamValidator\ParamValidator;
 
 /**
@@ -119,6 +120,7 @@ class ApiExpandTemplates extends ApiBase {
 		if ( isset( $prop['parsetree'] ) || $params['generatexml'] ) {
 			$this->parser->startExternalParse( $titleObj, $options, Parser::OT_PREPROCESS );
 			$dom = $this->parser->preprocessToDom( $params['text'] );
+			// @phan-suppress-next-line PhanUndeclaredMethodInCallable
 			if ( is_callable( [ $dom, 'saveXML' ] ) ) {
 				// @phan-suppress-next-line PhanUndeclaredMethod
 				$xml = $dom->saveXML();
@@ -247,6 +249,6 @@ class ApiExpandTemplates extends ApiBase {
 	}
 
 	public function getHelpUrls() {
-		return 'https://www.mediawiki.org/wiki/Special:MyLanguage/API:Parsing_wikitext#expandtemplates';
+		return 'https://www.mediawiki.org/wiki/Special:MyLanguage/API:Expandtemplates';
 	}
 }

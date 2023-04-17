@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Al12si",
 			"Anson2812",
 			"Antonytse",
 			"Asdfugil",
@@ -46,8 +47,7 @@
 			"Yfdyh000",
 			"Yueman",
 			"Z423x5c6",
-			"아라",
-			"Al12si"
+			"아라"
 		]
 	},
 	"tog-underline": "連結加底線：",
@@ -1722,6 +1722,7 @@
 	"filehist-dimensions": "尺寸",
 	"filehist-filesize": "快勞大細",
 	"filehist-comment": "註解",
+	"filehist-missing": "檔案遺失",
 	"imagelinks": "檔案用途",
 	"linkstoimage": "以下嘅$1版用到呢個檔：",
 	"linkstoimage-more": "多過$1{{PLURAL:$1|版用到}}呢個檔。\n下面嘅表只係列示咗用到呢個檔案嘅最頭$1版。\n一個完整嘅一覽[[Special:WhatLinksHere/$2|喺度]]。",
@@ -2492,6 +2493,9 @@
 	"movesubpagetext": "呢版有$1版細頁列示如下。",
 	"movenosubpage": "呢版無細頁。",
 	"movereason": "原因",
+	"moveotherreason": "第啲理由：",
+	"movereasonotherlist": "第啲理由",
+	"movepage-reason-dropdown": "* 常見原因\n** 錯標題",
 	"revertmove": "恢復",
 	"delete_and_move_text": "目標頁「[[:$1]]」已經存在。\n你要唔要刪咗佢空個位出嚟畀個搬文動作？",
 	"delete_and_move_confirm": "好，刪咗嗰個頁面",
@@ -2883,7 +2887,7 @@
 	"confirm-watch-button": "好",
 	"confirm-watch-top": "將呢一版加入你嘅監視清單？",
 	"confirm-watch-label": "監視期限：",
-	"watchlist-expiry-options": "永久:infinite,1個禮拜:1 week,1個月:1 month,3個月:3 months,6個月:6 months",
+	"watchlist-expiry-options": "永久:infinite,1個禮拜:1 week,1個月:1 month,3個月:3 months,6個月:6 months,1年:1 year",
 	"confirm-watch-button-expiry": "監視",
 	"confirm-unwatch-button": "好",
 	"confirm-unwatch-top": "喺你嘅監視清單度刪走呢一版？",
@@ -3145,7 +3149,6 @@
 	"log-name-managetags": "標籤管理日誌",
 	"log-name-tag": "標籤日誌",
 	"rightsnone": "(冇)",
-	"feedback-back": "返轉頭",
 	"feedback-cancel": "取消",
 	"feedback-close": "搞掂",
 	"feedback-dialog-title": "遞交意見",
@@ -3308,5 +3311,27 @@
 	"newpages-showhide-bots": "$1機械人",
 	"newpages-showhide-patrolled": "$1巡過嘅修改",
 	"newpages-showhide-redirect": "$1跳轉",
-	"newpages-showhide-registered": "$1註冊咗嘅用戶"
+	"newpages-showhide-registered": "$1註冊咗嘅用戶",
+	"renameuser": "改用戶名",
+	"renameuserold": "現時嘅用戶名:",
+	"renameusernew": "新嘅用戶名:",
+	"renameuserreason": "原因：",
+	"renameusermove": "搬用戶頁同埋佢嘅對話頁（同埋佢哋嘅細頁）到新名",
+	"renameuserwarnings": "警告:",
+	"renameuserconfirm": "係，改呢個用戶名",
+	"renameusersubmit": "遞交",
+	"renameusererrordoesnotexist": "用戶\"<nowiki>$1</nowiki>\"唔存在",
+	"renameusererrorexists": "用戶\"<nowiki>$1</nowiki>\"已經存在",
+	"renameusererrorinvalid": "用戶名\"<nowiki>$1</nowiki>\"唔正確",
+	"renameuser-error-request": "響收到請求嗰陣出咗問題。\n請返去再試過。",
+	"renameuser-error-same-user": "你唔可以改一位用戶係同之前嘅嘢一樣。",
+	"renameusersuccess": "用戶\"<nowiki>$1</nowiki>\"已經改咗名做\"<nowiki>$2</nowiki>\"",
+	"renameuser-page-exists": "$1呢一版已經存在，唔可以自動重寫。",
+	"renameuser-page-moved": "$1呢一版已經搬到去$2。",
+	"renameuser-page-unmoved": "$1呢一版唔能夠搬到去$2。",
+	"log-name-renameuser": "用戶改名日誌",
+	"logentry-renameuser-renameuser": "$1 {{GENDER:$2|改咗}}用戶 $4 （{{PLURAL:$6|$6 次修改}}）嘅名做 {{GENDER:$7|$5}}",
+	"renameuser-move-log": "當由\"[[User:$1|$1]]\"改名做\"[[User:$2|$2]]\"嗰陣已經自動搬咗用戶頁",
+	"action-renameuser": "同用戶改名",
+	"right-renameuser": "改用戶名"
 }

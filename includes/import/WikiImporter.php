@@ -35,6 +35,9 @@ use MediaWiki\Page\WikiPageFactory;
 use MediaWiki\Permissions\PermissionManager;
 use MediaWiki\Revision\SlotRecord;
 use MediaWiki\Revision\SlotRoleRegistry;
+use MediaWiki\Title\Title;
+use MediaWiki\Title\TitleFactory;
+use Wikimedia\AtEase\AtEase;
 use Wikimedia\NormalizedException\NormalizedException;
 
 /**
@@ -46,6 +49,9 @@ use Wikimedia\NormalizedException\NormalizedException;
 class WikiImporter {
 	/** @var XMLReader */
 	private $reader;
+
+	/** @var string */
+	private $sourceAdapterId;
 
 	/** @var array|null */
 	private $foreignNamespaces = null;
@@ -171,26 +177,9 @@ class WikiImporter {
 		if ( !in_array( 'uploadsource', stream_get_wrappers() ) ) {
 			stream_wrapper_register( 'uploadsource', UploadSourceAdapter::class );
 		}
-		$id = UploadSourceAdapter::registerSource( $source );
+		$this->sourceAdapterId = UploadSourceAdapter::registerSource( $source );
 
-		// Enable the entity loader, as it is needed for loading external URLs via
-		// XMLReader::open (T86036)
-		// phpcs:ignore Generic.PHP.NoSilencedErrors -- suppress deprecation per T268847
-		$oldDisable = @libxml_disable_entity_loader( false );
-		if ( defined( 'LIBXML_PARSEHUGE' ) ) {
-			$status = $this->reader->open( "uploadsource://$id", null, LIBXML_PARSEHUGE );
-		} else {
-			$status = $this->reader->open( "uploadsource://$id" );
-		}
-		if ( !$status ) {
-			$error = libxml_get_last_error();
-			// phpcs:ignore Generic.PHP.NoSilencedErrors
-			@libxml_disable_entity_loader( $oldDisable );
-			throw new MWException( 'Encountered an internal error while initializing WikiImporter object: ' .
-				$error->message );
-		}
-		// phpcs:ignore Generic.PHP.NoSilencedErrors
-		@libxml_disable_entity_loader( $oldDisable );
+		$this->openReader();
 
 		// Default callbacks
 		$this->setPageCallback( [ $this, 'beforeImportPage' ] );
@@ -703,6 +692,8 @@ class WikiImporter {
 	 * @return bool
 	 */
 	public function doImport() {
+		$this->syntaxCheckXML();
+
 		// Calls to reader->read need to be wrapped in calls to
 		// libxml_disable_entity_loader() to avoid local file
 		// inclusion attacks (T48932).
@@ -840,7 +831,7 @@ class WikiImporter {
 	 * @return mixed|false
 	 */
 	private function processLogItem( $logInfo ) {
-		$revision = new WikiRevision( $this->config );
+		$revision = new WikiRevision();
 
 		if ( isset( $logInfo['id'] ) ) {
 			$revision->setID( $logInfo['id'] );
@@ -925,7 +916,7 @@ class WikiImporter {
 					// $title is either an array of two titles or false.
 					if ( is_array( $title ) ) {
 						$this->pageCallback( $title );
-						list( $pageInfo['_title'], $foreignTitle ) = $title;
+						[ $pageInfo['_title'], $foreignTitle ] = $title;
 					} else {
 						$badTitle = true;
 						$skip = true;
@@ -1092,7 +1083,7 @@ class WikiImporter {
 	 * @return mixed|false
 	 */
 	private function processRevision( $pageInfo, $revisionInfo ) {
-		$revision = new WikiRevision( $this->config );
+		$revision = new WikiRevision();
 
 		$revId = $revisionInfo['id'] ?? 0;
 		if ( $revId ) {
@@ -1208,7 +1199,7 @@ class WikiImporter {
 	 * @return mixed
 	 */
 	private function processUpload( $pageInfo, $uploadInfo ) {
-		$revision = new WikiRevision( $this->config );
+		$revision = new WikiRevision();
 		$revId = $pageInfo['id'];
 		$title = $pageInfo['_title'];
 		// T292348: text key may be absent, force addition if null
@@ -1340,5 +1331,58 @@ class WikiImporter {
 		return $this->slotRoleRegistry
 			->getRoleHandler( $role )
 			->getDefaultModel( $title );
+	}
+
+	/**
+	 * Open the XMLReader connected to the source adapter id
+	 */
+	private function openReader() {
+		// Enable the entity loader, as it is needed for loading external URLs via
+		// XMLReader::open (T86036)
+		// phpcs:ignore Generic.PHP.NoSilencedErrors -- suppress deprecation per T268847
+		$oldDisable = @libxml_disable_entity_loader( false );
+		if ( defined( 'LIBXML_PARSEHUGE' ) ) {
+			$status = $this->reader->open( 'uploadsource://' . $this->sourceAdapterId, null, LIBXML_PARSEHUGE );
+		} else {
+			$status = $this->reader->open( 'uploadsource://' . $this->sourceAdapterId );
+		}
+		if ( !$status ) {
+			$error = libxml_get_last_error();
+			// phpcs:ignore Generic.PHP.NoSilencedErrors
+			@libxml_disable_entity_loader( $oldDisable );
+			throw new MWException(
+				'Encountered an internal error while initializing WikiImporter object: ' . $error->message
+			);
+		}
+		// phpcs:ignore Generic.PHP.NoSilencedErrors
+		@libxml_disable_entity_loader( $oldDisable );
+	}
+
+	/**
+	 * Check the syntax of the given xml
+	 */
+	private function syntaxCheckXML() {
+		if ( !UploadSourceAdapter::isSeekableSource( $this->sourceAdapterId ) ) {
+			return;
+		}
+		AtEase::suppressWarnings();
+		$oldDisable = libxml_disable_entity_loader( false );
+		try {
+			while ( $this->reader->read() );
+			$error = libxml_get_last_error();
+			if ( $error ) {
+				$errorMessage = 'XML error at line ' . $error->line . ': ' . $error->message;
+				wfDebug( __METHOD__ . ': Invalid xml found - ' . $errorMessage );
+				throw new MWException( $errorMessage );
+			}
+		} finally {
+			libxml_disable_entity_loader( $oldDisable );
+			AtEase::restoreWarnings();
+			$this->reader->close();
+		}
+
+		// Reopen for the real import
+		UploadSourceAdapter::seekSource( $this->sourceAdapterId, 0 );
+		$this->openReader();
 	}
 }

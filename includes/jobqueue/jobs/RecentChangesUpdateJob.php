@@ -16,14 +16,14 @@
  * http://www.gnu.org/copyleft/gpl.html
  *
  * @file
- * @ingroup JobQueue
  */
 
 use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Title\Title;
 
 /**
- * Job for pruning recent changes
+ * Puurge expired rows from the recentchanges table.
  *
  * @ingroup JobQueue
  * @since 1.25
@@ -244,6 +244,10 @@ class RecentChangesUpdateJob extends Job {
 			],
 			__METHOD__
 		);
+
+		if ( !MediaWikiServices::getInstance()->getMainConfig()->get( MainConfigNames::MiserMode ) ) {
+			SiteStatsUpdate::cacheUpdate( $dbw );
+		}
 
 		$dbw->unlock( $lockKey, __METHOD__ );
 	}

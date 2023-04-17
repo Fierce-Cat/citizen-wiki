@@ -11,6 +11,7 @@
 			"Justincheng12345",
 			"Kayau",
 			"LNDDYL",
+			"Lakejason0",
 			"Liuxinyu970226",
 			"LuciferianThomas",
 			"Mark85296341",
@@ -31,9 +32,8 @@
 			"Yuyu",
 			"Z423x5c6",
 			"和平至上",
-			"星海",
 			"捍粵者",
-			"Lakejason0"
+			"星海"
 		]
 	},
 	"tog-underline": "底線標示連結：",
@@ -185,6 +185,8 @@
 	"publishpage-start": "發佈頁面…",
 	"publishchanges-start": "發佈變更…",
 	"missingsummary": "<strong>提醒：</strong>您未填寫編輯摘要。\n若您再點選「$1」一次，將略過摘要直接發布您的編輯。",
+	"userpage-userdoesnotexist": "用戶賬號「$1」沒有在此wiki上註冊。請在建立或編輯本頁前檢查。",
+	"userpage-userdoesnotexist-view": "用戶賬號「$1」尚未在此wiki上註冊。",
 	"blocked-notice-logextract": "此用戶目前已封鎖，以下是最近的封鎖紀錄：",
 	"editing": "正在編輯 $1",
 	"template-protected": "（受保護）",
@@ -228,6 +230,7 @@
 	"right-reupload-own": "覆蓋自己上載的現有檔案",
 	"right-viewmyprivateinfo": "編輯自己的私隱數據（如：電子郵件位址及真實姓名）",
 	"right-editmyprivateinfo": "編輯自己的私隱數據（如：電子郵件位址及真實姓名）",
+	"grant-highvolume": "大量操作（機械人）取用權",
 	"newuserlogpage": "用戶建立日誌",
 	"rightslog": "用戶權限日誌",
 	"action-block": "封鎖此用戶的編輯權限",
@@ -345,5 +348,12 @@
 	"api-error-publishfailed": "內部錯誤：伺服器發佈暫存檔案失敗。",
 	"duration-days": "$1日",
 	"nstab-mainpage": "首頁",
-	"newpages-showhide-bots": "$1機械人"
+	"newpages-showhide-bots": "$1機械人",
+	"renameuser": "重新命名用戶",
+	"renameuser-linkoncontribs": "重新命名用戶",
+	"renameuserold": "目前的用戶名稱：",
+	"log-name-renameuser": "用戶名變更日誌",
+	"logentry-renameuser-renameuser": "$1 {{GENDER:$2|重新命名}}用戶 $4 (已編輯 {{PLURAL:$6|$6 次}}) 為 $5",
+	"action-renameuser": "重新命名用戶",
+	"right-renameuser": "重新命名用戶"
 }

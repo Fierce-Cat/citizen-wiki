@@ -21,6 +21,7 @@
  */
 
 use MediaWiki\MainConfigNames;
+use MediaWiki\Title\Title;
 use MediaWiki\User\UserOptionsLookup;
 use MediaWiki\Watchlist\WatchlistManager;
 use Wikimedia\ParamValidator\ParamValidator;
@@ -389,7 +390,7 @@ class ApiUpload extends ApiBase {
 		if ( $status->getMessage()->getKey() === 'uploadstash-exception' ) {
 			// The exceptions thrown by upload stash code and pretty silly and UploadBase returns poor
 			// Statuses for it. Just extract the exception details and parse them ourselves.
-			list( $exceptionType, $message ) = $status->getMessage()->getParams();
+			[ $exceptionType, $message ] = $status->getMessage()->getParams();
 			$debugMessage = 'Stashing temporary file failed: ' . $exceptionType . ' ' . $message;
 			wfDebug( __METHOD__ . ' ' . $debugMessage );
 		}
@@ -414,7 +415,6 @@ class ApiUpload extends ApiBase {
 	 * @return never
 	 */
 	private function dieRecoverableError( $errors, $parameter = null ) {
-		// @phan-suppress-previous-line PhanTypeMissingReturn
 		$this->performStash( 'optional', $data );
 
 		if ( $parameter ) {
@@ -441,7 +441,6 @@ class ApiUpload extends ApiBase {
 	 * @return never
 	 */
 	public function dieStatusWithCode( $status, $overrideCode, $moreExtraData = null ) {
-		// @phan-suppress-previous-line PhanTypeMissingReturn
 		$sv = StatusValue::newGood();
 		foreach ( $status->getErrors() as $error ) {
 			$msg = ApiMessage::create( $error, $overrideCode );
@@ -603,11 +602,6 @@ class ApiUpload extends ApiBase {
 			// @phan-suppress-next-line PhanTypeMismatchArgumentNullable Block is checked and not null
 			$this->dieBlocked( $user->getBlock() );
 		}
-
-		// Global blocks
-		if ( $user->isBlockedGlobally() ) {
-			$this->dieBlocked( $user->getGlobalBlock() );
-		}
 	}
 
 	/**
@@ -654,7 +648,6 @@ class ApiUpload extends ApiBase {
 	 * @return never
 	 */
 	protected function checkVerification( array $verification ) {
-		// @phan-suppress-previous-line PhanTypeMissingReturn
 		switch ( $verification['status'] ) {
 			// Recoverable errors
 			case UploadBase::MIN_LENGTH_PARTNAME:
@@ -844,9 +837,7 @@ class ApiUpload extends ApiBase {
 	 */
 	protected function performUpload( $warnings ) {
 		// Use comment as initial page text by default
-		if ( $this->mParams['text'] === null ) {
-			$this->mParams['text'] = $this->mParams['comment'];
-		}
+		$this->mParams['text'] ??= $this->mParams['comment'];
 
 		/** @var LocalFile $file */
 		$file = $this->mUpload->getLocalFile();

@@ -3,37 +3,37 @@
 namespace MediaWiki\Tests\Parser\Parsoid;
 
 use MediaWiki\Page\PageIdentityValue;
-use MediaWiki\Parser\Parsoid\HTMLTransform;
-use MediaWiki\Parser\Parsoid\HTMLTransformFactory;
+use MediaWiki\Parser\Parsoid\HtmlToContentTransform;
+use MediaWiki\Parser\Parsoid\HtmlTransformFactory;
 use MediaWikiIntegrationTestCase;
 use Wikimedia\Parsoid\Utils\ContentUtils;
 use Wikimedia\Parsoid\Utils\DOMCompat;
 
 /**
- * @coversDefaultClass \MediaWiki\Parser\Parsoid\HTMLTransformFactory
+ * @coversDefaultClass \MediaWiki\Parser\Parsoid\HtmlTransformFactory
  */
-class HTMLTransformFactoryTest extends MediaWikiIntegrationTestCase {
+class HtmlTransformFactoryTest extends MediaWikiIntegrationTestCase {
 	/**
 	 * @covers ::__construct
 	 */
 	public function testGetContentTransformFactory() {
-		$factory = $this->getServiceContainer()->getHTMLTransformFactory();
-		$this->assertInstanceOf( HTMLTransformFactory::class, $factory );
+		$factory = $this->getServiceContainer()->getHtmlTransformFactory();
+		$this->assertInstanceOf( HtmlTransformFactory::class, $factory );
 	}
 
 	/**
-	 * @covers ::getHTMLTransform
+	 * @covers ::getHtmlToContentTransform
 	 */
-	public function testGetHTMLTransform() {
-		$factory = $this->getServiceContainer()->getHTMLTransformFactory();
+	public function testGetHtmlToContentTransform() {
+		$factory = $this->getServiceContainer()->getHtmlTransformFactory();
 		$modifiedHTML = '<p>Hello World</p>';
 
-		$transform = $factory->getHTMLTransform(
+		$transform = $factory->getHtmlToContentTransform(
 			$modifiedHTML,
 			PageIdentityValue::localIdentity( 0, NS_MAIN, 'Test' )
 		);
 
-		$this->assertInstanceOf( HTMLTransform::class, $transform );
+		$this->assertInstanceOf( HtmlToContentTransform::class, $transform );
 
 		$actualHTML = ContentUtils::toXML( DOMCompat::getBody( $transform->getModifiedDocument() ) );
 		$this->assertStringContainsString( $modifiedHTML, $actualHTML );

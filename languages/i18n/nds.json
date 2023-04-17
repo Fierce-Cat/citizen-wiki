@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"1233qwer1234qwer4",
 			"Amire80",
 			"DannyS712",
 			"Fitoschido",
@@ -19,8 +20,7 @@
 			"Vlad5250",
 			"Zylbath",
 			"לערי ריינהארט",
-			"아라",
-			"1233qwer1234qwer4"
+			"아라"
 		]
 	},
 	"tog-underline": "Verwies ünnerstrieken",
@@ -1002,6 +1002,7 @@
 	"filehist-dimensions": "Grött",
 	"filehist-filesize": "Dateigrött",
 	"filehist-comment": "Kommentar",
+	"filehist-missing": "Datei fehlt",
 	"imagelinks": "Dateibruuk",
 	"linkstoimage": "Disse {{PLURAL:$1|Sied|Sieden}} bruukt dit Bild:",
 	"linkstoimage-more": "Mehr as {{PLURAL:$1|ene Sied|$1 Sieden}} wiest na disse Datei.\nDisse List wiest blot {{PLURAL:$1|den eersten Lenk|de eersten $1 Lenken}} op disse Datei.\nEn [[Special:WhatLinksHere/$2|kumplette List]] gifft dat ok.",
@@ -1733,7 +1734,7 @@
 	"metadata-help": "Disse Datei bargt noch mehr Informatschonen, de mehrsttiets vun de Digitalkamera oder den Scanner kaamt. Dör Afännern vun de Originaldatei köönt welk Details nich mehr ganz to dat Bild passen.",
 	"metadata-expand": "Wies mehr Details",
 	"metadata-collapse": "Wies minner Details",
-	"metadata-fields": "De folgen Fehlers vun de EXIF-Metadaten, de in disse MediaWiki-Systemtext indragen sünd, warrt op Bildbeschrievenssieden mit inklappte Metadatentabell anwiest. \nWiedere warrt standardmatig nich anwiest:\n* make\n* model\n* datetimeoriginal\n* exposuretime\n* fnumber\n* isospeedratings\n* focallength\n* artist\n* copyright\n* imagedescription\n* gpslatitude\n* gpslongitude\n* gpsaltitude",
+	"metadata-fields": "De folgen Fehlers vun de EXIF-Metadaten, de in disse MediaWiki-Systemtext indragen sünd, warrt op Bildbeschrievenssieden mit inklappte Metadatentabell anwiest. \nWiedere warrt standardmatig nich anwiest:\n* make \n* model \n* datetimeoriginal \n* exposuretime \n* fnumber \n* isospeedratings \n* focallength \n* artist \n* copyright \n* imagedescription \n* gpslatitude \n* gpslongitude \n* gpsaltitude \n* dc-rights \n* copyrightowner \n* usageterms \n* webstatement \n* licenseurl \n* attributionurl \n* preferredattributionname \n* credit \n* jpegfilecomment \n* pngfilecomment \n* giffilecomment \n* usercomment \n* citydest \n* citycreated \n* headline \n* source \n* locationdest \n* dc-contributor \n* dc-coverage \n* dc-publisher \n* dc-relation \n* label \n* nickname \n* personinimage \n* disclaimer \n* event \n* objectname",
 	"namespacesall": "alle",
 	"monthsall": "alle",
 	"confirmemail": "Nettbreefadress bestätigen",
@@ -1923,5 +1924,26 @@
 	"skin-action-protect": "Schulen",
 	"skin-action-undelete": "Wedderhalen",
 	"skin-action-delete": "Wegdoon",
-	"skin-action-move": "Schuven"
+	"skin-action-move": "Schuven",
+	"renameuser": "Brukernaam ännern",
+	"renameuserold": "Brukernaam nu:",
+	"renameusernew": "Nee Brukernaam:",
+	"renameuserreason": "Gründ för den ne’en Naam:",
+	"renameusermove": "Brukersieden op’n ne’en Naam schuven",
+	"renameuserreserve": "Den olen Brukernaam dor vör schulen, dat he noch wedder nee anmellt warrt",
+	"renameuserwarnings": "Wohrschauels:",
+	"renameuserconfirm": "Jo, den Bruker en ne’en Naam geven",
+	"renameusersubmit": "Ännern",
+	"renameusererrordoesnotexist": "Bruker ''<nowiki>$1</nowiki>'' gifft dat nich",
+	"renameusererrorexists": "Bruker ''<nowiki>$1</nowiki>'' gifft dat al",
+	"renameusererrorinvalid": "Brukernaam ''<nowiki>$1</nowiki>'' geiht nich",
+	"renameuser-error-request": "Dat geev en Problem bi’t Överdragen vun de Anfraag. Gah trüch un versöök dat noch wedder.",
+	"renameuser-error-same-user": "De ole un ne’e Brukernaam sünd gliek.",
+	"renameusersuccess": "Brukernaam ''<nowiki>$1</nowiki>'' op ''<nowiki>$2</nowiki>'' ännert",
+	"renameuser-page-exists": "Siet $1 gifft dat al un kann nichautomaatsch överschreven warrn.",
+	"renameuser-page-moved": "Siet $1 schaven na $2.",
+	"renameuser-page-unmoved": "Siet $1 kunn nich na $2 schaven warrn.",
+	"log-name-renameuser": "Ännerte-Brukernaams-Logbook",
+	"renameuser-move-log": "Siet bi dat Ännern vun’n Brukernaam ''[[User:$1|$1]]'' na ''[[User:$2|$2]]'' automaatsch schaven",
+	"right-renameuser": "Brukers ne’en Naam geven"
 }

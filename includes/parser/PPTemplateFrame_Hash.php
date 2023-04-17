@@ -19,6 +19,8 @@
  * @ingroup Parser
  */
 
+use MediaWiki\Title\Title;
+
 /**
  * Expansion frame with template arguments
  * @ingroup Parser
@@ -174,7 +176,6 @@ class PPTemplateFrame_Hash extends PPFrame_Hash {
 		if ( !isset( $this->namedExpansionCache[$name] ) ) {
 			# Trim named arguments post-expand, for backwards compatibility
 			$this->namedExpansionCache[$name] = trim(
-				// @phan-suppress-next-line SecurityCheck-XSS
 				$this->parent->expand( $this->namedArgs[$name], PPFrame::STRIP_COMMENTS ) );
 		}
 		return $this->namedExpansionCache[$name];
