@@ -178,7 +178,10 @@
             "include": [
                 "extensions/*/composer.json",
                 "skins/*/composer.json"
-            ]
+            ],
+			"recurse": true,
+            "replace": true,
+            "merge-dev": true
 		}
 	}
 }
