@@ -6,10 +6,10 @@
 			"Bua333",
 			"Matma Rex",
 			"Midnight Gambler",
+			"Mucalexx",
 			"Silvicola",
 			"Zombie45764",
-			"아라",
-			"Mucalexx"
+			"아라"
 		]
 	},
 	"tog-underline": "Linggs undârschdrajchn:",
@@ -431,6 +431,7 @@
 	"filehist-dimensions": "Maase",
 	"filehist-filesize": "Dadajgräâs",
 	"filehist-comment": "Sembf dâdsuâ",
+	"filehist-missing": "Dadaj fääld",
 	"imagelinks": "Daddeiverwendung",
 	"linkstoimage": "Dii dadaj wäd fo {{PLURAL:$1|därâ |denâ $1 }} sajdn benudsd:",
 	"linkstoimage-more": "Määr wii {{PLURAL:$1|ane |$1 }} sajdn fârwajsn uf diâ dadaj.\nDii lisdn undn dsajch dâfâu nôr äärschd môôl {{PLURAL:$1|an|$1}} fârwajs.\nS'gajd awâr aa â [[Special:WhatLinksHere/$2|lisdn mid alâ fârwajs]].",

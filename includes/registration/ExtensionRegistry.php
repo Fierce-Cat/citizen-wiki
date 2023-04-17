@@ -1,15 +1,23 @@
 <?php
 
 use Composer\Semver\Semver;
+use MediaWiki\Settings\SettingsBuilder;
 use MediaWiki\Shell\Shell;
 use MediaWiki\ShellDisabledError;
 use Wikimedia\ScopedCallback;
 
 /**
- * The Registry loads JSON files, and uses a Processor
- * to extract information from them. It also registers
- * classes with the autoloader.
+ * @defgroup ExtensionRegistry ExtensionRegistry
  *
+ * For higher level documentation, see <https://www.mediawiki.org/wiki/Manual:Extension_registration/Architecture>.
+ */
+
+/**
+ * Load JSON files, and uses a Processor to extract information.
+ *
+ * This also adds the extension's classes to the AutoLoader.
+ *
+ * @ingroup ExtensionRegistry
  * @since 1.25
  */
 class ExtensionRegistry {
@@ -140,6 +148,11 @@ class ExtensionRegistry {
 	private $cache = null;
 
 	/**
+	 * @var ?SettingsBuilder
+	 */
+	private ?SettingsBuilder $settingsBuilder = null;
+
+	/**
 	 * @codeCoverageIgnore
 	 * @return ExtensionRegistry
 	 */
@@ -196,7 +209,7 @@ class ExtensionRegistry {
 			// @codeCoverageIgnoreStart
 			if ( $mtime === false ) {
 				$err = error_get_last();
-				throw new Exception( "Unable to open file $path: {$err['message']}" );
+				throw new MissingExtensionException( $path, $err['message'] );
 				// @codeCoverageIgnoreEnd
 			}
 		}
@@ -517,6 +530,9 @@ class ExtensionRegistry {
 			}
 		}
 
+		// XXX: SettingsBuilder should really be a parameter to this method.
+		$settings = $this->getSettingsBuilder();
+
 		foreach ( $info['callbacks'] as $name => $cb ) {
 			if ( !is_callable( $cb ) ) {
 				if ( is_array( $cb ) ) {
@@ -524,7 +540,7 @@ class ExtensionRegistry {
 				}
 				throw new UnexpectedValueException( "callback '$cb' is not callable" );
 			}
-			$cb( $info['credits'][$name] );
+			$cb( $info['credits'][$name], $settings );
 		}
 	}
 
@@ -650,5 +666,20 @@ class ExtensionRegistry {
 			$file = "$dir/$file";
 		}
 		return $files;
+	}
+
+	/**
+	 * @internal for use by Setup. Hopefully in the future, we find a better way.
+	 * @param SettingsBuilder $settingsBuilder
+	 */
+	public function setSettingsBuilder( SettingsBuilder $settingsBuilder ) {
+		$this->settingsBuilder = $settingsBuilder;
+	}
+
+	private function getSettingsBuilder(): SettingsBuilder {
+		if ( $this->settingsBuilder === null ) {
+			$this->settingsBuilder = SettingsBuilder::getInstance();
+		}
+		return $this->settingsBuilder;
 	}
 }

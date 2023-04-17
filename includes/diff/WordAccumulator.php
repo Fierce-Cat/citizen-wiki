@@ -51,12 +51,13 @@ class WordAccumulator {
 	 */
 	private function flushGroup( $new_tag ) {
 		if ( $this->group !== '' ) {
+			$encGroup = htmlspecialchars( $this->group, ENT_NOQUOTES );
 			if ( $this->tag == 'ins' ) {
-				$this->line .= "<ins{$this->insClass}>" . htmlspecialchars( $this->group ) . '</ins>';
+				$this->line .= "<ins{$this->insClass}>$encGroup</ins>";
 			} elseif ( $this->tag == 'del' ) {
-				$this->line .= "<del{$this->delClass}>" . htmlspecialchars( $this->group ) . '</del>';
+				$this->line .= "<del{$this->delClass}>$encGroup</del>";
 			} else {
-				$this->line .= htmlspecialchars( $this->group );
+				$this->line .= $encGroup;
 			}
 		}
 		$this->group = '';
@@ -69,10 +70,10 @@ class WordAccumulator {
 	private function flushLine( $new_tag ) {
 		$this->flushGroup( $new_tag );
 		if ( $this->line != '' ) {
-			array_push( $this->lines, $this->line );
+			$this->lines[] = $this->line;
 		} else {
 			# make empty lines visible by inserting an NBSP
-			array_push( $this->lines, "\u{00A0}" );
+			$this->lines[] = "\u{00A0}";
 		}
 		$this->line = '';
 	}

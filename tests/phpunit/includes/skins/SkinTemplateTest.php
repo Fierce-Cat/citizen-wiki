@@ -1,6 +1,7 @@
 <?php
 
 use MediaWiki\MainConfigNames;
+use MediaWiki\Title\Title;
 use Wikimedia\TestingAccessWrapper;
 
 // phpcs:ignore MediaWiki.Files.ClassMatchesFilename.NotMatch
@@ -67,7 +68,7 @@ class SkinTemplateTest extends MediaWikiIntegrationTestCase {
 		return $mock;
 	}
 
-	public function provideGetDefaultModules() {
+	public static function provideGetDefaultModules() {
 		return [
 			[
 				false,
@@ -92,7 +93,7 @@ class SkinTemplateTest extends MediaWikiIntegrationTestCase {
 		];
 	}
 
-	public function provideGetFooterIcons() {
+	public static function provideGetFooterIcons() {
 		return [
 			// Test case 1
 			[
@@ -212,7 +213,7 @@ class SkinTemplateTest extends MediaWikiIntegrationTestCase {
 		);
 	}
 
-	public function provideContentNavigation(): array {
+	public static function provideContentNavigation(): array {
 		return [
 			'No userpage set' => [
 				'contentNavigation' => [
@@ -322,6 +323,6 @@ class SkinTemplateTest extends MediaWikiIntegrationTestCase {
 		$tpl = $wrapper->prepareQuickTemplate();
 		$contentNav = $tpl->get( 'content_navigation' );
 
-		$this->assertEquals( array_keys( $contentNav ), [ 'namespaces', 'views', 'actions', 'variants' ] );
+		$this->assertEquals( [ 'namespaces', 'views', 'actions', 'variants' ], array_keys( $contentNav ) );
 	}
 }

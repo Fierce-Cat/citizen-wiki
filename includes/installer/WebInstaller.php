@@ -21,6 +21,7 @@
  * @ingroup Installer
  */
 
+use MediaWiki\Html\Html;
 use MediaWiki\Languages\LanguageNameUtils;
 use MediaWiki\MediaWikiServices;
 
@@ -261,7 +262,6 @@ class WebInstaller extends Installer {
 
 		# Execute the page.
 		$this->currentPageName = $page->getName();
-		// @phan-suppress-next-line PhanTypeMismatchArgumentNullable pageName is not null here
 		$this->startPageWrapper( $pageName );
 
 		if ( $page->isSlow() ) {
@@ -275,7 +275,6 @@ class WebInstaller extends Installer {
 		if ( $result == 'skip' ) {
 			# Page skipped without explicit submission.
 			# Skip it when we click "back" so that we don't just go forward again.
-			// @phan-suppress-next-line PhanTypeMismatchDimAssignment pageName is not null here
 			$this->skippedPages[$pageName] = true;
 			$result = 'continue';
 		} else {
@@ -977,7 +976,7 @@ class WebInstaller extends Installer {
 		}
 
 		$s = "<ul>\n";
-		foreach ( $items as $value => $item ) {
+		foreach ( $items as $item ) {
 			$s .= "<li>$item</li>\n";
 		}
 		$s .= "</ul>\n";
@@ -1248,18 +1247,17 @@ class WebInstaller extends Installer {
 	 */
 	protected static function infoBox( $rawHtml, $icon, $alt, $class = '' ) {
 		$s = Html::openElement( 'div', [ 'class' => 'mw-installer-box-left' ] ) .
-				Html::element( 'img',
-					[
-						'src' => $icon,
-						'alt' => $alt,
-					]
-				) .
-				Html::closeElement( 'div' );
-
-		$s .= Html::openElement( 'div', [ 'class' => 'mw-installer-box-right' ] ) .
-				$rawHtml .
-				Html::closeElement( 'div' );
-		$s .= Html::element( 'div', [ 'style' => 'clear: left;' ], ' ' );
+			Html::element( 'img',
+				[
+					'src' => $icon,
+					'alt' => $alt,
+				]
+			) .
+			Html::closeElement( 'div' ) .
+			Html::openElement( 'div', [ 'class' => 'mw-installer-box-right' ] ) .
+			$rawHtml .
+			Html::closeElement( 'div' ) .
+			Html::element( 'div', [ 'style' => 'clear: left;' ], ' ' );
 
 		return Html::warningBox( $s, $class )
 			. Html::element( 'div', [ 'style' => 'clear: left;' ], ' ' );

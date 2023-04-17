@@ -162,7 +162,7 @@ class AuthManagerTest extends \MediaWikiIntegrationTestCase {
 			$name = $prop->getName();
 			$usedMsg = ltrim( "$msg ($name)" );
 			if ( $name === 'message' && $expected->message ) {
-				$this->assertSame( $expected->message->serialize(), $actual->message->serialize(),
+				$this->assertSame( $expected->message->__serialize(), $actual->message->__serialize(),
 					$usedMsg );
 			} else {
 				$this->assertEquals( $expected->$name, $actual->$name, $usedMsg );
@@ -210,7 +210,7 @@ class AuthManagerTest extends \MediaWikiIntegrationTestCase {
 			$this->config = new \HashConfig();
 		}
 		if ( $regen || !$this->request ) {
-			$this->request = new \FauxRequest();
+			$this->request = new \MediaWiki\Request\FauxRequest();
 		}
 		if ( $regen || !$this->objectFactory ) {
 			$services = $this->createNoOpAbstractMock( ContainerInterface::class );
@@ -350,11 +350,11 @@ class AuthManagerTest extends \MediaWikiIntegrationTestCase {
 	public function testCanAuthenticateNow() {
 		$this->initializeManager();
 
-		list( $provider, $reset ) = $this->getMockSessionProvider( false );
+		[ $provider, $reset ] = $this->getMockSessionProvider( false );
 		$this->assertFalse( $this->manager->canAuthenticateNow() );
 		ScopedCallback::consume( $reset );
 
-		list( $provider, $reset ) = $this->getMockSessionProvider( true );
+		[ $provider, $reset ] = $this->getMockSessionProvider( true );
 		$this->assertTrue( $this->manager->canAuthenticateNow() );
 		ScopedCallback::consume( $reset );
 	}
@@ -399,7 +399,7 @@ class AuthManagerTest extends \MediaWikiIntegrationTestCase {
 		$provideUser = null;
 		$reauth = $mutableSession ? AuthManager::SEC_REAUTH : AuthManager::SEC_FAIL;
 
-		list( $provider, $reset ) = $this->getMockSessionProvider(
+		[ $provider, $reset ] = $this->getMockSessionProvider(
 			$mutableSession, [ 'provideSessionInfo' ]
 		);
 		$provider->method( 'provideSessionInfo' )
@@ -756,7 +756,7 @@ class AuthManagerTest extends \MediaWikiIntegrationTestCase {
 		);
 	}
 
-	public function provideSetDefaultUserOptions() {
+	public static function provideSetDefaultUserOptions() {
 		return [
 			[ 'zh', false, 'zh', 'zh' ],
 			[ 'zh', true, 'de', 'zh' ],
@@ -845,7 +845,7 @@ class AuthManagerTest extends \MediaWikiIntegrationTestCase {
 		$this->initializeManager();
 
 		// Immutable session
-		list( $provider, $reset ) = $this->getMockSessionProvider( false );
+		[ $provider, $reset ] = $this->getMockSessionProvider( false );
 		$this->hook( 'UserLoggedIn', UserLoggedInHook::class, $this->never() );
 		$this->request->getSession()->setSecret( 'AuthManager::authnState', 'test' );
 		try {
@@ -1144,7 +1144,6 @@ class AuthManagerTest extends \MediaWikiIntegrationTestCase {
 					AuthManagerLoginAuthenticateAuditHook::class, $this->never() );
 			}
 
-			$ex = null;
 			try {
 				if ( !$i ) {
 					$ret = $this->manager->beginAuthentication( [ $req ], 'http://localhost/' );
@@ -2259,7 +2258,6 @@ class AuthManagerTest extends \MediaWikiIntegrationTestCase {
 				$this->hook( 'LocalUserCreated', LocalUserCreatedHook::class, $this->never() );
 			}
 
-			$ex = null;
 			try {
 				if ( $first ) {
 					$userReq = new UsernameAuthenticationRequest;
@@ -2341,11 +2339,8 @@ class AuthManagerTest extends \MediaWikiIntegrationTestCase {
 				}
 			}
 
-			if ( $created ) {
-				$this->assertNotNull( \User::idFromName( $username ) );
-			} else {
-				$this->assertNull( \User::idFromName( $username ) );
-			}
+			$userIdentity = $this->userIdentityLookup->getUserIdentityByName( $username );
+			$this->assertSame( $created, $userIdentity && $userIdentity->isRegistered() );
 
 			$first = false;
 		}
@@ -3099,7 +3094,6 @@ class AuthManagerTest extends \MediaWikiIntegrationTestCase {
 				->willReturn( $good );
 		}
 
-		$primaries = [];
 		foreach ( [
 			PrimaryAuthenticationProvider::TYPE_NONE,
 			PrimaryAuthenticationProvider::TYPE_CREATE,
@@ -3278,8 +3272,6 @@ class AuthManagerTest extends \MediaWikiIntegrationTestCase {
 			}
 			return $ret;
 		};
-
-		$good = StatusValue::newGood();
 
 		$primary1 = $this->createMock( AbstractPrimaryAuthenticationProvider::class );
 		$primary1->method( 'getUniqueId' )
@@ -3709,7 +3701,6 @@ class AuthManagerTest extends \MediaWikiIntegrationTestCase {
 		}
 
 		$first = true;
-		$created = false;
 		$expectLog = [];
 		foreach ( $managerResponses as $i => $response ) {
 			if ( $response instanceof AuthenticationResponse &&
@@ -3718,7 +3709,6 @@ class AuthManagerTest extends \MediaWikiIntegrationTestCase {
 				$expectLog[] = [ LogLevel::INFO, 'Account linked to {user} by primary' ];
 			}
 
-			$ex = null;
 			try {
 				if ( $first ) {
 					$ret = $this->manager->beginAccountLink( $user, [ $req ], 'http://localhost/' );

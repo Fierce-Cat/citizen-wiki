@@ -6,7 +6,7 @@
  */
 class UserEditCountInitJobTest extends MediaWikiIntegrationTestCase {
 
-	public function provideTestCases() {
+	public static function provideTestCases() {
 		// $startingEditCount, $setCount, $finalCount
 		yield 'Initiate count if not yet set' => [ false, 2, 2 ];
 		yield 'Update count when increasing' => [ 2, 3, 3 ];
@@ -21,7 +21,7 @@ class UserEditCountInitJobTest extends MediaWikiIntegrationTestCase {
 		$user = $this->getMutableTestUser()->getUser();
 
 		if ( $startingEditCount !== false ) {
-			$this->getServiceContainer()->getDbLoadBalancer()
+			$this->getServiceContainer()->getDBLoadBalancer()
 				->getConnectionRef( DB_PRIMARY )
 				->update(
 					'user',

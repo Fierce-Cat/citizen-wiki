@@ -21,6 +21,7 @@
  */
 
 use MediaWiki\Page\PageIdentity;
+use MediaWiki\Title\Title;
 use Wikimedia\Rdbms\IDatabase;
 use Wikimedia\Rdbms\IResultWrapper;
 
@@ -152,7 +153,7 @@ abstract class RevisionListBase extends ContextSource implements Iterator {
 	}
 
 	public function valid(): bool {
-		return $this->res ? $this->res->valid() : false;
+		return $this->res && $this->res->valid();
 	}
 
 	/**

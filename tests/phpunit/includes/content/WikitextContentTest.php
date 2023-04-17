@@ -1,6 +1,7 @@
 <?php
 
 use MediaWiki\Deferred\LinksUpdate\LinksDeletionUpdate;
+use MediaWiki\Title\Title;
 
 /**
  * @group ContentHandler
@@ -66,7 +67,7 @@ just a test"
 				"0",
 				"No more",
 				null,
-				trim( preg_replace( '/^Intro/sm', 'No more', self::$sections ) )
+				trim( preg_replace( '/^Intro/m', 'No more', self::$sections ) )
 			],
 			[ self::$sections,
 				"",

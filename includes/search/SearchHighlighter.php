@@ -472,7 +472,7 @@ class SearchHighlighter {
 	/**
 	 * Basic wikitext removal
 	 * @param string $text
-	 * @return mixed
+	 * @return string
 	 */
 	private function removeWiki( $text ) {
 		$text = preg_replace( "/\\{\\{([^|]+?)\\}\\}/", "", $text );
@@ -538,17 +538,14 @@ class SearchHighlighter {
 
 		$terms = implode( '|', $terms );
 		$max = intval( $contextchars ) + 1;
-		$pat1 = "/(.*)($terms)(.{0,$max})/i";
+		$pat1 = "/(.*)($terms)(.{0,$max})/ui";
 
-		$lineno = 0;
-
-		$extract = "";
+		$extract = '';
 		$contLang = MediaWikiServices::getInstance()->getContentLanguage();
 		foreach ( $lines as $line ) {
 			if ( $contextlines == 0 ) {
 				break;
 			}
-			++$lineno;
 			$m = [];
 			if ( !preg_match( $pat1, $line, $m ) ) {
 				continue;
@@ -566,8 +563,8 @@ class SearchHighlighter {
 			$found = $m[2];
 
 			$line = htmlspecialchars( $pre . $found . $post );
-			$pat2 = '/(' . $terms . ")/i";
-			$line = preg_replace( $pat2, "<span class='searchmatch'>\\1</span>", $line );
+			$pat2 = '/(' . $terms . ')/ui';
+			$line = preg_replace( $pat2, '<span class="searchmatch">\1</span>', $line );
 
 			$extract .= "{$line}\n";
 		}

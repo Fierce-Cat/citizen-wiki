@@ -28,9 +28,9 @@ use MediaWiki\HookContainer\HookContainer;
 use MediaWiki\Json\JsonCodec;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Page\WikiPageFactory;
+use MediaWiki\Title\TitleFactory;
 use ParserCache;
 use Psr\Log\LoggerInterface;
-use TitleFactory;
 use WANObjectCache;
 
 /**
@@ -42,6 +42,9 @@ class ParserCacheFactory {
 
 	/** @var string name of ParserCache for the default parser */
 	public const DEFAULT_NAME = 'pcache';
+
+	/** @var string name of RevisionOutputCache for the default parser */
+	public const DEFAULT_RCACHE_NAME = 'rcache';
 
 	/** @var BagOStuff */
 	private $parserCacheBackend;

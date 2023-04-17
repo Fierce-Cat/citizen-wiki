@@ -52,6 +52,7 @@ class WikiTextStructure {
 	private $auxiliaryElementSelectors = [
 		// Thumbnail captions aren't really part of the text proper
 		'.thumbcaption',
+		'figcaption',
 		// Neither are tables
 		'table',
 		// Common style for "See also:".
@@ -84,16 +85,20 @@ class WikiTextStructure {
 	 */
 	public function headings() {
 		$headings = [];
+		$tocData = $this->parserOutput->getTOCData();
+		if ( $tocData === null ) {
+			return $headings;
+		}
 		$ignoredHeadings = $this->getIgnoredHeadings();
-		foreach ( $this->parserOutput->getSections() as $heading ) {
-			$heading = $heading[ 'line' ];
+		foreach ( $tocData->getSections() as $heading ) {
+			$heading = $heading->line;
 
 			// Some wikis wrap the brackets in a span:
 			// https://en.wikipedia.org/wiki/MediaWiki:Cite_reference_link
 			$heading = preg_replace( '/<\/?span>/', '', $heading );
 			// Normalize [] so the following regexp would work.
 			$heading = preg_replace( [ '/&#91;/', '/&#93;/' ], [ '[', ']' ], $heading );
-			$heading = preg_replace( '/<sup>\s*\[\s*\d+\s*\]\s*<\/sup>/is', '', $heading );
+			$heading = preg_replace( '/<sup>\s*\[\s*\d+\s*\]\s*<\/sup>/i', '', $heading );
 
 			// Strip tags from the heading or else we'll display them (escaped) in search results
 			$heading = trim( Sanitizer::stripAllTags( $heading ) );
@@ -243,6 +248,10 @@ class WikiTextStructure {
 	 * @return string|null
 	 */
 	public function getDefaultSort() {
-		return $this->parserOutput->getPageProperty( 'defaultsort' );
+		$sort = $this->parserOutput->getPageProperty( 'defaultsort' );
+		if ( $sort === false ) {
+			return null;
+		}
+		return $sort;
 	}
 }

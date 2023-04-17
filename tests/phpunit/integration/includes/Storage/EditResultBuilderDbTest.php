@@ -162,7 +162,7 @@ class EditResultBuilderDbTest extends MediaWikiIntegrationTestCase {
 		return $revision;
 	}
 
-	public function provideManualReverts(): array {
+	public static function provideManualReverts(): array {
 		return [
 			'reverting a single edit' => [
 				self::CONTENT_A,
@@ -263,7 +263,7 @@ class EditResultBuilderDbTest extends MediaWikiIntegrationTestCase {
 
 		// test the newest reverted revision
 		$newestRevertedRev = $this->revisionStore->getRevisionById(
-			$er->getnewestRevertedRevisionId()
+			$er->getNewestRevertedRevisionId()
 		);
 		$expectedNewestRevertedRev = $this->revisions[$expectedNewestRevertedRevKey];
 		$this->assertSame(
@@ -273,7 +273,7 @@ class EditResultBuilderDbTest extends MediaWikiIntegrationTestCase {
 		);
 	}
 
-	public function provideNotManualReverts(): array {
+	public static function provideNotManualReverts(): array {
 		return [
 			'edit not changing anything' => [
 				self::CONTENT_B,

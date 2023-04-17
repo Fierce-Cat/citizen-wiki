@@ -132,14 +132,8 @@ class FileModule extends Module {
 	/** @var bool Link to raw files in debug mode */
 	protected $debugRaw = true;
 
-	/** @var string[] */
-	protected $targets = [ 'desktop' ];
-
 	/** @var bool Whether CSSJanus flipping should be skipped for this module */
 	protected $noflip = false;
-
-	/** @var bool Whether this module requires the client to support ES6 */
-	protected $es6 = false;
 
 	/**
 	 * @var bool Whether getStyleURLsForDebug should return raw file paths,
@@ -164,7 +158,7 @@ class FileModule extends Module {
 	protected $vueComponentParser = null;
 
 	/**
-	 * Constructs a new module from an options array.
+	 * Construct a new module from an options array.
 	 *
 	 * @param array $options See $wgResourceModules for the available options.
 	 * @param string|null $localBasePath Base path to prepend to all local paths in $options.
@@ -181,7 +175,7 @@ class FileModule extends Module {
 		$hasTemplates = false;
 		// localBasePath and remoteBasePath both have unbelievably long fallback chains
 		// and need to be handled separately.
-		list( $this->localBasePath, $this->remoteBasePath ) =
+		[ $this->localBasePath, $this->remoteBasePath ] =
 			self::extractBasePaths( $options, $localBasePath, $remoteBasePath );
 
 		// Extract, validate and normalise remaining options
@@ -239,7 +233,6 @@ class FileModule extends Module {
 				// Single booleans
 				case 'debugRaw':
 				case 'noflip':
-				case 'es6':
 					$this->{$member} = (bool)$option;
 					break;
 			}
@@ -287,9 +280,6 @@ class FileModule extends Module {
 		// The different ways these checks are done, and their ordering, look very silly,
 		// but were preserved for backwards-compatibility just in case. Tread lightly.
 
-		if ( $localBasePath === null ) {
-			$localBasePath = $IP;
-		}
 		if ( $remoteBasePath === null ) {
 			$remoteBasePath = MediaWikiServices::getInstance()->getMainConfig()
 				->get( MainConfigNames::ResourceBasePath );
@@ -327,11 +317,11 @@ class FileModule extends Module {
 			$remoteBasePath = '/';
 		}
 
-		return [ $localBasePath, $remoteBasePath ];
+		return [ $localBasePath ?? $IP, $remoteBasePath ];
 	}
 
 	/**
-	 * Gets all scripts for a given context concatenated together.
+	 * Get all scripts for a given context concatenated together.
 	 *
 	 * @param Context $context Context in which to generate script
 	 * @return string|array JavaScript code for $context, or package files data structure
@@ -498,7 +488,7 @@ class FileModule extends Module {
 	}
 
 	public function requiresES6() {
-		return $this->es6;
+		return true;
 	}
 
 	/**
@@ -704,6 +694,7 @@ class FileModule extends Module {
 
 	/**
 	 * Infer the file type from a package file path.
+	 *
 	 * @param string $path
 	 * @return string 'script', 'script-vue', or 'data'
 	 */
@@ -718,7 +709,7 @@ class FileModule extends Module {
 	}
 
 	/**
-	 * Collates styles file paths by 'media' option (or 'all' if 'media' is not set)
+	 * Collate style file paths by 'media' option (or 'all' if 'media' is not set)
 	 *
 	 * @param array $list List of file paths in any combination of index/path
 	 *     or path/options pairs
@@ -729,16 +720,10 @@ class FileModule extends Module {
 		foreach ( $list as $key => $value ) {
 			if ( is_int( $key ) ) {
 				// File name as the value
-				if ( !isset( $collatedFiles['all'] ) ) {
-					$collatedFiles['all'] = [];
-				}
 				$collatedFiles['all'][] = $value;
 			} elseif ( is_array( $value ) ) {
 				// File name as the key, options array as the value
 				$optionValue = $value['media'] ?? 'all';
-				if ( !isset( $collatedFiles[$optionValue] ) ) {
-					$collatedFiles[$optionValue] = [];
-				}
 				$collatedFiles[$optionValue][] = $key;
 			}
 		}
@@ -842,7 +827,7 @@ class FileModule extends Module {
 
 			// Add new file paths, remapping them to refer to our directories and not use settings
 			// from the module we're modifying, which come from the base definition.
-			list( $localBasePath, $remoteBasePath ) = self::extractBasePaths( $overrides );
+			[ $localBasePath, $remoteBasePath ] = self::extractBasePaths( $overrides );
 
 			foreach ( $paths as $path ) {
 				$styleFiles[] = new FilePath( $path, $localBasePath, $remoteBasePath );
@@ -869,7 +854,7 @@ class FileModule extends Module {
 	}
 
 	/**
-	 * Gets a list of file paths for all skin styles in the module used by
+	 * Get a list of file paths for all skin styles in the module used by
 	 * the skin.
 	 *
 	 * @param string $skinName The name of the skin
@@ -882,7 +867,7 @@ class FileModule extends Module {
 	}
 
 	/**
-	 * Gets a list of file paths for all skin style files in the module,
+	 * Get a list of file paths for all skin style files in the module,
 	 * for all available skins.
 	 *
 	 * @return array A list of file paths collated by media type
@@ -905,7 +890,7 @@ class FileModule extends Module {
 	}
 
 	/**
-	 * Returns all style files and all skin style files used by this module.
+	 * Get all style files and all skin style files used by this module.
 	 *
 	 * @return array
 	 */
@@ -917,7 +902,7 @@ class FileModule extends Module {
 
 		$result = [];
 
-		foreach ( $collatedStyleFiles as $media => $styleFiles ) {
+		foreach ( $collatedStyleFiles as $styleFiles ) {
 			foreach ( $styleFiles as $styleFile ) {
 				$result[] = $this->getLocalPath( $styleFile );
 			}
@@ -1315,10 +1300,10 @@ class FileModule extends Module {
 	}
 
 	/**
-	 * Resolve the package files definition and generates the content of each package file.
+	 * Resolve the package files definition and generate the content of each package file.
 	 *
 	 * @param Context $context
-	 * @return array|null Package files data structure, see ResourceLoaderModule::getScript()
+	 * @return array|null Package files data structure, see Module::getScript()
 	 */
 	public function getPackageFiles( Context $context ) {
 		if ( $this->packageFiles === null ) {
@@ -1334,8 +1319,8 @@ class FileModule extends Module {
 		foreach ( $expandedPackageFiles['files'] as $fileName => &$fileInfo ) {
 			// Turn any 'filePath' or 'callback' key into actual 'content',
 			// and remove the key after that. The callback could return a
-			// ResourceLoaderFilePath object; if that happens, fall through
-			// to the 'filePath' handling.
+			// FilePath object; if that happens, fall through to the 'filePath'
+			// handling.
 			if ( isset( $fileInfo['callback'] ) ) {
 				$callbackResult = ( $fileInfo['callback'] )(
 					$context,
@@ -1407,7 +1392,7 @@ class FileModule extends Module {
 	}
 
 	/**
-	 * Takes an input string and removes the UTF-8 BOM character if present
+	 * Take an input string and remove the UTF-8 BOM character if present
 	 *
 	 * We need to remove these after reading a file, because we concatenate our files and
 	 * the BOM character is not valid in the middle of a string.

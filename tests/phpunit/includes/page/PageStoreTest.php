@@ -11,9 +11,9 @@ use MediaWiki\Page\PageIdentity;
 use MediaWiki\Page\PageIdentityValue;
 use MediaWiki\Page\PageRecord;
 use MediaWiki\Page\PageStore;
+use MediaWiki\Title\Title;
 use MediaWikiIntegrationTestCase;
 use MockTitleTrait;
-use Title;
 use TitleValue;
 use Wikimedia\Assert\PreconditionException;
 use Wikimedia\Rdbms\IDatabase;
@@ -149,7 +149,7 @@ class PageStoreTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $link->getDBkey(), $page->getDBkey() );
 	}
 
-	public function provideInvalidLinks() {
+	public static function provideInvalidLinks() {
 		yield 'section link' => [ new TitleValue( NS_MAIN, '', '#References' ) ];
 		yield 'special page' => [ new TitleValue( NS_SPECIAL, 'Test' ) ];
 		yield 'interwiki link' => [ new TitleValue( NS_MAIN, 'Test', '', 'acme' ) ];
@@ -389,7 +389,7 @@ class PageStoreTest extends MediaWikiIntegrationTestCase {
 		$this->assertSamePage( $existingPage, $page );
 	}
 
-	public function provideGetPageByName_invalid() {
+	public static function provideGetPageByName_invalid() {
 		yield 'empty title' => [ NS_MAIN, '' ];
 		yield 'spaces in title' => [ NS_MAIN, 'Foo Bar' ];
 		yield 'special page' => [ NS_SPECIAL, 'Test' ];
@@ -410,7 +410,7 @@ class PageStoreTest extends MediaWikiIntegrationTestCase {
 		$pageStore->getPageByName( $ns, $dbkey );
 	}
 
-	public function provideInvalidTitleText() {
+	public static function provideInvalidTitleText() {
 		yield 'empty' => [ '' ];
 		yield 'section' => [ '#foo' ];
 		yield 'autoblock' => [ 'User:#12345' ];
@@ -493,7 +493,7 @@ class PageStoreTest extends MediaWikiIntegrationTestCase {
 		$this->assertNull( $page->getLanguage() );
 	}
 
-	public function provideGetPageById_invalid() {
+	public static function provideGetPageById_invalid() {
 		yield 'zero' => [ 0 ];
 		yield 'negative' => [ -1 ];
 	}
@@ -764,7 +764,7 @@ class PageStoreTest extends MediaWikiIntegrationTestCase {
 		$this->getExistingTestPage( $title->getSubpage( 'B' ) );
 
 		$pageStore = $this->getPageStore();
-		$this->assertEmpty( $pageStore->getSubpages( $title, 100 ) );
+		$this->assertCount( 0, $pageStore->getSubpages( $title, 100 ) );
 	}
 
 	/**

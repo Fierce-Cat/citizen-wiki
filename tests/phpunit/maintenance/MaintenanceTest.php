@@ -3,6 +3,7 @@
 namespace MediaWiki\Tests\Maintenance;
 
 use Config;
+use HashConfig;
 use Maintenance;
 use MediaWiki\MediaWikiServices;
 use PHPUnit\Framework\Assert;
@@ -56,7 +57,7 @@ class MaintenanceTest extends MaintenanceBaseTestCase {
 		$this->assertOutputPrePostShutdown( $expected, $extraNL );
 	}
 
-	public function provideOutputData() {
+	public static function provideOutputData() {
 		return [
 			[ [ "" ], "", false ],
 			[ [ "foo" ], "foo", false ],
@@ -209,7 +210,7 @@ class MaintenanceTest extends MaintenanceBaseTestCase {
 		$this->assertOutputPrePostShutdown( $expected, $extraNL );
 	}
 
-	public function provideOutputChanneledData() {
+	public static function provideOutputChanneledData() {
 		return [
 			[ [ "" ], "\n", false ],
 			[ [ "foo" ], "foo\n", false ],
@@ -497,7 +498,7 @@ class MaintenanceTest extends MaintenanceBaseTestCase {
 	 * @covers Maintenance::setConfig
 	 */
 	public function testSetConfig() {
-		$conf = $this->createMock( Config::class );
+		$conf = new HashConfig();
 		$this->maintenance->setConfig( $conf );
 		$this->assertSame( $conf, $this->maintenance->getConfig() );
 	}

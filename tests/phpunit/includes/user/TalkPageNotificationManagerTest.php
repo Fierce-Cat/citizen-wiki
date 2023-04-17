@@ -5,6 +5,7 @@ use MediaWiki\Revision\MutableRevisionRecord;
 use MediaWiki\Revision\RevisionLookup;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Tests\Unit\DummyServicesTrait;
+use MediaWiki\Title\Title;
 use MediaWiki\User\TalkPageNotificationManager;
 use MediaWiki\User\UserIdentity;
 use MediaWiki\User\UserIdentityValue;
@@ -36,7 +37,7 @@ class TalkPageNotificationManagerTest extends MediaWikiIntegrationTestCase {
 			$this->getTestSysop()->getUser()
 		);
 		$this->assertStatusGood( $status, 'create revision of user talk' );
-		return $status->getValue()['revision-record'];
+		return $status->getNewRevision();
 	}
 
 	private function getManager(
@@ -60,7 +61,7 @@ class TalkPageNotificationManagerTest extends MediaWikiIntegrationTestCase {
 		);
 	}
 
-	public function provideUserHasNewMessages() {
+	public static function provideUserHasNewMessages() {
 		yield 'Registered user' => [ UserIdentityValue::newRegistered( 123, 'MyName' ) ];
 		yield 'Anonymous user' => [ UserIdentityValue::newAnonymous( '1.2.3.4' ) ];
 	}

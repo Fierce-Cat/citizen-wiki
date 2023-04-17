@@ -5,9 +5,9 @@ namespace MediaWiki\Tests\ResourceLoader;
 use EmptyResourceLoader;
 use Exception;
 use ExtensionRegistry;
-use FauxRequest;
 use InvalidArgumentException;
 use MediaWiki\MainConfigNames;
+use MediaWiki\Request\FauxRequest;
 use MediaWiki\ResourceLoader\Context;
 use MediaWiki\ResourceLoader\FileModule;
 use MediaWiki\ResourceLoader\ResourceLoader;
@@ -216,6 +216,51 @@ class ResourceLoaderTest extends ResourceLoaderTestCase {
 		$this->assertStringEqualsFile( "$basePath/module/styles.css", $css );
 	}
 
+	public static function provideLessImportRemappingCases() {
+		$basePath = dirname( dirname( __DIR__ ) ) . '/data/less';
+		return [
+			[
+				'input' => "$basePath/import-codex-icons.less",
+				'expected' => "$basePath/import-codex-icons.css"
+			],
+			[
+				'input' => "$basePath/import-codex-tokens.less",
+				'expected' => "$basePath/import-codex-tokens.css"
+			],
+			[
+				'input' => "$basePath/import-codex-tokens-npm.less",
+				'expected' => null,
+				'exception' => [
+					'class' => Exception::class,
+					'message' => 'Importing from @wikimedia/codex-design-tokens is not supported. ' .
+						"To use the Codex tokens, use `@import 'mediawiki.skin.variables.less';` instead."
+				]
+			]
+		];
+	}
+
+	/**
+	 * @dataProvider provideLessImportRemappingCases
+	 */
+	public function testLessImportRemapping( $input, $expected, $exception = null ) {
+		$rl = new EmptyResourceLoader();
+		$lc = $rl->getLessCompiler();
+
+		if ( $exception !== null ) {
+			if ( isset( $exception['class'] ) ) {
+				$this->expectException( $exception['class'] );
+			}
+			if ( isset( $exception['message'] ) ) {
+				$this->expectExceptionMessage( $exception['message'] );
+			}
+		}
+
+		$css = $lc->parseFile( $input )->getCss();
+		if ( $expected !== null ) {
+			$this->assertStringEqualsFile( $expected, $css );
+		}
+	}
+
 	public static function provideMediaWikiVariablesCases() {
 		$basePath = __DIR__ . '/../../data/less';
 		return [
@@ -349,7 +394,7 @@ class ResourceLoaderTest extends ResourceLoaderTestCase {
 		$rl = new EmptyResourceLoader;
 		$this->expectException( InvalidArgumentException::class );
 		$this->expectExceptionMessage( 'must have a "loadScript" key' );
-		$rl->addSource( 'foo',  [ 'x' => 'https://example.org/w/load.php' ] );
+		$rl->addSource( 'foo', [ 'x' => 'https://example.org/w/load.php' ] );
 	}
 
 	public static function provideLoaderImplement() {
@@ -523,13 +568,9 @@ END
 			'packageFiles' => [],
 		];
 		$rl = TestingAccessWrapper::newFromClass( ResourceLoader::class );
-		$context = new Context( new EmptyResourceLoader(), new FauxRequest( [
-			'debug' => 'true',
-		] ) );
 		$this->assertEquals(
 			$case['expected'],
 			$rl->makeLoaderImplementScript(
-				$context,
 				$case['name'],
 				( $case['wrap'] && is_string( $case['scripts'] ) )
 					? new XmlJsCode( $case['scripts'] )
@@ -546,9 +587,7 @@ END
 		$this->expectException( InvalidArgumentException::class );
 		$this->expectExceptionMessage( 'Script must be a' );
 		$rl = TestingAccessWrapper::newFromClass( ResourceLoader::class );
-		$context = new Context( new EmptyResourceLoader(), new FauxRequest() );
 		$rl->makeLoaderImplementScript(
-			$context,
 			'test', // name
 			123, // scripts
 			null, // styles
@@ -818,7 +857,7 @@ END
 
 		$response = $rl->makeModuleResponse( $context, [] );
 		$this->assertSame( [], $rl->getErrors(), 'Errors' );
-		$this->assertRegExp( '/^\/\*.+no modules were requested.+\*\/$/ms', $response );
+		$this->assertMatchesRegularExpression( '/^\/\*.+no modules were requested.+\*\/$/ms', $response );
 	}
 
 	/**
@@ -848,7 +887,7 @@ END
 		$errors = $rl->getErrors();
 
 		$this->assertCount( 1, $errors );
-		$this->assertRegExp( '/Ferry not found/', $errors[0] );
+		$this->assertMatchesRegularExpression( '/Ferry not found/', $errors[0] );
 		$this->assertEquals(
 			"foo();\nbar();\n" . 'mw.loader.state({
     "ferry": "error",
@@ -886,8 +925,8 @@ END
 		$errors = $rl->getErrors();
 
 		$this->assertCount( 2, $errors );
-		$this->assertRegExp( '/Ferry not found/', $errors[0] );
-		$this->assertRegExp( '/Problem.+"ferry":\s*"error"/ms', $errors[1] );
+		$this->assertMatchesRegularExpression( '/Ferry not found/', $errors[0] );
+		$this->assertMatchesRegularExpression( '/Problem.+"ferry":\s*"error"/ms', $errors[1] );
 		$this->assertEquals(
 			'.foo{}.bar{}',
 			$response
@@ -937,20 +976,20 @@ END
 		$response = $rl->makeModuleResponse( $context, $modules );
 		$errors = $rl->getErrors();
 
-		$this->assertRegExp( '/Ferry not found/', $errors[0] ?? '' );
+		$this->assertMatchesRegularExpression( '/Ferry not found/', $errors[0] ?? '' );
 		$this->assertCount( 1, $errors );
-		$this->assertRegExp(
+		$this->assertMatchesRegularExpression(
 			'/isCompatible.*window\.RLQ/s',
 			$response,
 			'startup response undisrupted (T152266)'
 		);
-		$this->assertRegExp(
-			'/register\([^)]+"ferry",\s*""/s',
+		$this->assertMatchesRegularExpression(
+			'/register\([^)]+"ferry",\s*""/',
 			$response,
 			'startup response registers broken module'
 		);
-		$this->assertRegExp(
-			'/state\([^)]+"ferry":\s*"error"/s',
+		$this->assertMatchesRegularExpression(
+			'/state\([^)]+"ferry":\s*"error"/',
 			$response,
 			'startup response sets state to error'
 		);
@@ -1080,6 +1119,37 @@ END
 
 		$this->expectOutputRegex( '/mw\.loader\.state.*"unknown": "missing"/s' );
 
+		$rl->respond( $context );
+	}
+
+	/**
+	 * Silently ignore invalid UTF-8 injected into random query parameters.
+	 *
+	 * @see https://phabricator.wikimedia.org/T331641
+	 */
+	public function testRespondInvalidMissingModule() {
+		$rl = $this->getMockBuilder( EmptyResourceLoader::class )
+			->onlyMethods( [
+				'measureResponseTime',
+				'tryRespondNotModified',
+				'sendResponseHeaders',
+			] )
+			->getMock();
+
+		// Cover the JS-response which formats via mw.loader.state()
+		$context = $this->getResourceLoaderContext(
+			[ 'modules' => "foo|bar\x80\xf0bara|quux", 'only' => null ],
+			$rl
+		);
+		$this->expectOutputRegex( '/mw\.loader\.state.*"foo": "missing"/s' );
+		$rl->respond( $context );
+
+		// Cover the CSS-response which formats via a block comment
+		$context = $this->getResourceLoaderContext(
+			[ 'modules' => "foo|bar\x80\xf0bara|quux", 'only' => 'styles' ],
+			$rl
+		);
+		$this->expectOutputRegex( '/Problematic modules.*"foo": "missing"/s' );
 		$rl->respond( $context );
 	}
 

@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\Specials\SpecialBlankpage;
+
 /**
  * @license GPL-2.0-or-later
  * @author Addshore
@@ -23,7 +25,7 @@ class SpecialBlankPageTest extends SpecialPageTestBase {
 	}
 
 	public function testHasWikiMsg() {
-		list( $html, ) = $this->executeSpecialPage();
+		[ $html, ] = $this->executeSpecialPage();
 		$this->assertStringContainsString( '(intentionallyblankpage)', $html );
 	}
 

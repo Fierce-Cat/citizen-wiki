@@ -4,13 +4,14 @@ use MediaWiki\Cache\CacheKeyHelper;
 use MediaWiki\Page\PageIdentityValue;
 use MediaWiki\Page\PageReference;
 use MediaWiki\Page\PageReferenceValue;
+use MediaWiki\Title\Title;
 
 /**
  * @group Cache
  */
 class CacheKeyHelperTest extends MediaWikiUnitTestCase {
 
-	public function provideKeyForPage() {
+	public static function provideKeyForPage() {
 		// NOTE: code changes that break these test cases
 		//       will result in incompatible cache keys when deployed!
 

@@ -26,6 +26,7 @@ use MediaWiki\HookContainer\HookContainer;
 use MediaWiki\HookContainer\HookRunner;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Permissions\PermissionManager;
+use MediaWiki\Request\WebResponse;
 use MediaWiki\User\UserFactory;
 use MediaWiki\User\UserIdentity;
 use Message;
@@ -33,7 +34,6 @@ use MWCryptHash;
 use Psr\Log\LoggerInterface;
 use User;
 use WebRequest;
-use WebResponse;
 use Wikimedia\IPSet;
 use Wikimedia\IPUtils;
 
@@ -195,7 +195,6 @@ class BlockManager {
 		} elseif ( count( $blocks ) === 1 ) {
 			return $blocks[ 0 ];
 		} else {
-			// @phan-suppress-next-line SecurityCheck-DoubleEscaped
 			return new CompositeBlock( [
 				'address' => $ip,
 				'reason' => new Message( 'blockedtext-composite-reason' ),
@@ -253,14 +252,12 @@ class BlockManager {
 		if ( !in_array( $ip, $this->options->get( MainConfigNames::ProxyWhitelist ) ) ) {
 			// Local list
 			if ( $this->isLocallyBlockedProxy( $ip ) ) {
-				// @phan-suppress-next-line SecurityCheck-DoubleEscaped
 				$blocks[] = new SystemBlock( [
 					'reason' => new Message( 'proxyblockreason' ),
 					'address' => $ip,
 					'systemBlock' => 'proxy',
 				] );
 			} elseif ( $isAnon && $this->isDnsBlacklisted( $ip ) ) {
-				// @phan-suppress-next-line SecurityCheck-DoubleEscaped
 				$blocks[] = new SystemBlock( [
 					'reason' => new Message( 'sorbsreason' ),
 					'address' => $ip,
@@ -272,7 +269,6 @@ class BlockManager {
 
 		// Soft blocking
 		if ( $isAnon && IPUtils::isInRanges( $ip, $this->options->get( MainConfigNames::SoftBlockRanges ) ) ) {
-			// @phan-suppress-next-line SecurityCheck-DoubleEscaped
 			$blocks[] = new SystemBlock( [
 				'address' => $ip,
 				'reason' => new Message( 'softblockrangesreason', [ $ip ] ),
@@ -358,7 +354,7 @@ class BlockManager {
 	 *
 	 * @param UserIdentity $user
 	 * @param WebRequest $request
-	 * @return DatabaseBlock|bool The block object, or false if none could be loaded.
+	 * @return DatabaseBlock|false The block object, or false if none could be loaded.
 	 */
 	private function getBlockFromCookieValue(
 		UserIdentity $user,
@@ -505,7 +501,7 @@ class BlockManager {
 	 * Wrapper for mocking in tests.
 	 *
 	 * @param string $hostname DNSBL query
-	 * @return string[]|bool IPv4 array, or false if the IP is not blacklisted
+	 * @return string[]|false IPv4 array, or false if the IP is not blacklisted
 	 */
 	protected function checkHost( $hostname ) {
 		return gethostbynamel( $hostname );

@@ -1,20 +1,19 @@
 <?php
 
+use MediaWiki\EditPage\EditPage;
 use MediaWiki\MainConfigNames;
 use MediaWiki\MainConfigSchema;
+use MediaWiki\Request\FauxRequest;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Storage\EditResult;
+use MediaWiki\Title\Title;
 use MediaWiki\User\UserIdentity;
 use Wikimedia\TestingAccessWrapper;
 
 /**
  * @group Editing
- *
  * @group Database
- *        ^--- tell jenkins this test needs the database
- *
  * @group medium
- *        ^--- tell phpunit that these test cases may take longer than 2 seconds.
  */
 class EditPageTest extends MediaWikiLangTestCase {
 
@@ -31,6 +30,89 @@ class EditPageTest extends MediaWikiLangTestCase {
 				[ 'testing' => 'DummyContentHandlerForTesting' ] +
 				MainConfigSchema::getDefaultValue( MainConfigNames::ContentHandlers ),
 		] );
+
+		// Disable WAN cache to avoid edit conflicts in testUpdateNoMinor
+		$this->setMainCache( CACHE_NONE );
+	}
+
+	public static function provideGetCodeEditingIntro() {
+		return [
+			[
+				NS_MAIN,
+				'Hello',
+				'',
+				'Hello does not require a code editing message box'
+			],
+			[
+				NS_USER,
+				'Bob/vector.js',
+				'<div class="mw-message-box-error mw-message-box"><div class="mw-userconfigdangerous">(userjsdangerous)</div>'
+					. '<p>(editpage-code-message)',
+				'JavaScript requires alert as well as code-specific message'
+			],
+			[
+				NS_MEDIAWIKI,
+				'Map.json',
+				'<div class="mw-message-box-error mw-message-box"><div class="mw-editinginterface">(editinginterface)</div></div>',
+				'JSON requires alert'
+			],
+			[
+				NS_MEDIAWIKI,
+				'Message',
+				'<div class="mw-message-box-error mw-message-box"><div class="mw-editinginterface">(editinginterface)</div></div>',
+				'Messages requires alert'
+			],
+		];
+	}
+
+	/**
+	 * @dataProvider provideGetCodeEditingIntro
+	 * @covers EditPage::getCodeEditingIntro
+	 */
+	public function testGetCodeEditingIntro( $ns, $title, $result, $reason ) {
+		$editPageMock = $this->getMockBuilder( EditPage::class )
+			->disableOriginalConstructor()
+			->getMock();
+		$title = Title::makeTitle( $ns, $title );
+		$context = new RequestContext();
+		$user = $this->getTestUser()->getUser();
+		$context->setUser( $user );
+		$context->setLanguage( 'qqx' );
+		$intro = TestingAccessWrapper::newFromObject( $editPageMock )->getCodeEditingIntro(
+			$title,
+			$context
+		);
+		$this->assertStringContainsString(
+			$result,
+			$intro,
+			$reason
+		);
+	}
+
+	/**
+	 * @covers EditPage::getCodeEditingIntro
+	 */
+	public function testGetCodeEditingIntroForUser() {
+		$guidelines = '<p>(editpage-code-message)';
+		$editPageMock = $this->getMockBuilder( EditPage::class )
+			->disableOriginalConstructor()
+			->getMock();
+		$user = $this->getTestUser()->getUser();
+		$title = Title::makeTitle( NS_USER, $user->getName() . '/common.js' );
+		$context = new RequestContext();
+		$context->setUser( $user );
+		$context->setLanguage( 'qqx' );
+		$intro = TestingAccessWrapper::newFromObject( $editPageMock )->getCodeEditingIntro(
+			$title,
+			$context
+		);
+		$this->assertStringContainsString(
+			'<div class="mw-message-box-error mw-message-box">'
+				. '<div class="mw-userconfigpublic">(userjsispublic)</div>'
+				. '<div class="mw-userconfigdangerous">(userjsdangerous)</div>' . $guidelines,
+			$intro,
+			'Inform users that their JS is public and suggest guidelines'
+		);
 	}
 
 	/**
@@ -138,7 +220,8 @@ class EditPageTest extends MediaWikiLangTestCase {
 			$user = $this->getTestUser()->getUser();
 		}
 
-		$page = WikiPage::factory( $title );
+		$wikiPageFactory = $this->getServiceContainer()->getWikiPageFactory();
+		$page = $wikiPageFactory->newFromTitle( $title );
 
 		if ( $baseText !== null ) {
 			$content = ContentHandler::makeContent( $baseText, $title );
@@ -195,7 +278,7 @@ class EditPageTest extends MediaWikiLangTestCase {
 				"Expected result code mismatch. $message" );
 		}
 
-		$page = WikiPage::factory( $title );
+		$page = $wikiPageFactory->newFromTitle( $title );
 
 		if ( $expectedText !== null ) {
 			// check resulting page text
@@ -676,7 +759,7 @@ hello
 
 		$elmosEdit['wpSummary'] = 'Elmo\'s edit';
 		$bertasEdit['wpSummary'] = 'Bertas\'s edit';
-		$newEdit['wpSummary'] = $newEdit['wpSummary'] ?? 'new edit';
+		$newEdit['wpSummary'] ??= 'new edit';
 
 		// first edit: Elmo
 		$page = $this->assertEdit( __METHOD__, null, 'Elmo', $elmosEdit,
@@ -964,8 +1047,8 @@ hello
 		$this->assertSame( $options, $dropdownOptions );
 	}
 
-	public function provideWatchlistExpiry() {
-		$standardOptions = [ 'infinite', '1 week', '1 month', '3 months', '6 months' ];
+	public static function provideWatchlistExpiry() {
+		$standardOptions = [ 'infinite', '1 week', '1 month', '3 months', '6 months', '1 year' ];
 		return [
 			'not watched, request nothing' => [
 				'existingExpiry' => '',

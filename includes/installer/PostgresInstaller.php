@@ -21,8 +21,10 @@
  * @ingroup Installer
  */
 
+use MediaWiki\Html\Html;
 use MediaWiki\MediaWikiServices;
 use Wikimedia\Rdbms\Database;
+use Wikimedia\Rdbms\DatabaseFactory;
 use Wikimedia\Rdbms\DatabasePostgres;
 use Wikimedia\Rdbms\DBConnectionError;
 use Wikimedia\Rdbms\DBQueryError;
@@ -196,7 +198,6 @@ class PostgresInstaller extends DatabaseInstaller {
 			$conn = $status->value;
 			$conn->clearFlag( DBO_TRX );
 			$conn->commit( __METHOD__ );
-			// @phan-suppress-next-line SecurityCheck-DoubleEscaped
 			$this->pgConns[$type] = $conn;
 		}
 
@@ -276,7 +277,7 @@ class PostgresInstaller extends DatabaseInstaller {
 					'password' => $password,
 					'dbname' => $db
 				];
-				$conn = Database::factory( 'postgres', $p );
+				$conn = ( new DatabaseFactory() )->create( 'postgres', $p );
 			} catch ( DBConnectionError $error ) {
 				$conn = false;
 				$status->fatal( 'config-pg-test-error', $db,
@@ -312,20 +313,12 @@ class PostgresInstaller extends DatabaseInstaller {
 
 	protected function canCreateAccounts() {
 		$perms = $this->getInstallUserPermissions();
-		if ( !$perms ) {
-			return false;
-		}
-
-		return $perms->rolsuper === 't' || $perms->rolcreaterole === 't';
+		return $perms && ( $perms->rolsuper === 't' || $perms->rolcreaterole === 't' );
 	}
 
 	protected function isSuperUser() {
 		$perms = $this->getInstallUserPermissions();
-		if ( !$perms ) {
-			return false;
-		}
-
-		return $perms->rolsuper === 't';
+		return $perms && $perms->rolsuper === 't';
 	}
 
 	public function getSettingsForm() {

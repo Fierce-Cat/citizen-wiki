@@ -7,6 +7,7 @@ use MediaWiki\Block\Restriction\NamespaceRestriction;
 use MediaWiki\Block\Restriction\PageRestriction;
 use MediaWiki\Block\SystemBlock;
 use MediaWiki\MainConfigNames;
+use MediaWiki\Request\FauxRequest;
 
 /**
  * @group Database
@@ -231,7 +232,7 @@ class CompositeBlockTest extends MediaWikiLangTestCase {
 		return $mockBlock;
 	}
 
-	public function provideTestBlockAppliesToRight() {
+	public static function provideTestBlockAppliesToRight() {
 		return [
 			'Block does not apply if no original blocks apply' => [
 				[ false, false ],

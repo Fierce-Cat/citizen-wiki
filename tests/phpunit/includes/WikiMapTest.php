@@ -1,6 +1,8 @@
 <?php
 
 use MediaWiki\MainConfigNames;
+use MediaWiki\WikiMap\WikiMap;
+use MediaWiki\WikiMap\WikiReference;
 use Wikimedia\Rdbms\DatabaseDomain;
 
 /**
@@ -38,7 +40,7 @@ class WikiMapTest extends MediaWikiLangTestCase {
 		TestSites::insertIntoDb();
 	}
 
-	public function provideGetWiki() {
+	public static function provideGetWiki() {
 		// As provided by $wgConf
 		$enwiki = new WikiReference( 'http://en.example.org', '/w/$1' );
 		$ruwiki = new WikiReference( '//ru.example.org', '/wiki/$1' );
@@ -73,7 +75,7 @@ class WikiMapTest extends MediaWikiLangTestCase {
 		$this->assertEquals( $expected, WikiMap::getWiki( $wikiId ) );
 	}
 
-	public function provideGetWikiName() {
+	public static function provideGetWikiName() {
 		return [
 			'unknown' => [ 'xyzzy', 'xyzzy' ],
 			'enwiki' => [ 'en.example.org', 'enwiki' ],
@@ -89,7 +91,7 @@ class WikiMapTest extends MediaWikiLangTestCase {
 		$this->assertEquals( $expected, WikiMap::getWikiName( $wikiId ) );
 	}
 
-	public function provideMakeForeignLink() {
+	public static function provideMakeForeignLink() {
 		return [
 			'unknown' => [ false, 'xyzzy', 'Foo' ],
 			'enwiki' => [
@@ -125,7 +127,7 @@ class WikiMapTest extends MediaWikiLangTestCase {
 		);
 	}
 
-	public function provideForeignUserLink() {
+	public static function provideForeignUserLink() {
 		return [
 			'unknown' => [ false, 'xyzzy', 'Foo' ],
 			'enwiki' => [
@@ -158,7 +160,7 @@ class WikiMapTest extends MediaWikiLangTestCase {
 		$this->assertEquals( $expected, WikiMap::foreignUserLink( $wikiId, $user, $text ) );
 	}
 
-	public function provideGetForeignURL() {
+	public static function provideGetForeignURL() {
 		return [
 			'unknown' => [ false, 'xyzzy', 'Foo' ],
 			'enwiki' => [ 'http://en.example.org/w/Foo', 'enwiki', 'Foo' ],

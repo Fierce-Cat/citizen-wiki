@@ -13,11 +13,11 @@ use MediaWiki\Permissions\PermissionManager;
 use MediaWiki\Permissions\RestrictionStore;
 use MediaWiki\SpecialPage\SpecialPageFactory;
 use MediaWiki\Tests\Unit\DummyServicesTrait;
+use MediaWiki\Title\Title;
 use MediaWiki\User\TempUser\RealTempUserConfig;
 use MediaWiki\User\UserFactory;
 use MediaWiki\User\UserGroupManager;
 use MediaWikiUnitTestCase;
-use Title;
 use TitleFormatter;
 use User;
 use UserCache;
@@ -49,56 +49,34 @@ class PermissionManagerTest extends MediaWikiUnitTestCase {
 			MainConfigNames::DeleteRevisionsLimit => false,
 		];
 		$config = $overrideConfig + $baseConfig;
-		$specialPageFactory = $options['specialPageFactory'] ??
-			$this->createMock( SpecialPageFactory::class );
 
-		// DummyServicesTrait::getDummyNamespaceInfo
-		$namespaceInfo = $this->getDummyNamespaceInfo();
-
-		$groupPermissionsLookup = $options['groupPermissionsLookup'] ??
-			new GroupPermissionsLookup(
-				new ServiceOptions( GroupPermissionsLookup::CONSTRUCTOR_OPTIONS, $config )
-			);
-		$userGroupManager = $options['userGroupManager'] ??
-			$this->createMock( UserGroupManager::class );
-		$blockErrorFormatter = $options['blockErrorFormatter'] ??
-			$this->createMock( BlockErrorFormatter::class );
 		$hookContainer = $options['hookContainer'] ??
 			$this->createMock( HookContainer::class );
-		$userCache = $options['userCache'] ??
-			$this->createMock( UserCache::class );
 		$redirectLookup = $options['redirectLookup'] ??
 			$this->createMock( RedirectLookup::class );
 		$restrictionStore = $options['restrictionStore'] ??
 			$this->createMock( RestrictionStore::class );
-		$titleFormatter = $options['titleFormatter'] ??
-			$this->createMock( TitleFormatter::class );
-		$tempUserConfig = $options['tempUserConfig'] ??
-			new RealTempUserConfig( [] );
-		$userFactory = $options['userFactory'] ??
-			$this->createMock( UserFactory::class );
-		$actionFactory = $options['actionFactory'] ??
-			$this->createMock( ActionFactory::class );
 
 		$permissionManager = new PermissionManager(
 			new ServiceOptions( PermissionManager::CONSTRUCTOR_OPTIONS, $config ),
-			$specialPageFactory,
-			$namespaceInfo,
-			$groupPermissionsLookup,
-			$userGroupManager,
-			$blockErrorFormatter,
+			$this->createMock( SpecialPageFactory::class ),
+			$this->getDummyNamespaceInfo(),
+			new GroupPermissionsLookup(
+				new ServiceOptions( GroupPermissionsLookup::CONSTRUCTOR_OPTIONS, $config )
+			),
+			$this->createMock( UserGroupManager::class ),
+			$this->createMock( BlockErrorFormatter::class ),
 			$hookContainer,
-			$userCache,
+			$this->createMock( UserCache::class ),
 			$redirectLookup,
 			$restrictionStore,
-			$titleFormatter,
-			$tempUserConfig,
-			$userFactory,
-			$actionFactory
+			$this->createMock( TitleFormatter::class ),
+			new RealTempUserConfig( [] ),
+			$this->createMock( UserFactory::class ),
+			$this->createMock( ActionFactory::class )
 		);
 
-		$accessPermissionManager = TestingAccessWrapper::newFromObject( $permissionManager );
-		return $accessPermissionManager;
+		return TestingAccessWrapper::newFromObject( $permissionManager );
 	}
 
 	/**
@@ -144,7 +122,7 @@ class PermissionManagerTest extends MediaWikiUnitTestCase {
 		$this->assertEquals( $expectedErrors, $result );
 	}
 
-	public function provideTestCheckUserConfigPermissions() {
+	public static function provideTestCheckUserConfigPermissions() {
 		yield 'Patrol ignored' => [ 'NameOfActingUser/subpage', [], 'patrol', false, [] ];
 		yield 'Own non-config' => [ 'NameOfActingUser/subpage', [], 'edit', false, [] ];
 		yield 'Other non-config' => [ 'NameOfAnotherUser/subpage', [], 'edit', false, [] ];
@@ -259,7 +237,7 @@ class PermissionManagerTest extends MediaWikiUnitTestCase {
 		);
 	}
 
-	public function provideTestCheckUserConfigPermissionsForRedirect() {
+	public static function provideTestCheckUserConfigPermissionsForRedirect() {
 		yield 'With `editmyuserjsredirect`' => [ true, true, NS_USER, 'NameOfActingUser/other.js', false ];
 		yield 'Not a redirect' => [ false, false, NS_USER, 'NameOfActingUser/other.js', false ];
 		yield 'Redirect out of user space' => [ false, true, NS_MAIN, 'MainPage.js', true ];
@@ -306,7 +284,7 @@ class PermissionManagerTest extends MediaWikiUnitTestCase {
 		$this->assertEquals( $expectedErrors, $result );
 	}
 
-	public function provideTestCheckPageRestrictions() {
+	public static function provideTestCheckPageRestrictions() {
 		yield 'No restrictions' => [ 'move', [], [], true, [] ];
 		yield 'Empty string' => [ 'edit', [ '' ], [], true, [] ];
 		yield 'Semi-protected, with rights' => [
@@ -368,7 +346,7 @@ class PermissionManagerTest extends MediaWikiUnitTestCase {
 		$hookContainer->method( 'run' )
 			->willReturn( true );
 
-		// Overrides needed in case `groupHasPermission` is called
+		// Overrides needed in case `GroupPermissionsLookup::groupHasPermission` is called
 		$config = [
 			MainConfigNames::GroupPermissions => [
 				'autoconfirmed' => [
@@ -402,7 +380,7 @@ class PermissionManagerTest extends MediaWikiUnitTestCase {
 		$this->assertEquals( $expectedErrors, $result );
 	}
 
-	public function provideTestCheckQuickPermissions() {
+	public static function provideTestCheckQuickPermissions() {
 		// $namespace, $pageTitle, $userIsAnon, $action, $rights, $expectedError
 
 		// Four different possible errors when trying to create

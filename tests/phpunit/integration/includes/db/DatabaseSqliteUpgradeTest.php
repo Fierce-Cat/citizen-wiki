@@ -52,9 +52,6 @@ class DatabaseSqliteUpgradeTest extends \MediaWikiIntegrationTestCase {
 				'profiler' => null,
 				'topologyRole' => Database::ROLE_STREAMING_MASTER,
 				'trxProfiler' => new TransactionProfiler(),
-				'connLogger' => new NullLogger(),
-				'queryLogger' => new NullLogger(),
-				'replLogger' => new NullLogger(),
 				'errorLogger' => null,
 				'deprecationLogger' => new NullLogger(),
 				'srvCache' => new HashBagOStuff(),
@@ -163,16 +160,13 @@ class DatabaseSqliteUpgradeTest extends \MediaWikiIntegrationTestCase {
 		}
 	}
 
-	public function provideSupportedVersions() {
+	public static function provideSupportedVersions() {
 		return [
-			[ '1.31' ],
-			[ '1.32' ],
-			[ '1.33' ],
-			[ '1.34' ],
 			[ '1.35' ],
 			[ '1.36' ],
 			[ '1.37' ],
 			[ '1.38' ],
+			[ '1.39' ],
 		];
 	}
 

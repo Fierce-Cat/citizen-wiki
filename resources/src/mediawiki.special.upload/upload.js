@@ -6,8 +6,6 @@
  * @singleton
  */
 
-/* global Uint8Array */
-
 ( function () {
 	var uploadWarning, uploadTemplatePreview,
 		NS_FILE = mw.config.get( 'wgNamespaceIds' ).file,

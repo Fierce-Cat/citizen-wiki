@@ -1,6 +1,7 @@
 <?php
 
 use MediaWiki\Tests\Unit\Libs\Rdbms\AddQuoterMock;
+use Wikimedia\Rdbms\Database;
 use Wikimedia\Rdbms\DatabaseDomain;
 use Wikimedia\Rdbms\Platform\SqlitePlatform;
 
@@ -11,18 +12,19 @@ class SqlitePlatformTest extends PHPUnit\Framework\TestCase {
 
 	use MediaWikiCoversValidator;
 
-	/**
-	 * @return SqlitePlatform
-	 */
-	private function getPlatform() {
-		return new SqlitePlatform(
+	/** @var SqlitePlatform */
+	private $platform;
+
+	protected function setUp(): void {
+		parent::setUp();
+		$this->platform = new SqlitePlatform(
 			new AddQuoterMock(),
 			null,
 			new DatabaseDomain( null, null, '' )
 		);
 	}
 
-	public function provideBuildSubstring() {
+	public static function provideBuildSubstring() {
 		yield [ 'someField', 1, 2, 'SUBSTR(someField,1,2)' ];
 		yield [ 'someField', 1, null, 'SUBSTR(someField,1)' ];
 	}
@@ -31,11 +33,11 @@ class SqlitePlatformTest extends PHPUnit\Framework\TestCase {
 	 * @dataProvider provideBuildSubstring
 	 */
 	public function testBuildSubstring( $input, $start, $length, $expected ) {
-		$output = $this->getPlatform()->buildSubstring( $input, $start, $length );
+		$output = $this->platform->buildSubstring( $input, $start, $length );
 		$this->assertSame( $expected, $output );
 	}
 
-	public function provideBuildSubstring_invalidParams() {
+	public static function provideBuildSubstring_invalidParams() {
 		yield [ -1, 1 ];
 		yield [ 1, -1 ];
 		yield [ 1, 'foo' ];
@@ -49,7 +51,7 @@ class SqlitePlatformTest extends PHPUnit\Framework\TestCase {
 	 */
 	public function testBuildSubstring_invalidParams( $start, $length ) {
 		$this->expectException( InvalidArgumentException::class );
-		$this->getPlatform()->buildSubstring( 'foo', $start, $length );
+		$this->platform->buildSubstring( 'foo', $start, $length );
 	}
 
 	/**
@@ -58,7 +60,7 @@ class SqlitePlatformTest extends PHPUnit\Framework\TestCase {
 	public function testBuildGreatest( $fields, $values, $sqlText ) {
 		$this->assertEquals(
 			$sqlText,
-			trim( $this->getPlatform()->buildGreatest( $fields, $values ) )
+			trim( $this->platform->buildGreatest( $fields, $values ) )
 		);
 	}
 
@@ -93,7 +95,7 @@ class SqlitePlatformTest extends PHPUnit\Framework\TestCase {
 	public function testBuildLeast( $fields, $values, $sqlText ) {
 		$this->assertEquals(
 			$sqlText,
-			trim( $this->getPlatform()->buildLeast( $fields, $values ) )
+			trim( $this->platform->buildLeast( $fields, $values ) )
 		);
 	}
 
@@ -190,12 +192,12 @@ class SqlitePlatformTest extends PHPUnit\Framework\TestCase {
 	 * @dataProvider provideReplaceVars
 	 */
 	public function testReplaceVars( $expected, $sql ) {
-		$this->assertEquals( $expected,  $this->replaceVars( $sql ) );
+		$this->assertEquals( $expected, $this->replaceVars( $sql ) );
 	}
 
 	public function testTableName() {
 		// @todo Moar!
-		$platform = $this->getPlatform();
+		$platform = $this->platform;
 		$this->assertEquals( '"foo"', $platform->tableName( 'foo' ) );
 		$this->assertEquals( 'sqlite_master', $platform->tableName( 'sqlite_master' ) );
 		$platform->setPrefix( 'foo_' );

@@ -9,6 +9,7 @@ use MediaWiki\Config\ServiceOptions;
 use MediaWiki\HookContainer\HookContainer;
 use MediaWiki\Linker\LinkTarget;
 use MediaWiki\MainConfigNames;
+use MediaWiki\Title\Title;
 use Wikimedia\ScopedCallback;
 
 class NamespaceInfoTest extends MediaWikiIntegrationTestCase {
@@ -97,7 +98,7 @@ class NamespaceInfoTest extends MediaWikiIntegrationTestCase {
 		$this->assertTrue( true );
 	}
 
-	public function provideConstructor() {
+	public static function provideConstructor() {
 		return [
 			[ new ServiceOptions( NamespaceInfo::CONSTRUCTOR_OPTIONS, self::DEFAULT_OPTIONS ) ],
 			[ new ServiceOptions( [], [] ), 'Required options missing: ' ],
@@ -121,7 +122,7 @@ class NamespaceInfoTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $expected, $obj->isMovable( $ns ) );
 	}
 
-	public function provideIsMovable() {
+	public static function provideIsMovable() {
 		return [
 			'Main' => [ true, NS_MAIN ],
 			'Talk' => [ true, NS_TALK ],
@@ -154,7 +155,7 @@ class NamespaceInfoTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( !$expected, $this->newObj()->isTalk( $ns ) );
 	}
 
-	public function provideIsSubject() {
+	public static function provideIsSubject() {
 		return [
 			// Special namespaces
 			[ NS_MEDIA, true ],
@@ -182,7 +183,7 @@ class NamespaceInfoTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $expected, $this->newObj()->exists( $ns ) );
 	}
 
-	public function provideExists() {
+	public static function provideExists() {
 		return [
 			'Main' => [ NS_MAIN, true ],
 			'Talk' => [ NS_TALK, true ],
@@ -223,7 +224,7 @@ class NamespaceInfoTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $expected, $this->newObj()->subjectEquals( $ns1, $ns2 ) );
 	}
 
-	public function provideSubjectEquals() {
+	public static function provideSubjectEquals() {
 		return [
 			[ NS_MAIN, NS_MAIN, true ],
 			// In case we make NS_MAIN 'MAIN'
@@ -253,7 +254,7 @@ class NamespaceInfoTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $expected, $this->newObj()->hasTalkNamespace( $ns ) );
 	}
 
-	public function provideHasTalkNamespace() {
+	public static function provideHasTalkNamespace() {
 		return [
 			[ NS_MEDIA, false ],
 			[ NS_SPECIAL, false ],
@@ -280,7 +281,7 @@ class NamespaceInfoTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $expected, $obj->isContent( $ns ) );
 	}
 
-	public function provideIsContent() {
+	public static function provideIsContent() {
 		return [
 			[ NS_MAIN, true ],
 			[ NS_MEDIA, false ],
@@ -308,7 +309,7 @@ class NamespaceInfoTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $expected, $this->newObj()->wantSignatures( $index ) );
 	}
 
-	public function provideWantSignatures() {
+	public static function provideWantSignatures() {
 		return [
 			'Main' => [ NS_MAIN, false ],
 			'Talk' => [ NS_TALK, true ],
@@ -359,7 +360,7 @@ class NamespaceInfoTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $expected, $this->newObj()->isWatchable( $ns ) );
 	}
 
-	public function provideIsWatchable() {
+	public static function provideIsWatchable() {
 		return [
 			// Specials namespaces are not watchable
 			[ NS_MEDIA, false ],
@@ -389,7 +390,7 @@ class NamespaceInfoTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $expected, $obj->hasSubpages( $ns ) );
 	}
 
-	public function provideHasSubpages() {
+	public static function provideHasSubpages() {
 		return [
 			// Special namespaces:
 			[ NS_MEDIA, false ],
@@ -416,7 +417,7 @@ class NamespaceInfoTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $expected, $obj->getContentNamespaces() );
 	}
 
-	public function provideGetContentNamespaces() {
+	public static function provideGetContentNamespaces() {
 		return [
 			// Non-array
 			[ '', [ NS_MAIN ] ],
@@ -486,7 +487,7 @@ class NamespaceInfoTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $expected, $obj->isCapitalized( $ns ) );
 	}
 
-	public function provideIsCapitalized() {
+	public static function provideIsCapitalized() {
 		return [
 			// Test default settings
 			[ NS_PROJECT, true ],
@@ -556,7 +557,7 @@ class NamespaceInfoTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $expected, $obj->getNamespaceContentModel( $ns ) );
 	}
 
-	public function provideGetNamespaceContentModel() {
+	public static function provideGetNamespaceContentModel() {
 		return [
 			[ NS_MAIN, null ],
 			[ NS_TALK, null ],
@@ -581,7 +582,7 @@ class NamespaceInfoTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $expected, $this->newObj()->getCategoryLinkType( $ns ) );
 	}
 
-	public function provideGetCategoryLinkType() {
+	public static function provideGetCategoryLinkType() {
 		return [
 			[ NS_MAIN, 'page' ],
 			[ NS_TALK, 'page' ],
@@ -855,7 +856,7 @@ class NamespaceInfoTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $expected, $this->newObj()->getCanonicalName( $index ) );
 	}
 
-	public function provideGetCanonicalName() {
+	public static function provideGetCanonicalName() {
 		return [
 			'Main' => [ NS_MAIN, '' ],
 			'Talk' => [ NS_TALK, 'Talk' ],
@@ -877,7 +878,7 @@ class NamespaceInfoTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $expected, $this->newObj()->getCanonicalIndex( $name ) );
 	}
 
-	public function provideGetCanonicalIndex() {
+	public static function provideGetCanonicalIndex() {
 		return [
 			'Main' => [ '', NS_MAIN ],
 			'Talk' => [ 'talk', NS_TALK ],
@@ -1228,7 +1229,7 @@ class NamespaceInfoTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $expected, $this->newObj()->getValidNamespaces() );
 	}
 
-	public function provideGetValidNamespaces_misc() {
+	public static function provideGetValidNamespaces_misc() {
 		return [
 			'Out of order (T109137)' => [ [ 1, 0 ], [ 0, 1 ] ],
 			'Alphabetical order' => [ [ 10, 2 ], [ 2, 10 ] ],
@@ -1278,7 +1279,7 @@ class NamespaceInfoTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $expected, $obj->getRestrictionLevels( $ns, $user ) );
 	}
 
-	public function provideGetRestrictionLevels() {
+	public static function provideGetRestrictionLevels() {
 		return [
 			'No namespace restriction' => [ [ '', 'autoconfirmed', 'sysop' ], NS_TALK ],
 			'Restricted to autoconfirmed' => [ [ '', 'sysop' ], NS_MAIN ],

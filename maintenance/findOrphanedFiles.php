@@ -19,6 +19,7 @@
  */
 
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Title\Title;
 
 require_once __DIR__ . '/Maintenance.php';
 
@@ -90,7 +91,7 @@ class FindOrphanedFiles extends Maintenance {
 				}
 
 				$oldNames[] = $name;
-				list( , $base ) = explode( '!', $name, 2 ); // <TS_MW>!<img_name>
+				[ , $base ] = explode( '!', $name, 2 ); // <TS_MW>!<img_name>
 				$oiWheres[] = $dbr->makeList(
 					[ 'oi_name' => $base, 'oi_archive_name' => $name ],
 					LIST_AND
@@ -104,27 +105,21 @@ class FindOrphanedFiles extends Maintenance {
 				$imgIN[] = $name;
 			}
 		}
-
-		$res = $dbr->query(
-			$dbr->unionQueries(
-				[
-					$dbr->selectSQLText(
-						'image',
-						[ 'name' => 'img_name', 'old' => 0 ],
-						$imgIN ? [ 'img_name' => $imgIN ] : '1=0',
-						__METHOD__
-					),
-					$dbr->selectSQLText(
-						'oldimage',
-						[ 'name' => 'oi_archive_name', 'old' => 1 ],
-						$oiWheres ? $dbr->makeList( $oiWheres, LIST_OR ) : '1=0',
-						__METHOD__
-					)
-				],
-				$dbr::UNION_ALL
-			),
-			__METHOD__
+		$uqb = $dbr->newUnionQueryBuilder();
+		$uqb->add(
+			$dbr->newSelectQueryBuilder()
+				->select( [ 'name' => 'img_name', 'old' => '0' ] )
+				->from( 'image' )
+				->where( $imgIN ? [ 'img_name' => $imgIN ] : '1=0' )
 		);
+		$uqb->add(
+			$dbr->newSelectQueryBuilder()
+				->select( [ 'name' => 'oi_archive_name', 'old' => '1' ] )
+				->from( 'oldimage' )
+				->where( $oiWheres ? $dbr->makeList( $oiWheres, LIST_OR ) : '1=0' )
+		);
+
+		$res = $uqb->all()->caller( __METHOD__ )->fetchResultSet();
 
 		$curNamesFound = [];
 		$oldNamesFound = [];
@@ -147,7 +142,7 @@ class FindOrphanedFiles extends Maintenance {
 		}
 
 		foreach ( array_diff( $oldNames, $oldNamesFound ) as $name ) {
-			list( , $base ) = explode( '!', $name, 2 ); // <TS_MW>!<img_name>
+			[ , $base ] = explode( '!', $name, 2 ); // <TS_MW>!<img_name>
 			$file = $repo->newFromArchiveName( Title::makeTitle( NS_FILE, $base ), $name );
 			// Print name and public URL to ease recovery
 			$this->output( $name . "\n" . $file->getCanonicalUrl() . "\n\n" );

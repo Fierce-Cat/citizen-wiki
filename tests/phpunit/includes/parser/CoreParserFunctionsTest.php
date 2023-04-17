@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\Language\RawMessage;
+
 /**
  * @group Database
  * @covers CoreParserFunctions
@@ -21,7 +23,7 @@ class CoreParserFunctionsTest extends MediaWikiLangTestCase {
 		$this->assertEquals( 'f', $msg2, 'Works escaped' );
 	}
 
-	public function provideTalkpagename() {
+	public static function provideTalkpagename() {
 		yield [ 'Talk:Foo bar', 'foo_bar' ];
 		yield [ 'Talk:Foo', ' foo ' ];
 		yield [ 'Talk:Foo', 'Talk:Foo' ];
@@ -47,7 +49,7 @@ class CoreParserFunctionsTest extends MediaWikiLangTestCase {
 		$this->assertSame( $expected, CoreParserFunctions::talkpagename( $parser, $title ) );
 	}
 
-	public function provideSubjectpagename() {
+	public static function provideSubjectpagename() {
 		yield [ 'Foo bar', 'Talk:foo_bar' ];
 		yield [ 'Foo', ' Talk:foo ' ];
 		yield [ 'User:Foo', 'User talk:foo' ];

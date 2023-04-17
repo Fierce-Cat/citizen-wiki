@@ -409,9 +409,7 @@
 			}
 		}
 
-		// eslint-disable-next-line no-restricted-properties
 		if ( v.normalize ) {
-			// eslint-disable-next-line no-restricted-properties
 			v = v.normalize();
 		}
 		re = new RegExp( '^\\s*' + mw.util.escapeRegExp( v ), 'i' );

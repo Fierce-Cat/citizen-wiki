@@ -41,18 +41,20 @@ class SearchPostgres extends SearchDatabase {
 	 * @return SqlSearchResultSet
 	 */
 	protected function doSearchTitleInDB( $term ) {
-		$q = $this->searchQuery( $term, 'titlevector', 'page_title' );
+		$q = $this->searchQuery( $term, 'titlevector' );
 		$olderror = error_reporting( E_ERROR );
 		$dbr = $this->lb->getConnectionRef( DB_REPLICA );
+		// phpcs:ignore MediaWiki.Usage.DbrQueryUsage.DbrQueryFound
 		$resultSet = $dbr->query( $q, 'SearchPostgres', IDatabase::QUERY_SILENCE_ERRORS );
 		error_reporting( $olderror );
 		return new SqlSearchResultSet( $resultSet, $this->searchTerms );
 	}
 
 	protected function doSearchTextInDB( $term ) {
-		$q = $this->searchQuery( $term, 'textvector', 'old_text' );
+		$q = $this->searchQuery( $term, 'textvector' );
 		$olderror = error_reporting( E_ERROR );
 		$dbr = $this->lb->getConnectionRef( DB_REPLICA );
+		// phpcs:ignore MediaWiki.Usage.DbrQueryUsage.DbrQueryFound
 		$resultSet = $dbr->query( $q, 'SearchPostgres', IDatabase::QUERY_SILENCE_ERRORS );
 		error_reporting( $olderror );
 		return new SqlSearchResultSet( $resultSet, $this->searchTerms );
@@ -70,7 +72,7 @@ class SearchPostgres extends SearchDatabase {
 		wfDebug( "parseQuery received: $term" );
 
 		// No backslashes allowed
-		$term = preg_replace( '/\\\/', '', $term );
+		$term = preg_replace( '/\\\\/', '', $term );
 
 		// Collapse parens into nearby words:
 		$term = preg_replace( '/\s*\(\s*/', ' (', $term );
@@ -126,16 +128,16 @@ class SearchPostgres extends SearchDatabase {
 	 * Construct the full SQL query to do the search.
 	 * @param string $term
 	 * @param string $fulltext
-	 * @param string $colname
 	 * @return string
 	 */
-	private function searchQuery( $term, $fulltext, $colname ) {
+	private function searchQuery( $term, $fulltext ) {
 		# Get the SQL fragment for the given term
 		$searchstring = $this->parseQuery( $term );
 
 		// We need a separate query here so gin does not complain about empty searches
 		$sql = "SELECT to_tsquery($searchstring)";
 		$dbr = $this->lb->getConnectionRef( DB_REPLICA );
+		// phpcs:ignore MediaWiki.Usage.DbrQueryUsage.DbrQueryFound
 		$res = $dbr->query( $sql, __METHOD__ );
 		if ( !$res ) {
 			// TODO: Better output (example to catch: one 'two)

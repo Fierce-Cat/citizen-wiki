@@ -2,6 +2,7 @@
 
 use MediaWiki\MainConfigNames;
 use MediaWiki\Permissions\UltimateAuthority;
+use MediaWiki\Request\FauxRequest;
 
 /**
  * @author Ammarpad
@@ -41,7 +42,7 @@ class SpecialContributionsTest extends SpecialPageTestBase {
 	 * @dataProvider provideTestExecuteRange
 	 */
 	public function testExecuteRange( $username, $shouldShowLinks ) {
-		list( $html ) = $this->executeSpecialPage( $username, null, 'qqx', $this->admin, true );
+		[ $html ] = $this->executeSpecialPage( $username, null, 'qqx', $this->admin, true );
 
 		if ( $shouldShowLinks ) {
 			$this->assertStringContainsString( 'blocklink', $html );
@@ -56,7 +57,7 @@ class SpecialContributionsTest extends SpecialPageTestBase {
 	 * @dataProvider provideTestExecuteNonRange
 	 */
 	public function testExecuteNonRange( $username, $shouldShowLinks ) {
-		list( $html ) = $this->executeSpecialPage( $username, null, 'qqx', $this->admin, true );
+		[ $html ] = $this->executeSpecialPage( $username, null, 'qqx', $this->admin, true );
 
 		if ( $shouldShowLinks ) {
 			$this->assertStringContainsString( 'blocklink', $html );
@@ -65,7 +66,7 @@ class SpecialContributionsTest extends SpecialPageTestBase {
 		}
 	}
 
-	public function provideTestExecuteRange() {
+	public static function provideTestExecuteRange() {
 		yield 'Queryable IPv4 range should have blocklink for admin'
 			=> [ '24.237.208.166/30', true ];
 		yield 'Queryable IPv6 range should have blocklink for admin'
@@ -76,7 +77,7 @@ class SpecialContributionsTest extends SpecialPageTestBase {
 			=> [ '2000::/24', false ];
 	}
 
-	public function provideTestExecuteNonRange() {
+	public static function provideTestExecuteNonRange() {
 		yield 'Valid IPv4 should have blocklink for admin' => [ '124.24.52.13', true ];
 		yield 'Valid IPv6 should have blocklink for admin' => [ '2001:db8::', true ];
 		yield 'Local user should have blocklink for admin' => [ 'UTSysop', true ];
@@ -85,7 +86,7 @@ class SpecialContributionsTest extends SpecialPageTestBase {
 		yield 'Nonexistent user should not have blocklink for admin' => [ __CLASS__, false ];
 	}
 
-	public function provideYearMonthParams() {
+	public static function provideYearMonthParams() {
 		yield 'Current year/month' => [
 			'year' => date( 'Y' ),
 			'month' => date( 'm' ),

@@ -5,6 +5,7 @@ use MediaWiki\Linker\LinksMigration;
 use MediaWiki\Linker\LinkTarget;
 use MediaWiki\Page\PageReference;
 use MediaWiki\Page\PageReferenceValue;
+use MediaWiki\Title\Title;
 use Wikimedia\Rdbms\ILoadBalancer;
 
 /**
@@ -20,6 +21,7 @@ class LinkBatchTest extends MediaWikiIntegrationTestCase {
 	 * @covers LinkBatch::isEmpty()
 	 */
 	public function testConstructEmpty() {
+		$this->filterDeprecated( '/LinkBatch::__construct without providing all services is deprecated/' );
 		$batch = new LinkBatch();
 
 		$this->assertTrue( $batch->isEmpty() );
@@ -32,6 +34,7 @@ class LinkBatchTest extends MediaWikiIntegrationTestCase {
 	 * @covers LinkBatch::isEmpty()
 	 */
 	public function testConstruct() {
+		$this->filterDeprecated( '/LinkBatch::__construct without providing all services is deprecated/' );
 		$batch = new LinkBatch( [
 			new TitleValue( NS_MAIN, 'Foo' ),
 			new TitleValue( NS_TALK, 'Bar' ),
@@ -263,7 +266,7 @@ class LinkBatchTest extends MediaWikiIntegrationTestCase {
 		$this->assertTrue( $batch->doGenderQuery() );
 	}
 
-	public function provideBadObjects() {
+	public static function provideBadObjects() {
 		yield 'null' => [ null ];
 		yield 'empty' => [ Title::makeTitle( NS_MAIN, '' ) ];
 		yield 'bad user' => [ Title::makeTitle( NS_USER, '#12345' ) ];
@@ -281,7 +284,7 @@ class LinkBatchTest extends MediaWikiIntegrationTestCase {
 		$this->addToAssertionCount( 1 );
 	}
 
-	public function provideBadDBKeys() {
+	public static function provideBadDBKeys() {
 		yield 'empty' => [ '' ];
 		yield 'section' => [ '#See_also' ];
 		yield 'pipe' => [ 'foo|bar' ];

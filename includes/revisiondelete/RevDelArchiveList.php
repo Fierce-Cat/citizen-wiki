@@ -23,6 +23,7 @@ use MediaWiki\HookContainer\HookContainer;
 use MediaWiki\Page\PageIdentity;
 use MediaWiki\Revision\RevisionStore;
 use Wikimedia\Rdbms\IDatabase;
+use Wikimedia\Rdbms\IResultWrapper;
 use Wikimedia\Rdbms\LBFactory;
 
 /**
@@ -41,7 +42,6 @@ class RevDelArchiveList extends RevDelRevisionList {
 	 * @param HookContainer $hookContainer
 	 * @param HtmlCacheUpdater $htmlCacheUpdater
 	 * @param RevisionStore $revisionStore
-	 * @param WANObjectCache $wanObjectCache
 	 */
 	public function __construct(
 		IContextSource $context,
@@ -50,8 +50,7 @@ class RevDelArchiveList extends RevDelRevisionList {
 		LBFactory $lbFactory,
 		HookContainer $hookContainer,
 		HtmlCacheUpdater $htmlCacheUpdater,
-		RevisionStore $revisionStore,
-		WANObjectCache $wanObjectCache
+		RevisionStore $revisionStore
 	) {
 		parent::__construct(
 			$context,
@@ -60,8 +59,7 @@ class RevDelArchiveList extends RevDelRevisionList {
 			$lbFactory,
 			$hookContainer,
 			$htmlCacheUpdater,
-			$revisionStore,
-			$wanObjectCache
+			$revisionStore
 		);
 		$this->revisionStore = $revisionStore;
 	}
@@ -76,7 +74,7 @@ class RevDelArchiveList extends RevDelRevisionList {
 
 	/**
 	 * @param IDatabase $db
-	 * @return mixed
+	 * @return IResultWrapper
 	 */
 	public function doQuery( $db ) {
 		$timestamps = [];

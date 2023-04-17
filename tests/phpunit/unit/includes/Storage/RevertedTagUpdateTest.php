@@ -11,7 +11,7 @@ use MediaWiki\Storage\EditResult;
 use MediaWiki\Storage\RevertedTagUpdate;
 use MediaWikiUnitTestCase;
 use MockTitleTrait;
-use PHPUnit\Framework\MockObject\Builder\InvocationMocker;
+use PHPUnit\Framework\MockObject\Stub\ReturnCallback;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use TestLogger;
@@ -137,21 +137,19 @@ class RevertedTagUpdateTest extends MediaWikiUnitTestCase {
 	}
 
 	/**
-	 * Sets up assertions to run inside RevertedTagUpdate::markAsReverted()
-	 * overloaded method.
+	 * Returns a closure that determines the return value of RevertedTagUpdate::markAsReverted()
 	 *
-	 * @param InvocationMocker $futureChangeTagsMocker
 	 * @param int $revertedRevisionId
 	 * @param int $newRevisionId
 	 * @param EditResult $editResult
+	 * @return callable
 	 */
-	private function setFutureChangeTagsAsserts(
-		InvocationMocker $futureChangeTagsMocker,
+	private function getFutureChangeTagsReturnCallback(
 		int $revertedRevisionId,
 		int $newRevisionId,
 		EditResult $editResult
-	) {
-		$futureChangeTagsMocker->willReturnCallback( function (
+	): callable {
+		return function (
 			int $revisionId,
 			array $extraParams
 		) use ( $newRevisionId, $revertedRevisionId, $editResult ) {
@@ -170,10 +168,10 @@ class RevertedTagUpdateTest extends MediaWikiUnitTestCase {
 				true,
 				'RevertedTagUpdate::markAsReverted()'
 			);
-		} );
+		};
 	}
 
-	public function provideRevertedTagUpdateDisabled() {
+	public static function provideRevertedTagUpdateDisabled() {
 		yield 'mw-reverted tag is disabled' => [ [], 15 ];
 		yield '$wgRevertedTagMaxDepth is 0' => [ [ 'mw-reverted' ], 0 ];
 	}
@@ -199,7 +197,7 @@ class RevertedTagUpdateTest extends MediaWikiUnitTestCase {
 		$update->doUpdate();
 	}
 
-	public function provideInvalidEditResults() {
+	public static function provideInvalidEditResults() {
 		yield 'edit is not a revert' => [
 			new EditResult(
 				false,
@@ -337,7 +335,7 @@ class RevertedTagUpdateTest extends MediaWikiUnitTestCase {
 		], $logger->getBuffer() );
 	}
 
-	public function providePageIdMismatch() {
+	public static function providePageIdMismatch() {
 		yield 'mismatch between reverted revisions' => [
 			10,
 			22,
@@ -439,7 +437,7 @@ class RevertedTagUpdateTest extends MediaWikiUnitTestCase {
 
 		$this->assertSame( [
 			[
-				LogLevel::NOTICE,
+				LogLevel::INFO,
 				'The revert\'s text had been marked as deleted before the update was ' .
 					'executed. Skipping...',
 			],
@@ -487,7 +485,7 @@ class RevertedTagUpdateTest extends MediaWikiUnitTestCase {
 
 		$this->assertSame( [
 			[
-				LogLevel::NOTICE,
+				LogLevel::INFO,
 				'The revert had been reverted before the update was executed. Skipping...'
 			],
 		], $logger->getBuffer() );
@@ -516,13 +514,11 @@ class RevertedTagUpdateTest extends MediaWikiUnitTestCase {
 		$futureChangeTags->expects( $this->once() )
 			->method( 'getTags' )
 			->willReturn( [] );
-		$this->setFutureChangeTagsAsserts(
-			$futureChangeTags->expects( $this->once() )
-				->method( 'addTags' ),
-			123,
-			124,
-			$editResult
-		);
+		$futureChangeTags->expects( $this->once() )
+			->method( 'addTags' )
+			->willReturnCallback(
+				$this->getFutureChangeTagsReturnCallback( 123, 124, $editResult )
+			);
 
 		$update = $this->newRevertedTagUpdate(
 			$futureChangeTags,
@@ -580,7 +576,7 @@ class RevertedTagUpdateTest extends MediaWikiUnitTestCase {
 
 		$this->assertSame( [
 			[
-				LogLevel::NOTICE,
+				LogLevel::INFO,
 				'The revert is deeper than $wgRevertedTagMaxDepth. Skipping...'
 			],
 		], $logger->getBuffer() );
@@ -624,16 +620,15 @@ class RevertedTagUpdateTest extends MediaWikiUnitTestCase {
 		// Revision 125 has the same content as 124, so it should not be marked
 		// as reverted. See: T265312
 		$reallyRevertedRevs = [ 123, 124, 126 ];
+		$futureChangeTagsRetCallbacks = [];
 		for ( $i = 0; $i <= 2; $i++ ) {
-			$this->setFutureChangeTagsAsserts(
-				// $i + 1 because getTags is invoked first
-				$futureChangeTags->expects( $this->at( $i + 1 ) )
-					->method( 'addTags' ),
-				$reallyRevertedRevs[$i],
-				130,
-				$editResult
+			$futureChangeTagsRetCallbacks[] = new ReturnCallback(
+				$this->getFutureChangeTagsReturnCallback( $reallyRevertedRevs[$i], 130, $editResult )
 			);
 		}
+		$futureChangeTags
+			->method( 'addTags' )
+			->willReturnOnConsecutiveCalls( ...$futureChangeTagsRetCallbacks );
 		$futureChangeTags->expects( $this->exactly( 3 ) )
 			->method( 'addTags' );
 		$futureChangeTags->expects( $this->once() )

@@ -3,6 +3,8 @@
 declare( strict_types = 1 );
 
 use MediaWiki\Linker\LinkRenderer;
+use MediaWiki\Title\Title;
+use Wikimedia\TestingAccessWrapper;
 
 /**
  * @covers LinkHolderArray
@@ -18,48 +20,52 @@ class LinkHolderArrayTest extends MediaWikiUnitTestCase {
 			$this->createMock( ILanguageConverter::class ),
 			$this->createHookContainer()
 		);
+		/** @var LinkHolderArray $link1 */
+		$link1 = TestingAccessWrapper::newFromObject( $link1 );
 		$link2 = new LinkHolderArray(
 			$this->createMock( Parser::class ),
 			$this->createMock( ILanguageConverter::class ),
 			$this->createHookContainer()
 		);
+		/** @var LinkHolderArray $link2 */
+		$link2 = TestingAccessWrapper::newFromObject( $link2 );
 
 		$link1->internals = [
-			'dummy' => [
-				'dummy' => 'dummy entries 1',
-				'dummy entries 1' => 'dummy entries 1',
+			100 => [
+				10 => 'dummy entries 1',
+				11 => 'dummy entries 1',
 			],
-			'dummy entries 1' => [
-				'dummy' => 'dummy entries 1',
-				'dummy entries 1' => 'dummy entries 1',
+			101 => [
+				10 => 'dummy entries 1',
+				11 => 'dummy entries 1',
 			],
 		];
 		$link2->internals = [
-			'dummy' => [
-				'dummy' => 'dummy entries 2',
-				'dummy entries 2' => 'dummy entries 2',
+			100 => [
+				10 => 'dummy entries 2',
+				12 => 'dummy entries 2',
 			],
-			'dummy entries 2' => [
-				'dummy' => 'dummy entries 2',
-				'dummy entries 2' => 'dummy entries 2',
+			102 => [
+				10 => 'dummy entries 2',
+				12 => 'dummy entries 2',
 			],
 		];
 		$link1->interwikis = [
-			'dummy' => [
+			10 => [
 				'dummy' => 'dummy interwikis 1',
 				'dummy interwikis 1' => 'dummy interwikis 1',
 			],
-			'dummy interwikis 1' => [
+			18 => [
 				'dummy' => 'dummy interwikis 1',
 				'dummy entries 1' => 'dummy interwikis 1',
 			],
 		];
 		$link2->interwikis = [
-			'dummy' => [
+			10 => [
 				'dummy' => 'dummy interwikis 2',
 				'dummy interwikis 2' => 'dummy interwikis 2',
 			],
-			'dummy interwikis 2' => [
+			19 => [
 				'dummy' => 'dummy interwikis 2',
 				'dummy interwikis 2' => 'dummy interwikis 2',
 			],
@@ -72,18 +78,18 @@ class LinkHolderArrayTest extends MediaWikiUnitTestCase {
 
 		$this->assertArrayEquals(
 			[
-				'dummy' => [
-					'dummy' => 'dummy entries 1',
-					'dummy entries 1' => 'dummy entries 1',
-					'dummy entries 2' => 'dummy entries 2',
+				100 => [
+					10 => 'dummy entries 1',
+					11 => 'dummy entries 1',
+					12 => 'dummy entries 2',
 				],
-				'dummy entries 1' => [
-					'dummy' => 'dummy entries 1',
-					'dummy entries 1' => 'dummy entries 1',
+				101 => [
+					10 => 'dummy entries 1',
+					11 => 'dummy entries 1',
 				],
-				'dummy entries 2' => [
-					'dummy' => 'dummy entries 2',
-					'dummy entries 2' => 'dummy entries 2',
+				102 => [
+					10 => 'dummy entries 2',
+					12 => 'dummy entries 2',
 				],
 			],
 			$link1->internals
@@ -91,13 +97,13 @@ class LinkHolderArrayTest extends MediaWikiUnitTestCase {
 
 		$this->assertArrayEquals(
 			[
-				'dummy' => [
-					'dummy' => 'dummy entries 2',
-					'dummy entries 2' => 'dummy entries 2',
+				100 => [
+					10 => 'dummy entries 2',
+					12 => 'dummy entries 2',
 				],
-				'dummy entries 2' => [
-					'dummy' => 'dummy entries 2',
-					'dummy entries 2' => 'dummy entries 2',
+				102 => [
+					10 => 'dummy entries 2',
+					12 => 'dummy entries 2',
 				],
 			],
 			$link2->internals
@@ -105,15 +111,15 @@ class LinkHolderArrayTest extends MediaWikiUnitTestCase {
 
 		$this->assertArrayEquals(
 			[
-				'dummy' => [
+				10 => [
 					'dummy' => 'dummy interwikis 1',
 					'dummy interwikis 1' => 'dummy interwikis 1',
 				],
-				'dummy interwikis 1' => [
+				18 => [
 					'dummy' => 'dummy interwikis 1',
 					'dummy entries 1' => 'dummy interwikis 1',
 				],
-				'dummy interwikis 2' => [
+				19 => [
 					'dummy' => 'dummy interwikis 2',
 					'dummy interwikis 2' => 'dummy interwikis 2',
 				],
@@ -122,11 +128,11 @@ class LinkHolderArrayTest extends MediaWikiUnitTestCase {
 		);
 		$this->assertArrayEquals(
 			[
-				'dummy' => [
+				10 => [
 					'dummy' => 'dummy interwikis 2',
 					'dummy interwikis 2' => 'dummy interwikis 2',
 				],
-				'dummy interwikis 2' => [
+				19 => [
 					'dummy' => 'dummy interwikis 2',
 					'dummy interwikis 2' => 'dummy interwikis 2',
 				],
@@ -146,6 +152,8 @@ class LinkHolderArrayTest extends MediaWikiUnitTestCase {
 			$this->createMock( ILanguageConverter::class ),
 			$this->createHookContainer()
 		);
+		/** @var LinkHolderArray $linkHolderArray */
+		$linkHolderArray = TestingAccessWrapper::newFromObject( $linkHolderArray );
 		$linkHolderArray->internals = [ 'dummy data' ];
 		$linkHolderArray->interwikis = [ 'dummy data' ];
 		$linkHolderArray->size = -123;
@@ -172,18 +180,20 @@ class LinkHolderArrayTest extends MediaWikiUnitTestCase {
 			$this->createMock( ILanguageConverter::class ),
 			$this->createHookContainer()
 		);
+		/** @var LinkHolderArray $linkHolderArray */
+		$linkHolderArray = TestingAccessWrapper::newFromObject( $linkHolderArray );
 
 		$this->assertSame(
 			$input,
 			$linkHolderArray->replaceText( $input )
 		);
 		$linkHolderArray->internals = [
-			'a' => [ 'b:c' => [ 'text' => 'dummy 1' ] ],
-			'z' => [ 'x:c' => [ 'text' => 'dummy 2' ] ],
+			101 => [ 1 => [ 'text' => 'dummy 1' ] ],
+			102 => [ 2 => [ 'text' => 'dummy 2' ] ],
 		];
 		$linkHolderArray->interwikis = [
-			'a:b:c' => [ 'text' => 'dummy 3' ],
-			'z:x:c' => [ 'text' => 'dummy 4' ],
+			3 => [ 'text' => 'dummy 3' ],
+			4 => [ 'text' => 'dummy 4' ],
 		];
 
 		$this->assertSame(
@@ -192,33 +202,33 @@ class LinkHolderArrayTest extends MediaWikiUnitTestCase {
 		);
 	}
 
-	public function provideReplaceText() {
+	public static function provideReplaceText() {
 		yield [
-			'<!--LINK\'" q:w:e--> <!-- <!-- <!--IWLINK\'" q:w:e-->',
-			'<!--LINK\'" q:w:e--> <!-- <!-- <!--IWLINK\'" q:w:e-->',
+			'<!--LINK\'" 101:9--> <!-- <!-- <!--IWLINK\'" 9-->',
+			'<!--LINK\'" 101:9--> <!-- <!-- <!--IWLINK\'" 9-->',
 		];
 		yield [
-			'<!--<!--<!--LINK\'" a:b:c-->-->-->',
+			'<!--<!--<!--LINK\'" 101:1-->-->-->',
 			'<!--<!--dummy 1-->-->',
 		];
 		yield [
-			'<!--LINK\'" q:w:e--><!--LINK\'" a:b:c-->  <!--LINK\'" z:x:c-->',
-			'<!--LINK\'" q:w:e-->dummy 1  dummy 2',
+			'<!--LINK\'" 101:9--><!--LINK\'" 101:1-->  <!--LINK\'" 102:2-->',
+			'<!--LINK\'" 101:9-->dummy 1  dummy 2',
 		];
 		yield [
-			'<!--IWLINK\'" q:w:e--><!--IWLINK\'" a:b:c-->  <!--IWLINK\'" z:x:c-->',
-			'<!--IWLINK\'" q:w:e-->dummy 3  dummy 4',
+			'<!--IWLINK\'" 9--><!--IWLINK\'" 3-->  <!--IWLINK\'" 4-->',
+			'<!--IWLINK\'" 9-->dummy 3  dummy 4',
 		];
 		yield [
-			'<!--IWLINK\'" q:w:e-->  <!--LINK\'" a:b:c--><!--IWLINK\'" z:x:c-->',
-			'<!--IWLINK\'" q:w:e-->  dummy 1dummy 4',
+			'<!--IWLINK\'" 9-->  <!--LINK\'" 101:1--><!--IWLINK\'" 4-->',
+			'<!--IWLINK\'" 9-->  dummy 1dummy 4',
 		];
 		yield [
-			'<!--LINK\'" a:b:c--><!--LINK\'" a:b:c--><!--LINK\'" a:b:c-->',
+			'<!--LINK\'" 101:1--><!--LINK\'" 101:1--><!--LINK\'" 101:1-->',
 			'dummy 1dummy 1dummy 1',
 		];
 		yield [
-			'<!--IWLINK\'" z:x:c--><!--IWLINK\'" z:x:c--><!--IWLINK\'" z:x:c-->',
+			'<!--IWLINK\'" 4--><!--IWLINK\'" 4--><!--IWLINK\'" 4-->',
 			'dummy 4dummy 4dummy 4',
 		];
 	}
@@ -240,17 +250,19 @@ class LinkHolderArrayTest extends MediaWikiUnitTestCase {
 			$this->createMock( ILanguageConverter::class ),
 			$this->createHookContainer()
 		);
+		/** @var LinkHolderArray $testingAccess */
+		$testingAccess = TestingAccessWrapper::newFromObject( $link );
 		$title = $this->createMock( Title::class );
 		$title->method( 'isExternal' )->willReturn( true );
 
-		$link->interwikis = [
-			'key' => [
+		$testingAccess->interwikis = [
+			9 => [
 				'title' => $title,
 				'text' => 'text',
 			],
 		];
 		$parser = $this->createMock( Parser::class );
-		$link->parent = $parser;
+		$testingAccess->parent = $parser;
 
 		$parserOutput = $this->createMock( ParserOutput::class );
 		$parser->method( 'getOutput' )->willReturn( $parserOutput );
@@ -263,17 +275,17 @@ class LinkHolderArrayTest extends MediaWikiUnitTestCase {
 		$this->assertSame( $extended, $text );
 	}
 
-	public function provideReplace_external() {
+	public static function provideReplace_external() {
 		yield [
 			'dummy text',
 			'dummy text',
 		];
 		yield [
-			'<!--IWLINK\'" key-->',
+			'<!--IWLINK\'" 9-->',
 			'new text',
 		];
 		yield [
-			'text1<!--IWLINK\'" key--><!--IWLINK\'" key-->  text2',
+			'text1<!--IWLINK\'" 9--><!--IWLINK\'" 9-->  text2',
 			'text1new textnew text  text2',
 		];
 	}

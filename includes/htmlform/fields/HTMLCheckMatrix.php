@@ -1,5 +1,6 @@
 <?php
 
+use MediaWiki\Html\Html;
 use MediaWiki\MainConfigNames;
 
 /**
@@ -99,7 +100,6 @@ class HTMLCheckMatrix extends HTMLFormField implements HTMLNestedFilterable {
 		// Build the column headers
 		$headerContents = Html::rawElement( 'td', [], "\u{00A0}" );
 		foreach ( $columns as $columnLabel => $columnTag ) {
-			// @phan-suppress-next-line PhanTypeMismatchArgument False positive, labels are documented as string
 			$headerContents .= Html::rawElement( 'th', [], $columnLabel );
 		}
 		$thead = Html::rawElement( 'tr', [], "\n$headerContents\n" );
@@ -210,7 +210,7 @@ class HTMLCheckMatrix extends HTMLFormField implements HTMLNestedFilterable {
 	 * @return string Complete HTML table row
 	 */
 	public function getTableRow( $value ) {
-		list( $errors, $errorClass ) = $this->getErrorsAndErrorClass( $value );
+		[ $errors, $errorClass ] = $this->getErrorsAndErrorClass( $value );
 		$inputHtml = $this->getInputHTML( $value );
 		$fieldType = $this->getClassName();
 		$helptext = $this->getHelpTextHtmlTable( $this->getHelpText() );

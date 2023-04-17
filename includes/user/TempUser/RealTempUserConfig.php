@@ -2,7 +2,7 @@
 
 namespace MediaWiki\User\TempUser;
 
-use MWException;
+use BadMethodCallException;
 
 /**
  * The real TempUserConfig including internal methods used by TempUserCreator.
@@ -28,12 +28,16 @@ class RealTempUserConfig implements TempUserConfig {
 	/** @var Pattern|null */
 	private $matchPattern;
 
+	/** @var Pattern|null */
+	private $reservedPattern;
+
 	/**
 	 * @param array $config See the documentation of $wgAutoCreateTempUser.
 	 *   - enabled: bool
 	 *   - actions: array
 	 *   - genPattern: string
-	 *   - matchPattern string, optional
+	 *   - matchPattern: string, optional
+	 *   - reservedPattern: string, optional
 	 *   - serialProvider: array
 	 *   - serialMapping: array
 	 */
@@ -50,6 +54,9 @@ class RealTempUserConfig implements TempUserConfig {
 			$this->serialProviderConfig = $config['serialProvider'];
 			$this->serialMappingConfig = $config['serialMapping'];
 		}
+		if ( isset( $config['reservedPattern'] ) ) {
+			$this->reservedPattern = new Pattern( 'reservedPattern', $config['reservedPattern'] );
+		}
 	}
 
 	public function isEnabled() {
@@ -64,16 +71,21 @@ class RealTempUserConfig implements TempUserConfig {
 			&& in_array( $action, $this->autoCreateActions, true );
 	}
 
-	public function isReservedName( string $name ) {
+	public function isTempName( string $name ) {
 		return $this->enabled
 			&& $this->matchPattern->isMatch( $name );
+	}
+
+	public function isReservedName( string $name ) {
+		return ( $this->enabled && $this->matchPattern->isMatch( $name ) )
+			|| ( $this->reservedPattern && $this->reservedPattern->isMatch( $name ) );
 	}
 
 	public function getPlaceholderName(): string {
 		if ( $this->enabled ) {
 			return $this->genPattern->generate( '*' );
 		} else {
-			throw new MWException( __METHOD__ . ' is disabled' );
+			throw new BadMethodCallException( __METHOD__ . ' is disabled' );
 		}
 	}
 
@@ -85,7 +97,7 @@ class RealTempUserConfig implements TempUserConfig {
 		if ( $this->enabled ) {
 			return $this->genPattern;
 		} else {
-			throw new MWException( __METHOD__ . ' is disabled' );
+			throw new BadMethodCallException( __METHOD__ . ' is disabled' );
 		}
 	}
 

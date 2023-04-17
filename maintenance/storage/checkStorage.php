@@ -187,7 +187,7 @@ class CheckStorage {
 						$this->addError( 'restore text', "Error: invalid URL \"{$row->old_text}\"", $row->old_id );
 						continue;
 					}
-					list( $proto, ) = $urlParts;
+					[ $proto, ] = $urlParts;
 					if ( $proto != 'DB' ) {
 						$this->addError(
 							'restore text',
@@ -217,7 +217,7 @@ class CheckStorage {
 				}
 				foreach ( $externalConcatBlobs as $cluster => $xBlobIds ) {
 					$blobIds = array_keys( $xBlobIds );
-					$extDb =& $this->dbStore->getReplica( $cluster );
+					$extDb = $this->dbStore->getReplica( $cluster );
 					$blobsTable = $this->dbStore->getTable( $extDb );
 					$res = $extDb->select( $blobsTable,
 						[ 'blob_id' ],
@@ -418,7 +418,7 @@ class CheckStorage {
 
 		foreach ( $externalConcatBlobs as $cluster => $oldIds ) {
 			$blobIds = array_keys( $oldIds );
-			$extDb =& $this->dbStore->getReplica( $cluster );
+			$extDb = $this->dbStore->getReplica( $cluster );
 			$blobsTable = $this->dbStore->getTable( $extDb );
 			$headerLength = strlen( self::CONCAT_HEADER );
 			$res = $extDb->select( $blobsTable,
@@ -471,6 +471,7 @@ class CheckStorage {
 		// Run mwdumper
 		echo "Filtering XML dump...\n";
 		$exitStatus = 0;
+		// phpcs:ignore MediaWiki.Usage.ForbiddenFunctions.passthru
 		passthru( 'mwdumper ' .
 			Shell::escape(
 				"--output=file:$filteredXmlFileName",

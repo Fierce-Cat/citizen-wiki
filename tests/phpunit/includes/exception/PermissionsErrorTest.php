@@ -12,7 +12,7 @@ class PermissionsErrorTest extends MediaWikiIntegrationTestCase {
 		$this->setGroupPermissions( '*', 'testpermission', true );
 	}
 
-	public function provideConstruction() {
+	public static function provideConstruction() {
 		$status = new PermissionStatus();
 		$status->error( 'cat', 1, 2 );
 		$status->warning( 'dog', 3, 4 );
@@ -20,7 +20,7 @@ class PermissionsErrorTest extends MediaWikiIntegrationTestCase {
 		yield [ null, $status, $expected ];
 		yield [ 'testpermission', $status, $expected ];
 
-		yield [ 'testpermission', [], [ [ 'badaccess-groups', '*', 1 ] ] ];
+		yield [ 'testpermission', [], [ [ 'badaccess-groups', Message::listParam( [ '*' ], 'comma' ), 1 ] ] ];
 	}
 
 	/**
@@ -32,7 +32,7 @@ class PermissionsErrorTest extends MediaWikiIntegrationTestCase {
 		$this->assertArrayEquals( $expected, $e->errors );
 	}
 
-	public function provideInvalidConstruction() {
+	public static function provideInvalidConstruction() {
 		yield [ null, null ];
 		yield [ null, [] ];
 		yield [ null, new PermissionStatus() ];

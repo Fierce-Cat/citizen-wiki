@@ -68,7 +68,7 @@ class CleanupUploadStash extends Maintenance {
 			// finish the read before starting writes.
 			$keys = [];
 			foreach ( $res as $row ) {
-				array_push( $keys, $row->us_key );
+				$keys[] = $row->us_key;
 			}
 
 			$this->output( 'Removing ' . count( $keys ) . " file(s)...\n" );
@@ -76,8 +76,6 @@ class CleanupUploadStash extends Maintenance {
 			// UploadStash's own methods means it's less likely to fall accidentally
 			// out-of-date someday
 			$stash = new UploadStash( $repo );
-
-			$lbFactory = MediaWikiServices::getInstance()->getDBLoadBalancerFactory();
 
 			$i = 0;
 			foreach ( $keys as $key ) {
@@ -90,7 +88,7 @@ class CleanupUploadStash extends Maintenance {
 					$this->output( "Failed removing stashed upload with key: $key ($type)\n" );
 				}
 				if ( $i % 100 == 0 ) {
-					$lbFactory->waitForReplication();
+					$this->waitForReplication();
 					$this->output( "$i\n" );
 				}
 			}

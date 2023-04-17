@@ -14,7 +14,7 @@ class TestUtils {
 	/**
 	 * Override the singleton for unit testing
 	 * @param SessionManager|null $manager
-	 * @return \\Wikimedia\ScopedCallback|null
+	 * @return \Wikimedia\ScopedCallback|null
 	 */
 	public static function setSessionManagerSingleton( SessionManager $manager = null ) {
 		session_write_close();
@@ -88,15 +88,11 @@ class TestUtils {
 	public static function getDummySession( $backend = null, $index = -1, $logger = null ) {
 		$rc = new \ReflectionClass( Session::class );
 
-		if ( $backend === null ) {
-			$backend = new DummySessionBackend;
-		}
-
 		$session = $rc->newInstanceWithoutConstructor();
 		$priv = TestingAccessWrapper::newFromObject( $session );
-		$priv->backend = $backend;
+		$priv->backend = $backend ?? new DummySessionBackend();
 		$priv->index = $index;
-		$priv->logger = $logger ?: new \TestLogger;
+		$priv->logger = $logger ?? new \TestLogger();
 		return $session;
 	}
 

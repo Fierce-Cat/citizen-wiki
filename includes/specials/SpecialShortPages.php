@@ -22,7 +22,10 @@
  */
 
 use MediaWiki\Cache\LinkBatchFactory;
+use MediaWiki\Html\Html;
+use MediaWiki\Linker\Linker;
 use MediaWiki\MainConfigNames;
+use MediaWiki\Title\Title;
 use Wikimedia\Rdbms\IDatabase;
 use Wikimedia\Rdbms\ILoadBalancer;
 use Wikimedia\Rdbms\IResultWrapper;
@@ -132,6 +135,7 @@ class SpecialShortPages extends QueryPage {
 				$options,
 				$join_conds
 			);
+			// phpcs:ignore MediaWiki.Usage.DbrQueryUsage.DbrQueryFound
 			$res = $dbr->query( $sql, $fname );
 		}
 

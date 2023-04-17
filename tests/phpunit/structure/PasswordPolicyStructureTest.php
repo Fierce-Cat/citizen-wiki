@@ -1,8 +1,11 @@
 <?php
 
+/**
+ * @coversNothing
+ */
 class PasswordPolicyStructureTest extends MediaWikiIntegrationTestCase {
 
-	public function provideChecks() {
+	public static function provideChecks() {
 		global $wgPasswordPolicy;
 
 		foreach ( $wgPasswordPolicy['checks'] as $name => $callback ) {
@@ -10,7 +13,7 @@ class PasswordPolicyStructureTest extends MediaWikiIntegrationTestCase {
 		}
 	}
 
-	public function provideFlags() {
+	public static function provideFlags() {
 		global $wgPasswordPolicy;
 
 		// This won't actually find all flags, just the ones in use. Can't really be helped,

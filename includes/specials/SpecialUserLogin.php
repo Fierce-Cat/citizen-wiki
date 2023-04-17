@@ -54,6 +54,10 @@ class SpecialUserLogin extends LoginSignupSpecialPage {
 		return true;
 	}
 
+	public function isListed() {
+		return $this->getAuthManager()->canAuthenticateNow();
+	}
+
 	protected function getLoginSecurityLevel() {
 		return false;
 	}
@@ -147,7 +151,7 @@ class SpecialUserLogin extends LoginSignupSpecialPage {
 	}
 
 	protected function clearToken() {
-		return $this->getRequest()->getSession()->resetToken( 'login' );
+		$this->getRequest()->getSession()->resetToken( 'login' );
 	}
 
 	protected function getTokenName() {

@@ -30,29 +30,11 @@ use MediaWiki\MediaWikiServices;
 use MediaWiki\Settings\SettingsBuilder;
 use MediaWiki\Tests\AnsiTermColorer;
 use MediaWiki\Tests\DummyTermColorer;
+use Wikimedia\Parsoid\Utils\ScriptUtils;
+
+define( 'MW_AUTOLOAD_TEST_CLASSES', true );
 
 class ParserTestsMaintenance extends Maintenance {
-	/**
-	 * Copied over from the Parsoid repo: (tools/ScriptUtils.php)
-	 *
-	 * Parse a boolean option returned by our opts processor.
-	 * The strings 'false' and 'no' are also treated as false values.
-	 * This allows `--debug=no` and `--debug=false` to mean the same as
-	 * `--no-debug`.
-	 *
-	 * @param bool|string $val
-	 *   a boolean, or a string naming a boolean value.
-	 * @return bool
-	 */
-	private function booleanOption( $val ): bool {
-		if ( !$val ) {
-			return false;
-		}
-		if ( is_string( $val ) && preg_match( '/^(no|false)$/D', $val ) ) {
-			return false;
-		}
-		return true;
-	}
 
 	public function __construct() {
 		parent::__construct();
@@ -68,6 +50,8 @@ class ParserTestsMaintenance extends Maintenance {
 			false, true );
 		$this->addOption( 'filter', 'Alias for --regex', false, true );
 		$this->addOption( 'file', 'Run test cases from a custom file instead of parserTests.txt',
+			false, true, false, true );
+		$this->addOption( 'dir', 'Run test cases for all *.txt files in a directory',
 			false, true, false, true );
 		$this->addOption( 'record', 'Record tests in database' );
 		$this->addOption( 'compare', 'Compare with recorded results, without updating the database.' );
@@ -108,10 +92,15 @@ class ParserTestsMaintenance extends Maintenance {
 			'Changes to apply to Parsoid HTML to generate new HTML to be serialized (use with selser)',
 			false, true );
 		$this->addOption( 'parsoid', 'Run Parsoid tests' );
+		$this->addOption( 'trace', 'Use --trace=help for supported options (Parsoid only)', false, true );
+		$this->addOption( 'dump', 'Use --dump=help for supported options (Parsoid only)', false, true );
 		$this->addOption( 'updateKnownFailures', 'Update knownFailures.json with failing tests' );
 		$this->addOption( 'knownFailures',
 			'Compare against known failures (default: true). If false, ignores knownFailures.json file',
 			false, true );
+		$this->addOption( 'update-tests',
+			'Update parserTests.txt with results from wt2html fails.  Note that editTests.php exists ' .
+				'for finer grained editing of tests.' );
 	}
 
 	public function finalSetup( SettingsBuilder $settingsBuilder = null ) {
@@ -120,8 +109,6 @@ class ParserTestsMaintenance extends Maintenance {
 		define( 'MW_PARSER_TEST', true );
 
 		parent::finalSetup( $settingsBuilder );
-		ExtensionRegistry::getInstance()->setLoadTestClassesAndNamespaces( true );
-		self::requireTestsAutoloader();
 		TestSetup::applyInitialConfig();
 	}
 
@@ -189,6 +176,19 @@ class ParserTestsMaintenance extends Maintenance {
 			]
 		) );
 
+		$traceFlags = array_fill_keys( explode( ',', $this->getOption( 'trace', '' ) ), true );
+		$dumpFlags = array_fill_keys( explode( ',', $this->getOption( 'dump', '' ) ), true );
+		if ( $traceFlags['help'] ?? false ) {
+			print "-------------- PARSOID ONLY --------------\n";
+			print ScriptUtils::traceUsageHelp();
+			exit( 1 );
+		}
+		if ( $dumpFlags['help'] ?? false ) {
+			print "-------------- PARSOID ONLY --------------\n";
+			print ScriptUtils::dumpUsageHelp();
+			exit( 1 );
+		}
+
 		$recorderLB = false;
 		if ( $record || $compare ) {
 			// Make an untracked DB_PRIMARY connection (wiki's table prefix, not parsertest_)
@@ -208,13 +208,13 @@ class ParserTestsMaintenance extends Maintenance {
 		}
 
 		// Default parser tests and any set from extensions or local config
-		$files = $this->getOption( 'file', ParserTestRunner::getParserTestFiles() );
-
+		$dirs = $this->getOption( 'dir', [] );
+		$files = $this->getOption( 'file', ParserTestRunner::getParserTestFiles( $dirs ) );
 		$norm = $this->hasOption( 'norm' ) ? explode( ',', $this->getOption( 'norm' ) ) : [];
 
 		$selserOpt = $this->getOption( 'selser', false ); /* can also be 'noauto' */
 		if ( $selserOpt !== 'noauto' ) {
-			$selserOpt = $this->booleanOption( $selserOpt );
+			$selserOpt = ScriptUtils::booleanOption( $selserOpt );
 		}
 		$tester = new ParserTestRunner( $recorder, [
 			'norm' => $norm,
@@ -238,9 +238,12 @@ class ParserTestsMaintenance extends Maintenance {
 			'html2html' => $this->hasOption( 'html2html' ),
 			'numchanges' => $this->getOption( 'numchanges', 20 ),
 			'selser' => $selserOpt,
-			'changetree' => json_decode( $this->getOption( 'changetree', null ), true ),
-			'knownFailures' => $this->booleanOption( $this->getOption( 'knownFailures', true ) ),
-			'updateKnownFailures' => $this->hasOption( 'updateKnownFailures' )
+			'changetree' => json_decode( $this->getOption( 'changetree', '' ), true ),
+			'knownFailures' => ScriptUtils::booleanOption( $this->getOption( 'knownFailures', true ) ),
+			'updateKnownFailures' => $this->hasOption( 'updateKnownFailures' ),
+			'traceFlags' => $traceFlags,
+			'dumpFlags' => $dumpFlags,
+			'update-tests' => $this->hasOption( 'update-tests' ),
 		] );
 
 		$ok = $tester->runTestsFromFiles( $files );

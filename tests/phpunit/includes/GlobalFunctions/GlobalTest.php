@@ -11,12 +11,7 @@ class GlobalTest extends MediaWikiIntegrationTestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$readOnlyFile = $this->getNewTempFile();
-		unlink( $readOnlyFile );
-
 		$this->overrideConfigValues( [
-			MainConfigNames::ReadOnly => null,
-			MainConfigNames::ReadOnlyFile => $readOnlyFile,
 			MainConfigNames::UrlProtocols => [
 				'http://',
 				'https://',
@@ -99,45 +94,6 @@ class GlobalTest extends MediaWikiIntegrationTestCase {
 				. "%E0%B0%B5%E0%B0%BE%E0%B0%A1%E0%B1%81%E0%B0%95%E0%B0%B0%E0%B0%BF_"
 				. "%E0%B0%AE%E0%B0%BE%E0%B0%B0%E0%B1%8D%E0%B0%97%E0%B0%A6%E0%B0%B0"
 				. "%E0%B1%8D%E0%B0%B6%E0%B0%A8%E0%B0%BF" ) );
-	}
-
-	/**
-	 * Intended to cover the relevant bits of ServiceWiring.php, as well as GlobalFunctions.php
-	 * @covers ::wfReadOnly
-	 */
-	public function testReadOnlyEmpty() {
-		$this->hideDeprecated( 'wfReadOnly' );
-		$this->assertFalse( wfReadOnly() );
-		$this->assertFalse( wfReadOnly() );
-	}
-
-	/**
-	 * Intended to cover the relevant bits of ServiceWiring.php, as well as GlobalFunctions.php
-	 * @covers ::wfReadOnly
-	 */
-	public function testReadOnlySet() {
-		$this->hideDeprecated( 'wfReadOnly' );
-		global $wgReadOnlyFile;
-
-		$f = fopen( $wgReadOnlyFile, "wt" );
-		fwrite( $f, 'Message' );
-		fclose( $f );
-
-		$this->assertTrue( wfReadOnly() );
-		$this->assertTrue( wfReadOnly() ); # Check cached
-	}
-
-	/**
-	 * This behaviour could probably be deprecated. Several extensions rely on it as of 1.29.
-	 * @covers ::wfReadOnlyReason
-	 */
-	public function testReadOnlyGlobalChange() {
-		$this->hideDeprecated( 'wfReadOnlyReason' );
-		$this->assertFalse( wfReadOnlyReason() );
-
-		$this->overrideConfigValue( MainConfigNames::ReadOnly, 'reason' );
-
-		$this->assertSame( 'reason', wfReadOnlyReason() );
 	}
 
 	public static function provideArrayToCGI() {
@@ -311,7 +267,7 @@ class GlobalTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $expected, wfPercent( $input, $accuracy, $round ) );
 	}
 
-	public function provideWfPercentTest() {
+	public static function provideWfPercentTest() {
 		return [
 			[ 6 / 7, '0.86%', 2, false ],
 			[ 3 / 3, '1%' ],
@@ -414,7 +370,7 @@ class GlobalTest extends MediaWikiIntegrationTestCase {
 		$this->markTestSkippedIfNoDiff3();
 
 		$mergedText = null;
-		$attemptMergeResult = null;
+		$mergeAttemptResult = null;
 		$isMerged = wfMerge( $old, $mine, $yours, $mergedText, $mergeAttemptResult );
 
 		$msg = 'Merge should be a ';

@@ -176,11 +176,9 @@ trait LanguageNameUtilsTestTrait {
 			'Simple code in a different language (doesn\'t work without hook)' =>
 				[ 'Deutsch', 'de', 'fr' ],
 			'Invalid code' => [ '', '&' ],
-			'Pig Latin not enabled' => [ '', 'en-x-piglatin', AUTONYMS, ALL ],
+			'Pig Latin' => [ 'Igpay Atinlay', 'en-x-piglatin', AUTONYMS, ALL ],
 			'qqq doesn\'t have a name' => [ '', 'qqq', AUTONYMS, ALL ],
 			'An MW legacy tag is recognized' => [ 'žemaitėška', 'bat-smg' ],
-			// @todo Is the next test's result desired?
-			'An MW legacy tag is not supported' => [ '', 'bat-smg', AUTONYMS, SUPPORTED ],
 			'An internal standard name, for which a legacy tag is used externally, is supported' =>
 				[ 'žemaitėška', 'sgs', AUTONYMS, SUPPORTED ],
 		];
@@ -247,7 +245,7 @@ trait LanguageNameUtilsTestTrait {
 			'Invalid inLanguage defaults to English' => [ 'German', 'de', '&' ],
 			'If inLanguage not provided, default to autonym' => [ 'Deutsch', 'de' ],
 			'Hooks ignored for explicitly-requested autonym' => [ 'français', 'fr', 'fr' ],
-			'Hooks don\'t make a language supported' => [ '', 'bat-smg', 'en', SUPPORTED ],
+			'Hooks don\'t make a language supported' => [ '', 'es-419', 'en', SUPPORTED ],
 			'Hooks don\'t make a language defined' => [ '', 'sqsqsqsq', 'en', DEFINED ],
 			'Hooks do make a language name returned with ALL' => [ '!!?!', 'sqsqsqsq', 'en', ALL ],
 		];
@@ -273,7 +271,7 @@ trait LanguageNameUtilsTestTrait {
 		);
 	}
 
-	public function provideGetLanguageNames_ExtraLanguageNames() {
+	public static function provideGetLanguageNames_ExtraLanguageNames() {
 		return [
 			'Simple extra language name' => [ '!!?!', 'sqsqsqsq' ],
 			'Extra language is defined' => [ '!!?!', 'sqsqsqsq', AUTONYMS, DEFINED ],
@@ -322,7 +320,7 @@ trait LanguageNameUtilsTestTrait {
 		$this->assertSame( $sortedNames, $names );
 	}
 
-	public function provideGetLanguageNames_sorted() {
+	public static function provideGetLanguageNames_sorted() {
 		return [
 			[],
 			[ AUTONYMS ],
@@ -385,10 +383,12 @@ trait LanguageNameUtilsTestTrait {
 			[ MainConfigNames::UsePigLatinVariant => true ], $expected, 'en-x-piglatin', ...$otherArgs );
 	}
 
-	public function provideGetLanguageNames_pigLatin() {
+	public static function provideGetLanguageNames_pigLatin() {
+		# Pig Latin is supported only if UsePigLatinVariant is true
+		# (which it is, for these tests)
 		return [
 			'Simple test' => [ 'Igpay Atinlay' ],
-			'Not supported' => [ '', AUTONYMS, SUPPORTED ],
+			'Supported' => [ 'Igpay Atinlay', AUTONYMS, SUPPORTED ],
 			'Foreign language' => [ 'latin de cochons', 'fr' ],
 			'Hook doesn\'t override explicit autonym' =>
 				[ 'Igpay Atinlay', 'en-x-piglatin', 'en-x-piglatin' ],
@@ -396,9 +396,25 @@ trait LanguageNameUtilsTestTrait {
 	}
 
 	/**
-	 * Just for the sake of completeness, test that ExtraLanguageNames will not override the name
-	 * for pig Latin. Nobody actually cares about this and if anything current behavior is probably
-	 * wrong, but once we're testing the whole file we may as well be comprehensive.
+	 * @covers MediaWiki\Languages\LanguageNameUtils::getLanguageNames
+	 * @covers MediaWiki\Languages\LanguageNameUtils::getLanguageNamesUncached
+	 * @covers MediaWiki\Languages\LanguageNameUtils::getLanguageName
+	 * @covers Language::fetchLanguageNames
+	 * @covers Language::fetchLanguageName
+	 */
+	public function testGetLanguageNames_pigLatinNotSupported() {
+		// Pig Latin is "not supported" when UsePigLatinVariant is false
+		$this->assertGetLanguageNames(
+			[ MainConfigNames::UsePigLatinVariant => false ],
+			'', 'en-x-piglatin', AUTONYMS, SUPPORTED
+		);
+	}
+
+	/**
+	 * Just for the sake of completeness, test that ExtraLanguageNames
+	 * can override the name for Pig Latin. Nobody actually cares
+	 * about this, but once we're testing the whole file we may as
+	 * well be comprehensive.
 	 *
 	 * @covers MediaWiki\Languages\LanguageNameUtils::getLanguageNames
 	 * @covers MediaWiki\Languages\LanguageNameUtils::getLanguageNamesUncached
@@ -412,7 +428,7 @@ trait LanguageNameUtilsTestTrait {
 				MainConfigNames::UsePigLatinVariant => true,
 				MainConfigNames::ExtraLanguageNames => [ 'en-x-piglatin' => 'igpay atinlay' ]
 			],
-			'Igpay Atinlay',
+			'igpay atinlay',
 			'en-x-piglatin'
 		);
 	}
@@ -428,7 +444,7 @@ trait LanguageNameUtilsTestTrait {
 		$this->assertSame( $expected, $this->getFileName( ...$args ) );
 	}
 
-	public function provideGetFileName() {
+	public static function provideGetFileName() {
 		return [
 			'Simple case' => [ 'MessagesXx.php', 'Messages', 'xx' ],
 			'With extension' => [ 'MessagesXx.ext', 'Messages', 'xx', '.ext' ],
@@ -452,7 +468,7 @@ trait LanguageNameUtilsTestTrait {
 		$this->assertSame( $expected, $this->getMessagesFileName( $code ) );
 	}
 
-	public function provideGetMessagesFileName() {
+	public static function provideGetMessagesFileName() {
 		global $IP;
 		return [
 			'Simple case' => [ 'en', "$IP/languages/messages/MessagesEn.php" ],
@@ -522,7 +538,7 @@ trait LanguageNameUtilsTestTrait {
 
 	public function provideExceptionFromInvalidCode() {
 		$ret = [];
-		foreach ( static::provideIsValidBuiltInCode() as $desc => list( $code, $valid ) ) {
+		foreach ( static::provideIsValidBuiltInCode() as $desc => [ $code, $valid ] ) {
 			if ( $valid ) {
 				// Won't get an exception from this one
 				continue;

@@ -1,7 +1,9 @@
 <?php
 
 use MediaWiki\MainConfigNames;
+use MediaWiki\Request\FauxRequest;
 use MediaWiki\Tests\Unit\DummyServicesTrait;
+use MediaWiki\Title\Title;
 
 /**
  * @group API
@@ -112,7 +114,7 @@ class ApiQueryTest extends ApiTestCase {
 			'ApiUsageException thrown by titlePartToKey' );
 	}
 
-	public function provideTestTitlePartToKey() {
+	public static function provideTestTitlePartToKey() {
 		return [
 			[ 'a  b  c', NS_MAIN, 'A_b_c', false ],
 			[ 'x', NS_MAIN, 'X', false ],

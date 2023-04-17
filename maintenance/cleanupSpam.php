@@ -21,10 +21,13 @@
  * @ingroup Maintenance
  */
 
+use MediaWiki\ExternalLinks\LinkFilter;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Permissions\Authority;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Revision\SlotRecord;
+use MediaWiki\StubObject\StubGlobalUser;
+use MediaWiki\Title\Title;
 
 require_once __DIR__ . '/Maintenance.php';
 
@@ -90,6 +93,7 @@ class CleanupSpam extends Maintenance {
 							"$IP/maintenance/cleanupSpam.php",
 							[ '--wiki', $wikiId, $spec ]
 						);
+						// phpcs:ignore MediaWiki.Usage.ForbiddenFunctions.passthru
 						passthru( "$cmd | sed 's/^/$wikiId:  /'" );
 					}
 				}
@@ -113,8 +117,8 @@ class CleanupSpam extends Maintenance {
 					->where( $conds )
 					->caller( __METHOD__ )
 					->fetchResultSet();
-				$count = $res->numRows();
-				$this->output( "Found $count articles containing $spec\n" );
+				$count += $res->numRows();
+				$this->output( "Found $count articles containing $spec so far...\n" );
 				foreach ( $res as $row ) {
 					$this->cleanupArticle(
 						$row->el_from,

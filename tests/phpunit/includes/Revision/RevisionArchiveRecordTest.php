@@ -10,12 +10,12 @@ use MediaWiki\Revision\RevisionArchiveRecord;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Revision\RevisionSlots;
 use MediaWiki\Revision\SlotRecord;
+use MediaWiki\Title\Title;
 use MediaWiki\User\UserIdentity;
 use MediaWiki\User\UserIdentityValue;
 use MediaWikiIntegrationTestCase;
 use stdClass;
 use TextContent;
-use Title;
 use TitleValue;
 use Wikimedia\Assert\PreconditionException;
 
@@ -25,7 +25,7 @@ use Wikimedia\Assert\PreconditionException;
  */
 class RevisionArchiveRecordTest extends MediaWikiIntegrationTestCase {
 
-	public function provideConstructor() {
+	public static function provideConstructor() {
 		$user = new UserIdentityValue( 11, 'Tester' );
 		$comment = CommentStoreComment::newUnsavedComment( 'Hello World' );
 
@@ -128,7 +128,7 @@ class RevisionArchiveRecordTest extends MediaWikiIntegrationTestCase {
 	 * @param CommentStoreComment $comment
 	 * @param stdClass $row
 	 * @param RevisionSlots $slots
-	 * @param bool $wikiId
+	 * @param string|false $wikiId
 	 * @param string|null $expectedException
 	 */
 	public function testConstructorAndGetters(
@@ -185,7 +185,7 @@ class RevisionArchiveRecordTest extends MediaWikiIntegrationTestCase {
 		}
 	}
 
-	public function provideConstructorFailure() {
+	public static function provideConstructorFailure() {
 		$title = Title::makeTitle( NS_MAIN, 'Dummy' );
 		$title->resetArticleID( 17 );
 
@@ -259,7 +259,7 @@ class RevisionArchiveRecordTest extends MediaWikiIntegrationTestCase {
 	 * @param CommentStoreComment $comment
 	 * @param stdClass $row
 	 * @param RevisionSlots $slots
-	 * @param bool $wikiId
+	 * @param string|false $wikiId
 	 * @param string|null $expectedException
 	 */
 	public function testConstructorFailure(

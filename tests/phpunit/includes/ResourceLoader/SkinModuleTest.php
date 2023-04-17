@@ -199,17 +199,14 @@ class SkinModuleTest extends ResourceLoaderTestCase {
 					'2x' => '/logo@2x.png',
 				],
 				'expected' => [
-					'all' => [ <<<CSS
-.mw-wiki-logo { background-image: url(/logo.png); }
-CSS
+					'all' => [
+						'.mw-wiki-logo { background-image: url(/logo.png); }',
 					],
-					'(-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 1.5dppx), (min-resolution: 144dpi)' => [ <<<CSS
-.mw-wiki-logo { background-image: url(/logo@1.5x.png);background-size: 135px auto; }
-CSS
+					'(-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 1.5dppx), (min-resolution: 144dpi)' => [
+						'.mw-wiki-logo { background-image: url(/logo@1.5x.png);background-size: 135px auto; }',
 					],
-					'(-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx), (min-resolution: 192dpi)' => [ <<<CSS
-.mw-wiki-logo { background-image: url(/logo@2x.png);background-size: 135px auto; }
-CSS
+					'(-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx), (min-resolution: 192dpi)' => [
+						'.mw-wiki-logo { background-image: url(/logo@2x.png);background-size: 135px auto; }',
 					],
 				],
 			],
@@ -220,12 +217,9 @@ CSS
 					'svg' => '/logo.svg',
 				],
 				'expected' => [
-					'all' => [ <<<CSS
-.mw-wiki-logo { background-image: url(/logo.png); }
-CSS
-					, <<<CSS
-.mw-wiki-logo { background-image: linear-gradient(transparent, transparent), url(/logo.svg);background-size: 135px auto; }
-CSS
+					'all' => [
+						'.mw-wiki-logo { background-image: url(/logo.svg); }',
+						'.mw-wiki-logo { background-size: 135px auto; }',
 					],
 				],
 			],
@@ -293,7 +287,7 @@ CSS
 		);
 	}
 
-	public function provideGetLogoData() {
+	public static function provideGetLogoData() {
 		return [
 			'wordmark' => [
 				'config' => [
@@ -411,7 +405,7 @@ CSS
 		$this->assertEquals( [ $result ], $module->getHeaders( $ctx ) );
 	}
 
-	public function providePreloadLinks() {
+	public static function providePreloadLinks() {
 		return [
 			[
 				[
@@ -522,7 +516,7 @@ CSS
 		$this->assertFileExists( $file );
 	}
 
-	public function provideFeatureFiles(): Generator {
+	public static function provideFeatureFiles(): Generator {
 		global $IP;
 
 		$featureFiles = ( new ReflectionClass( SkinModule::class ) )
@@ -625,7 +619,7 @@ CSS
 		$ctx = $this->createMock( Context::class );
 		$module = new SkinModule(
 			[
-				// The ordering should be controlled by ResourceLoaderSkinModule
+				// The ordering should be controlled by SkinModule
 				// `normalize` will be outputted before `elements` despite the ordering
 				'features' => $features,
 				'styles' => $styles,

@@ -283,7 +283,7 @@ class ApiResult implements ApiSerializable {
 			if ( $flags & self::ADD_ON_TOP ) {
 				array_unshift( $arr, $value );
 			} else {
-				array_push( $arr, $value );
+				$arr[] = $value;
 			}
 			return;
 		}
@@ -1198,9 +1198,7 @@ class ApiResult implements ApiSerializable {
 	 */
 	public static function formatExpiry( $expiry, $infinity = 'infinity' ) {
 		static $dbInfinity;
-		if ( $dbInfinity === null ) {
-			$dbInfinity = wfGetDB( DB_REPLICA )->getInfinity();
-		}
+		$dbInfinity ??= wfGetDB( DB_REPLICA )->getInfinity();
 
 		if ( $expiry === '' || $expiry === null || $expiry === false ||
 			wfIsInfinity( $expiry ) || $expiry === $dbInfinity

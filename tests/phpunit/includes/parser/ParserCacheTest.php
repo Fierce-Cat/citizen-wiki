@@ -13,6 +13,7 @@ use MediaWiki\Page\PageRecord;
 use MediaWiki\Page\PageStoreRecord;
 use MediaWiki\Page\WikiPageFactory;
 use MediaWiki\Tests\Json\JsonUnserializableSuperClass;
+use MediaWiki\Title\Title;
 use MediaWikiIntegrationTestCase;
 use MWTimestamp;
 use NullStatsdDataFactory;
@@ -23,7 +24,6 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Psr\Log\NullLogger;
 use TestLogger;
-use Title;
 use User;
 use Wikimedia\TestingAccessWrapper;
 use WikiPage;
@@ -571,7 +571,7 @@ class ParserCacheTest extends MediaWikiIntegrationTestCase {
 		);
 	}
 
-	public function provideCorruptData() {
+	public static function provideCorruptData() {
 		yield 'JSON serialization, bad data' => [ 'bla bla' ];
 		yield 'JSON serialization, no _class_' => [ '{"test":"test"}' ];
 		yield 'JSON serialization, non-existing _class_' => [ '{"_class_":"NonExistentBogusClass"}' ];
@@ -713,6 +713,7 @@ class ParserCacheTest extends MediaWikiIntegrationTestCase {
 	 * @covers ParserCache::convertForCache
 	 */
 	public function testCyclicStructuresDoNotBlowUpInJson() {
+		$this->markTestSkipped( 'Temporarily disabled: T314338' );
 		$testLogger = new TestLogger( true );
 		$cache = $this->createParserCache( null, null, $testLogger );
 

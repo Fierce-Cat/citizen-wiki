@@ -19,7 +19,7 @@ class StartUpModuleTest extends ResourceLoaderTestCase {
 		] );
 	}
 
-	public function provideGetModuleRegistrations() {
+	public static function provideGetModuleRegistrations() {
 		return [
 			[ [
 				'msg' => 'Empty registry',
@@ -502,7 +502,7 @@ mw.loader.addSource({
 mw.loader.register([
     [
         "test.es6",
-        "!"
+        ""
     ]
 ]);',
 			] ],
@@ -677,7 +677,7 @@ mw.loader.register([
     ],
     [
         "test.es6",
-        "!"
+        ""
     ]
 ]);'
 			] ],

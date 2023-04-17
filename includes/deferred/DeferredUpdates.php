@@ -157,7 +157,7 @@ class DeferredUpdates {
 	 * Note that it is rarely the case that this method should be called outside of a few
 	 * select entry points. For simplicity, that kind of recursion is discouraged. Recursion
 	 * cannot happen if an explicit transaction round is active, which limits usage to updates
-	 * with TRX_ROUND_ABSENT that do not leave open an transactions round of their own during
+	 * with TRX_ROUND_ABSENT that do not leave open any transactions round of their own during
 	 * the call to this method.
 	 *
 	 * In the less-common case of this being called within an in-progress DeferrableUpdate,
@@ -166,11 +166,10 @@ class DeferredUpdates {
 	 * of the innermost in-progress update on the stack.
 	 *
 	 * @internal For use by MediaWiki, Maintenance, JobRunner, JobExecutor
-	 * @param string|null $unused Previously for an "enqueue" mode
 	 * @param int $stage Which updates to process. One of
 	 *  (DeferredUpdates::PRESEND, DeferredUpdates::POSTSEND, DeferredUpdates::ALL)
 	 */
-	public static function doUpdates( $unused = null, $stage = self::ALL ) {
+	public static function doUpdates( $stage = self::ALL ) {
 		$services = MediaWikiServices::getInstance();
 		$stats = $services->getStatsdDataFactory();
 		$lbf = $services->getDBLoadBalancerFactory();
@@ -278,7 +277,7 @@ class DeferredUpdates {
 
 		// Run the updates for this context if they will have outer transaction scope
 		if ( !self::areDatabaseTransactionsActive() ) {
-			self::doUpdates( null, self::ALL );
+			self::doUpdates( self::ALL );
 
 			return true;
 		}

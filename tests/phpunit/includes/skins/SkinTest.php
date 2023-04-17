@@ -6,6 +6,7 @@ use MediaWiki\Linker\LinkTarget;
 use MediaWiki\Page\PageReferenceValue;
 use MediaWiki\Permissions\Authority;
 use MediaWiki\Tests\Unit\Permissions\MockAuthorityTrait;
+use MediaWiki\Title\Title;
 use MediaWiki\User\UserIdentity;
 use MediaWiki\User\UserIdentityValue;
 
@@ -165,7 +166,7 @@ class SkinTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $expected, $skin->isResponsive() );
 	}
 
-	public function provideSkinResponsiveOptions() {
+	public static function provideSkinResponsiveOptions() {
 		yield 'responsive not set' => [
 			[ 'name' => 'test', 'userPreference' => true ],
 			false
@@ -191,7 +192,7 @@ class SkinTest extends MediaWikiIntegrationTestCase {
 	/**
 	 * @covers Skin::makeLink
 	 */
-	public function provideMakeLink() {
+	public static function provideMakeLink() {
 		return [
 			'Empty href with link class' => [
 				[
@@ -293,7 +294,6 @@ class SkinTest extends MediaWikiIntegrationTestCase {
 
 	/**
 	 * @covers Skin::makeLink
-	 * @covers Skin::applyLinkTitleAttribs
 	 * @dataProvider provideMakeLink
 	 * @param array $data
 	 * @param array $options
@@ -318,7 +318,7 @@ class SkinTest extends MediaWikiIntegrationTestCase {
 		);
 	}
 
-	public function provideGetPersonalToolsForMakeListItem() {
+	public static function provideGetPersonalToolsForMakeListItem() {
 		return [
 			[
 				[
@@ -373,8 +373,8 @@ class SkinTest extends MediaWikiIntegrationTestCase {
 	 * @covers Skin::getPersonalToolsForMakeListItem
 	 * @dataProvider provideGetPersonalToolsForMakeListItem
 	 * @param array $urls
-	 * @param array $applyClassesToListItems
-	 * @param string $expected
+	 * @param bool $applyClassesToListItems
+	 * @param array $expected
 	 */
 	public function testGetPersonalToolsForMakeListItem( array $urls, bool $applyClassesToListItems, array $expected ) {
 		$skin = new class extends Skin {
@@ -426,7 +426,7 @@ class SkinTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $relevantUser, $skin->getRelevantUser() );
 	}
 
-	public function provideGetRelevantUser_load_from_title() {
+	public static function provideGetRelevantUser_load_from_title() {
 		yield 'Not user namespace' => [
 			'relevantPage' => PageReferenceValue::localReference( NS_MAIN, '123.123.123.123' ),
 			'expectedUser' => null

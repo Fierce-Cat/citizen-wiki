@@ -5,6 +5,8 @@ use MediaWiki\Block\DatabaseBlock;
 use MediaWiki\DAO\WikiAwareEntity;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Permissions\PermissionManager;
+use MediaWiki\Request\FauxRequest;
+use MediaWiki\Title\Title;
 
 /**
  * @covers Action
@@ -80,7 +82,7 @@ class ActionTest extends MediaWikiIntegrationTestCase {
 		WikiPage $wikiPage = null,
 		IContextSource $context = null
 	): Article {
-		$context = $context ?? $this->getContext();
+		$context ??= $this->getContext();
 		if ( $wikiPage !== null ) {
 			$context->setWikiPage( $wikiPage );
 			$context->setTitle( $wikiPage->getTitle() );
@@ -93,7 +95,7 @@ class ActionTest extends MediaWikiIntegrationTestCase {
 
 	private function getPage(): WikiPage {
 		$title = Title::makeTitle( 0, 'Title' );
-		return WikiPage::factory( $title );
+		return $this->getServiceContainer()->getWikiPageFactory()->newFromTitle( $title );
 	}
 
 	/**
@@ -112,7 +114,7 @@ class ActionTest extends MediaWikiIntegrationTestCase {
 		return $context;
 	}
 
-	public function provideActions() {
+	public static function provideActions() {
 		return [
 			[ 'dummy', 'DummyAction' ],
 			[ 'string', 'NamedDummyAction' ],
@@ -154,7 +156,7 @@ class ActionTest extends MediaWikiIntegrationTestCase {
 		$this->assertTrue( $exists );
 	}
 
-	public function provideGetActionName() {
+	public static function provideGetActionName() {
 		return [
 			'dummy' => [ 'dummy', 'DummyAction' ],
 			'string' => [ 'string', 'NamedDummyAction' ],
@@ -296,7 +298,7 @@ class DummyAction extends Action {
 	}
 
 	public function canExecute( User $user ) {
-		return $this->checkCanExecute( $user );
+		$this->checkCanExecute( $user );
 	}
 }
 

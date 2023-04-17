@@ -63,6 +63,7 @@ class ReflectionSchemaSource implements SettingsSource {
 	 */
 	public function load(): array {
 		$schemas = [];
+		$obsolete = [];
 
 		try {
 			$class = new ReflectionClass( $this->class );
@@ -75,6 +76,11 @@ class ReflectionSchemaSource implements SettingsSource {
 				$schema = $const->getValue();
 
 				if ( !is_array( $schema ) ) {
+					continue;
+				}
+
+				if ( isset( $schema['obsolete'] ) ) {
+					$obsolete[ $name ] = $schema['obsolete'];
 					continue;
 				}
 
@@ -108,7 +114,8 @@ class ReflectionSchemaSource implements SettingsSource {
 		}
 
 		return [
-			'config-schema' => $schemas
+			'config-schema' => $schemas,
+			'obsolete-config' => $obsolete
 		];
 	}
 
@@ -122,7 +129,7 @@ class ReflectionSchemaSource implements SettingsSource {
 	}
 
 	private function normalizeComment( string $doc ) {
-		$doc = preg_replace( '/^\s*\/\*+\s*|\s*\*+\/\s*$/s', '', $doc );
+		$doc = preg_replace( '/^\s*\/\*+\s*|\s*\*+\/\s*$/', '', $doc );
 		$doc = preg_replace( '/^\s*\**$/m', " ", $doc );
 		$doc = preg_replace( '/^\s*\**[ \t]?/m', '', $doc );
 		return $doc;

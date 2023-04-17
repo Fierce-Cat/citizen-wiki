@@ -30,16 +30,27 @@
 		$summaryPreview.append(
 			mw.message( 'summary-preview' ).parse(),
 			' ',
-			$( '<span>' ).addClass( 'comment' ).html(
-				// There is no equivalent to rawParams
-				mw.message( 'parentheses' ).escaped()
-					// .replace() use $ as start of a pattern.
-					// $$ is the pattern for '$'.
-					// The inner .replace() duplicates any $ and
-					// the outer .replace() simplifies the $$.
-					.replace( '$1', parse.parsedsummary.replace( /\$/g, '$$$$' ) )
-			)
+			$( '<span>' ).addClass( 'comment' ).html( parenthesesWrap( parse.parsedsummary ) )
 		);
+	}
+
+	/**
+	 * Wrap a string in parentheses.
+	 *
+	 * @param {string} str
+	 * @return {string}
+	 */
+	function parenthesesWrap( str ) {
+		if ( str === '' ) {
+			return str;
+		}
+		// There is no equivalent to rawParams
+		return mw.message( 'parentheses' ).escaped()
+			// .replace() use $ as start of a pattern.
+			// $$ is the pattern for '$'.
+			// The inner .replace() duplicates any $ and
+			// the outer .replace() simplifies the $$.
+			.replace( '$1', str.replace( /\$/g, '$$$$' ) );
 	}
 
 	/**
@@ -74,41 +85,191 @@
 	/**
 	 * Show the templates used.
 	 *
+	 * The formatting here repeats what is done in includes/TemplatesOnThisPageFormatter.php
+	 *
 	 * @private
-	 * @param {Array} templates
+	 * @param {Array} templates List of template titles.
+	 * @param {boolean} isSection Whether a section is currently being edited.
 	 */
-	function showTemplates( templates ) {
-		var newList = templates.map( function ( template ) {
-			return $( '<li>' ).append(
-				$( '<a>' )
-					.addClass( template.exists ? '' : 'new' )
-					.attr( 'href', mw.util.getUrl( template.title ) )
-					.text( template.title )
-			);
+	function showTemplates( templates, isSection ) {
+		// The .templatesUsed div can be empty, if no templates are in use.
+		// In that case, we have to create the required structure.
+		var $parent = $( '.templatesUsed' );
+
+		// Find or add the explanation text (the toggler for collapsing).
+		var explanationMsg = isSection ? 'templatesusedsection' : 'templatesusedpreview';
+		var $explanation = $parent.find( '.mw-templatesUsedExplanation p' );
+		if ( $explanation.length === 0 ) {
+			$explanation = $( '<p>' );
+			$parent.append( $( '<div>' )
+				.addClass( 'mw-templatesUsedExplanation' )
+				.append( $explanation ) );
+		}
+
+		// Find or add the list. The makeCollapsible() method is called on this
+		// in resources/src/mediawiki.action/mediawiki.action.edit.collapsibleFooter.js
+		var $list = $parent.find( 'ul' );
+		if ( $list.length === 0 ) {
+			$list = $( '<ul>' );
+			$parent.append( $list );
+		}
+
+		if ( templates.length === 0 ) {
+			// The following messages can be used here:
+			// * templatesusedpreview
+			// * templatesusedsection
+			$explanation.msg( explanationMsg, 0 );
+			$list.empty();
+			return;
+		}
+
+		// Otherwise, fetch protection status of all templates.
+		$parent.addClass( 'mw-preview-loading-elements-loading' );
+
+		// Batch titles because API is limited to 50 at a time.
+		var batchSize = 50;
+		var requests = [];
+		for ( var batch = 0; batch < templates.length; batch += batchSize ) {
+			// Build a list of template names for this batch.
+			var titles = templates
+				.slice( batch, batch + batchSize )
+				.map( function ( template ) { return template.title; } );
+			requests.push( api.post( {
+				action: 'query',
+				format: 'json',
+				formatversion: 2,
+				titles: titles,
+				prop: 'info',
+				// @todo Do we need inlinkcontext here?
+				inprop: 'linkclasses|protection',
+				intestactions: 'edit'
+			} ) );
+		}
+		$.when.apply( null, requests ).done( function () {
+			var templatesAllInfo = [];
+			// For the first batch, empty the list in preparation for either adding new items or not needing to.
+			// @todo Don't empty the list till the new list items are ready to be inserted.
+			$list.empty();
+			for ( var r = 0; r < arguments.length; r++ ) {
+				// Response is either the whole argument, or the 0th element of it.
+				var response = arguments[ r ][ 0 ] || arguments[ r ];
+				var templatesInfo = ( response.query && response.query.pages ) || [];
+				templatesInfo.forEach( function ( ti ) {
+					templatesAllInfo.push( {
+						title: mw.Title.newFromText( ti.title ),
+						apiData: ti
+					} );
+				} );
+			}
+			// Sort alphabetically.
+			templatesAllInfo.sort( function ( t1, t2 ) {
+				// Compare titles with the same rules of Title::compare() in PHP.
+				return t1.title.getNamespaceId() !== t2.title.getNamespaceId() ?
+					t1.title.getNamespaceId() > t2.title.getNamespaceId() :
+					t1.title.getMain().localeCompare( t2.title.getMain() );
+			} );
+
+			// Add all templates to the list, and update the list header.
+			templatesAllInfo.forEach( function ( t ) {
+				addItemToTemplateList( $list, t );
+			} );
+			// The following messages can be used here:
+			// * templatesusedpreview
+			// * templatesusedsection
+			$explanation.msg( explanationMsg, templatesAllInfo.length );
+		} ).always( function () {
+			$parent.removeClass( 'mw-preview-loading-elements-loading' );
+		} );
+	}
+
+	/**
+	 * Create list item with relevant links for the given template, and add it to the $list.
+	 *
+	 * @private
+	 * @param {jQuery} $list The `<ul>` to add the item to.
+	 * @param {Object} template Template info with which to construct the `<li>`.
+	 * @return {void}
+	 */
+	function addItemToTemplateList( $list, template ) {
+		var canEdit = template.apiData.actions.edit !== undefined;
+		var linkClasses = template.apiData.linkclasses || [];
+		if ( template.apiData.missing !== undefined ) {
+			linkClasses.push( 'new' );
+		}
+		var $baseLink = $( '<a>' )
+			// Additional CSS classes (e.g. link colors) used for links to this template.
+			// The following classes might be used here:
+			// * new
+			// * mw-redirect
+			// * any added by the GetLinkColours hook
+			.addClass( linkClasses );
+		var $link = $baseLink.clone()
+			.attr( 'href', template.title.getUrl() )
+			.text( template.title.getPrefixedText() );
+		var $editLink = $baseLink.clone()
+			.attr( 'href', template.title.getUrl( { action: 'edit' } ) )
+			.append( mw.msg( canEdit ? 'editlink' : 'viewsourcelink' ) );
+		var wordSep = mw.message( 'word-separator' ).escaped();
+		getRestrictionsText( template.apiData.protection || [] ).then( function ( restrictionsList ) {
+			// restrictionsList is a comma-separated parentheses-wrapped localized list of restriction level names.
+			var editLinkParens = parenthesesWrap( $editLink[ 0 ].outerHTML );
+			var $li = $( '<li>' ).append( $link, wordSep, editLinkParens, wordSep, restrictionsList );
+			$list.append( $li );
+		} );
+	}
+
+	/**
+	 * Get a localized string listing the restriction levels for a template.
+	 *
+	 * This should match the logic from TemplatesOnThisPageFormatter::getRestrictionsText().
+	 *
+	 * @private
+	 * @param {Array} restrictions Set of protection info objects from the inprop=protection API.
+	 * @return {jQuery.Promise}
+	 */
+	function getRestrictionsText( restrictions ) {
+		var msg = '';
+		if ( !restrictions ) {
+			return $.Deferred().resolve( msg );
+		}
+
+		// Record other restriction levels, in case it's protected for others.
+		var restrictionLevels = [];
+		restrictions.forEach( function ( r ) {
+			if ( r.type !== 'edit' ) {
+				return;
+			}
+			if ( r.level === 'sysop' ) {
+				msg = mw.msg( 'template-protected' );
+			} else if ( r.level === 'autoconfirmed' ) {
+				msg = mw.msg( 'template-semiprotected' );
+			} else {
+				restrictionLevels.push( r.level );
+			}
 		} );
 
-		var $parent = $( '.templatesUsed' );
-		if ( newList.length ) {
-			var $list = $parent.find( 'ul' );
-			if ( $list.length ) {
-				$list.detach().empty();
-			} else {
-				$( '<div>' )
-					.addClass( 'mw-templatesUsedExplanation' )
-					.append( '<p>' )
-					.appendTo( $parent );
-				$list = $( '<ul>' );
-			}
-
-			// Add "Templates used in this preview" or replace
-			// "Templates used on this page" with it
-			$( '.mw-templatesUsedExplanation > p' )
-				.msg( 'templatesusedpreview', newList.length );
-
-			$list.append( newList ).appendTo( $parent );
-		} else {
-			$parent.empty();
+		// If sysop or autoconfirmed, use that.
+		if ( msg !== '' ) {
+			return $.Deferred().resolve( msg );
 		}
+
+		// Otherwise, if the edit restriction isn't one of the backwards-compatible ones,
+		// use the (possibly custom) restriction-level-* messages.
+		var msgs = [];
+		restrictionLevels.forEach( function ( level ) {
+			msgs.push( 'restriction-level-' + level );
+		} );
+		// Custom restriction levels don't have their messages loaded, so we have to do that.
+		return api.loadMessagesIfMissing( msgs ).then( function () {
+			var localizedMessages = msgs.map( function ( m ) {
+				// Messages that can be used here include:
+				// * restriction-level-sysop
+				// * restriction-level-autoconfirmed
+				return mw.message( m ).parse();
+			} );
+			// There's no commaList in JS, so just join with commas (doesn't handle the last item).
+			return parenthesesWrap( localizedMessages.join( mw.msg( 'comma-separator' ) ) );
+		} );
 	}
 
 	/**
@@ -145,8 +306,9 @@
 	 * @private
 	 * @param {Object} config
 	 * @param {Object} response
+	 * @param {boolean} isSection Whether a section is currently being edited.
 	 */
-	function parseResponse( config, response ) {
+	function parseResponse( config, response, isSection ) {
 		var $content;
 
 		// Js config variables and modules.
@@ -183,7 +345,7 @@
 
 		// Templates.
 		if ( response.parse.templates ) {
-			showTemplates( response.parse.templates );
+			showTemplates( response.parse.templates, isSection );
 		}
 
 		// Limit report.
@@ -267,7 +429,7 @@
 			}
 		}
 
-		return api.post( params );
+		return api.post( params, { headers: { 'Promise-Non-Write-API-Action': 'true' } } );
 	}
 
 	/**
@@ -422,7 +584,7 @@
 				if ( config.showDiff ) {
 					parseDiffResponse( config, diffResponse[ 0 ] );
 				} else {
-					parseResponse( config, response[ 0 ] );
+					parseResponse( config, response[ 0 ], section !== '' );
 				}
 
 				mw.hook( 'wikipage.editform' ).fire( config.$formNode );

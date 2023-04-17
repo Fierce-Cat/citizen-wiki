@@ -59,7 +59,7 @@ class SiteImporterTest extends MediaWikiIntegrationTestCase {
 		);
 	}
 
-	public function provideImportFromXML() {
+	public static function provideImportFromXML() {
 		$foo = Site::newForType( Site::TYPE_UNKNOWN );
 		$foo->setGlobalId( 'Foo' );
 
@@ -186,7 +186,7 @@ class SiteImporterTest extends MediaWikiIntegrationTestCase {
 
 		foreach ( $sites as $site ) {
 			$key = $site->getGlobalId();
-			$data = unserialize( $site->serialize() );
+			$data = unserialize( serialize( $site ) );
 
 			$serialized[$key] = $data;
 		}

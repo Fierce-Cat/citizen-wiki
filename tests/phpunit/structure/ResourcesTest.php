@@ -1,6 +1,7 @@
 <?php
 
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Request\FauxRequest;
 use MediaWiki\ResourceLoader as RL;
 use Wikimedia\Minify\CSSMin;
 use Wikimedia\TestingAccessWrapper;
@@ -14,15 +15,18 @@ use Wikimedia\TestingAccessWrapper;
  * @copyright © 2012, Antoine Musso
  * @copyright © 2012, Niklas Laxström
  * @copyright © 2012, Santhosh Thottingal
+ *
+ * @coversNothing
  */
 class ResourcesTest extends MediaWikiIntegrationTestCase {
 
 	public function testStyleMedia() {
-		foreach ( self::provideMediaStylesheets() as list( $moduleName, $media, $filename, $css ) ) {
+		foreach ( self::provideMediaStylesheets() as [ $moduleName, $media, $filename, $css ] ) {
 			$cssText = CSSMin::minify( $css->cssText );
 
-			$this->assertTrue(
-				strpos( $cssText, '@media' ) === false,
+			$this->assertStringNotContainsString(
+				'@media',
+				$cssText,
 				'Stylesheets should not both specify "media" and contain @media'
 			);
 		}
@@ -47,8 +51,6 @@ class ResourcesTest extends MediaWikiIntegrationTestCase {
 			}
 		}
 
-		$knownDeps = array_keys( $data['modules'] );
-
 		// Avoid an assert for each module to keep the test fast.
 		// Instead, perform a single assertion against everything at once.
 		// When all is good, actual/expected are both empty arrays.
@@ -63,7 +65,7 @@ class ResourcesTest extends MediaWikiIntegrationTestCase {
 		/** @var RL\Module $module */
 		foreach ( $data['modules'] as $moduleName => $module ) {
 			foreach ( $module->getDependencies( $data['context'] ) as $dep ) {
-				if ( !in_array( $dep, $knownDeps, true ) ) {
+				if ( !isset( $data['modules'][$dep] ) ) {
 					$actualUnknown[$moduleName][] = $dep;
 					$expectedUnknown[$moduleName] = [];
 				}
@@ -101,20 +103,16 @@ class ResourcesTest extends MediaWikiIntegrationTestCase {
 	 * Example:
 	 * - A depends on B. A has targets: mobile, desktop. B has targets: desktop. Therefore the
 	 *   dependency is sometimes unregistered: it's impossible to load module A on mobile.
-	 * - A depends on B. B has requiresES6=true but A does not. In some browsers, B will be
-	 *   unregistered at startup and thus impossible to satisfy as dependency.
 	 */
 	public function testUnsatisfiableDependencies() {
 		$data = self::getAllModules();
 
 		/** @var RL\Module $module */
+		$incompatibleTargetNames = [];
+		$targetsErrMsg = '';
 		foreach ( $data['modules'] as $moduleName => $module ) {
 			$depNames = $module->getDependencies( $data['context'] );
 			$moduleTargets = $module->getTargets();
-
-			// Detect incompatible ES6 requirements (T316324)
-			$requiresES6 = $module->requiresES6();
-			$incompatibleDepNames = [];
 
 			foreach ( $depNames as $depName ) {
 				$dep = $data['modules'][$depName] ?? null;
@@ -122,23 +120,22 @@ class ResourcesTest extends MediaWikiIntegrationTestCase {
 					// Missing dependencies reported by testMissingDependencies
 					continue;
 				}
+				if ( $moduleTargets === [ 'test' ] ) {
+					// Target filter does not apply under tests, which may include
+					// both mobile-only and desktop-only dependencies.
+					continue;
+				}
 				$targets = $dep->getTargets();
 				foreach ( $moduleTargets as $moduleTarget ) {
-					$this->assertContains(
-						$moduleTarget,
-						$targets,
-						"The module '$moduleName' must not have target '$moduleTarget' "
-							. "because its dependency '$depName' does not have it"
-					);
-				}
-				if ( !$requiresES6 && $dep->requiresES6() ) {
-					$incompatibleDepNames[] = $depName;
+					if ( !in_array( $moduleTarget, $targets ) ) {
+						$incompatibleTargetNames[] = $moduleName;
+						$targetsErrMsg .= "* The module '$moduleName' must not have target '$moduleTarget' "
+								. "because its dependency '$depName' does not have it\n";
+					}
 				}
 			}
-			$this->assertEquals( [], $incompatibleDepNames,
-				"The module '$moduleName' must not depend on modules with requiresES6=true"
-			);
 		}
+		$this->assertEquals( [], $incompatibleTargetNames, $targetsErrMsg );
 	}
 
 	/**
@@ -328,6 +325,29 @@ class ResourcesTest extends MediaWikiIntegrationTestCase {
 					$file->getPath( $data['context'] ),
 					"File '$relativePath' referenced by '$moduleName' must exist."
 				);
+			}
+		}
+	}
+
+	public function testRespond() {
+		$data = self::getAllModules();
+		// Re-use the ResourceLoader instance to speed up tests.
+		$rl = $data['resourceloader'];
+		foreach ( $data['modules'] as $moduleName => $module ) {
+			if ( $module->getGroup() === RL\Module::GROUP_PRIVATE ) {
+				// Private modules cannot be served from load.php
+				continue;
+			}
+			// Check both general (scripts) and only=styles responses.
+			foreach ( [ null, 'styles' ] as $only ) {
+				$context = new RL\Context(
+					$rl,
+					new FauxRequest( [ 'modules' => $moduleName, 'only' => $only ] )
+				);
+				ob_start();
+				$rl->respond( $context );
+				ob_end_clean();
+				$this->assertSame( [], $rl->getErrors(), "$moduleName errors" );
 			}
 		}
 	}

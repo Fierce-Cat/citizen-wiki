@@ -282,7 +282,7 @@ class RevisionOutputCacheTest extends MediaWikiIntegrationTestCase {
 		);
 	}
 
-	public function provideCorruptData() {
+	public static function provideCorruptData() {
 		yield 'JSON serialization, bad data' => [ 'bla bla' ];
 		yield 'JSON serialization, no _class_' => [ '{"test":"test"}' ];
 		yield 'JSON serialization, non-existing _class_' => [ '{"_class_":"NonExistentBogusClass"}' ];
@@ -342,6 +342,7 @@ class RevisionOutputCacheTest extends MediaWikiIntegrationTestCase {
 	 * @covers \MediaWiki\Parser\RevisionOutputCache::encodeAsJson
 	 */
 	public function testCyclicStructuresDoNotBlowUpInJson() {
+		$this->markTestSkipped( 'Temporarily disabled: T314338' );
 		$testLogger = new TestLogger( true );
 		$cache = $this->createRevisionOutputCache( null, $testLogger );
 

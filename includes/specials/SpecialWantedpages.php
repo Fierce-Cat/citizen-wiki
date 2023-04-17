@@ -21,8 +21,11 @@
  * @ingroup SpecialPage
  */
 
+namespace MediaWiki\Specials;
+
 use MediaWiki\Cache\LinkBatchFactory;
 use MediaWiki\MainConfigNames;
+use WantedQueryPage;
 use Wikimedia\Rdbms\ILoadBalancer;
 
 /**
@@ -30,7 +33,7 @@ use Wikimedia\Rdbms\ILoadBalancer;
  *
  * @ingroup SpecialPage
  */
-class WantedPagesPage extends WantedQueryPage {
+class SpecialWantedPages extends WantedQueryPage {
 
 	/**
 	 * @param ILoadBalancer $loadBalancer
@@ -107,3 +110,9 @@ class WantedPagesPage extends WantedQueryPage {
 		return 'maintenance';
 	}
 }
+
+/**
+ * Retain the old class name for backwards compatibility.
+ * @deprecated since 1.40
+ */
+class_alias( SpecialWantedPages::class, 'WantedPagesPage' );

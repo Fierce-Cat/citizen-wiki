@@ -23,7 +23,7 @@
 			font-size: 1.25em;
 			line-height: 1.2;
 
-			&:before {
+			&::before {
 				content: attr( data-marker );
 			}
 		}
@@ -88,6 +88,11 @@
 	/* TODO: Re-evaluate whether we should keep this over-ride or switch to ems */
 	/* stylelint-disable-next-line declaration-property-unit-disallowed-list */
 	font-size: 13px;
+	/* Standardize tab width */
+	/* stylelint-disable-next-line plugin/no-unsupported-browser-features */
+	-moz-tab-size: 4;
+	/* stylelint-disable-next-line plugin/no-unsupported-browser-features */
+	tab-size: 4;
 	line-height: 1.6;
 	vertical-align: top;
 	// Fallback for browsers that don't support break-spaces, mainly IE11
@@ -199,20 +204,20 @@
 		color: transparent;
 	}
 
-	&:after {
+	&::after {
 		display: block;
 		color: #202122;
 		margin-top: -1.25em;
 	}
 }
 
-.mw-diff-movedpara-left:after,
-.rtl .mw-diff-movedpara-right:after {
+.mw-diff-movedpara-left::after,
+.rtl .mw-diff-movedpara-right::after {
 	content: '↪';
 }
 
-.mw-diff-movedpara-right:after,
-.rtl .mw-diff-movedpara-left:after {
+.mw-diff-movedpara-right::after,
+.rtl .mw-diff-movedpara-left::after {
 	content: '↩';
 }
 

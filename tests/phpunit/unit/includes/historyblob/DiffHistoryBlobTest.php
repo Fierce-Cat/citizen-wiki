@@ -1,12 +1,9 @@
 <?php
 
+/**
+ * @requires extension xdiff
+ */
 class DiffHistoryBlobTest extends MediaWikiUnitTestCase {
-
-	protected function setUp(): void {
-		parent::setUp();
-		$this->checkPHPExtension( 'xdiff' );
-	}
-
 	/**
 	 * @dataProvider provideXdiffAdler32
 	 * @covers DiffHistoryBlob::xdiffAdler32
@@ -19,13 +16,7 @@ class DiffHistoryBlobTest extends MediaWikiUnitTestCase {
 			"Hash of " . addcslashes( $input, "\0..\37!@\@\177..\377" ) );
 	}
 
-	public function provideXdiffAdler32() {
-		// Hack non-empty early return since PHPUnit expands this provider before running
-		// the setUp() which marks the test as skipped.
-		if ( !function_exists( 'xdiff_string_rabdiff' ) ) {
-			return [ [ '', 'Empty string' ] ];
-		}
-
+	public static function provideXdiffAdler32() {
 		return [
 			[ '', 'Empty string' ],
 			[ "\0", 'Null' ],

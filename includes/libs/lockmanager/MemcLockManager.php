@@ -1,7 +1,5 @@
 <?php
 /**
- * Version of LockManager based on using memcached servers.
- *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +16,6 @@
  * http://www.gnu.org/copyleft/gpl.html
  *
  * @file
- * @ingroup LockManager
  */
 use Wikimedia\WaitConditionLoop;
 
@@ -110,8 +107,8 @@ class MemcLockManager extends QuorumLockManager {
 
 		$now = time();
 		// Check if the requested locks conflict with existing ones...
-		foreach ( $pathsByType as $type => $paths ) {
-			foreach ( $paths as $path ) {
+		foreach ( $pathsByType as $type => $paths2 ) {
+			foreach ( $paths2 as $path ) {
 				$locksKey = $this->recordKeyForPath( $path );
 				$locksHeld = isset( $lockRecords[$locksKey] )
 					? self::sanitizeLockArray( $lockRecords[$locksKey] )
@@ -184,8 +181,8 @@ class MemcLockManager extends QuorumLockManager {
 		$lockRecords = $memc->getMulti( $keys );
 
 		// Remove the requested locks from all records...
-		foreach ( $pathsByType as $type => $paths ) {
-			foreach ( $paths as $path ) {
+		foreach ( $pathsByType as $type => $paths2 ) {
+			foreach ( $paths2 as $path ) {
 				$locksKey = $this->recordKeyForPath( $path ); // lock record
 				if ( !isset( $lockRecords[$locksKey] ) ) {
 					$status->warning( 'lockmanager-fail-releaselock', $path );

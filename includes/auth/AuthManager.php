@@ -508,7 +508,7 @@ class AuthManager implements LoggerAwareInterface {
 				$req->returnToUrl = $state['returnToUrl'];
 			}
 
-			// Step 1: Choose an primary authentication provider, and call it until it succeeds.
+			// Step 1: Choose a primary authentication provider, and call it until it succeeds.
 
 			if ( $state['primary'] === null ) {
 				// We haven't picked a PrimaryAuthenticationProvider yet
@@ -1087,12 +1087,10 @@ class AuthManager implements LoggerAwareInterface {
 
 	/**
 	 * @param callable $authorizer ( string $action, PageIdentity $target, PermissionStatus $status )
-	 * @param Authority $creator
 	 * @return StatusValue
 	 */
 	private function authorizeInternal(
-		callable $authorizer,
-		Authority $creator
+		callable $authorizer
 	): StatusValue {
 		// Wiki is read-only?
 		if ( $this->readOnlyMode->isReadOnly() ) {
@@ -1135,8 +1133,7 @@ class AuthManager implements LoggerAwareInterface {
 				PermissionStatus $status
 			) use ( $creator ) {
 				return $creator->probablyCan( $action, $target, $status );
-			},
-			$creator
+			}
 		);
 	}
 
@@ -1159,8 +1156,7 @@ class AuthManager implements LoggerAwareInterface {
 				PermissionStatus $status
 			) use ( $creator ) {
 				return $creator->authorizeWrite( $action, $target, $status );
-			},
-			$creator
+			}
 		);
 	}
 
@@ -1869,7 +1865,8 @@ class AuthManager implements LoggerAwareInterface {
 		] );
 
 		// Ignore warnings about primary connections/writes...hard to avoid here
-		$trxProfilerSilencedScope = \Profiler::instance()->getTransactionProfiler()->silenceForScope();
+		$trxProfiler = \Profiler::instance()->getTransactionProfiler();
+		$scope = $trxProfiler->silenceForScope( $trxProfiler::EXPECTATION_REPLICAS_ONLY );
 		try {
 			$status = $user->addToDatabase();
 			if ( !$status->isOK() ) {
@@ -1914,10 +1911,12 @@ class AuthManager implements LoggerAwareInterface {
 
 		// Update user count
 		\DeferredUpdates::addUpdate( \SiteStatsUpdate::factory( [ 'users' => 1 ] ) );
-		// Watch user's userpage and talk page
-		\DeferredUpdates::addCallableUpdate( function () use ( $user ) {
-			$this->watchlistManager->addWatchIgnoringRights( $user, $user->getUserPage() );
-		} );
+		// Watch user's userpage and talk page (except temp users)
+		if ( $source !== self::AUTOCREATE_SOURCE_TEMP ) {
+			\DeferredUpdates::addCallableUpdate( function () use ( $user ) {
+				$this->watchlistManager->addWatchIgnoringRights( $user, $user->getUserPage() );
+			} );
+		}
 
 		// Log the creation
 		if ( $this->config->get( MainConfigNames::NewUserLog ) && $log ) {
@@ -1931,7 +1930,7 @@ class AuthManager implements LoggerAwareInterface {
 			$logEntry->insert();
 		}
 
-		ScopedCallback::consume( $trxProfilerSilencedScope );
+		ScopedCallback::consume( $scope );
 
 		if ( $login ) {
 			$remember = $source === self::AUTOCREATE_SOURCE_TEMP;
@@ -2332,9 +2331,7 @@ class AuthManager implements LoggerAwareInterface {
 			if ( !$req->action || $forceAction ) {
 				$req->action = $action;
 			}
-			if ( $req->username === null ) {
-				$req->username = $username;
-			}
+			$req->username ??= $username;
 		}
 	}
 

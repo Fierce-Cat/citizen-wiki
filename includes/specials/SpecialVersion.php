@@ -24,7 +24,16 @@
  */
 
 use MediaWiki\ExtensionInfo;
+use MediaWiki\Html\Html;
+use MediaWiki\Language\RawMessage;
+use MediaWiki\Linker\Linker;
 use MediaWiki\MainConfigNames;
+use MediaWiki\MediaWikiServices;
+use MediaWiki\Parser\ParserOutputFlags;
+use MediaWiki\Utils\UrlUtils;
+use Symfony\Component\Yaml\Yaml;
+use Wikimedia\Parsoid\Core\SectionMetadata;
+use Wikimedia\Parsoid\Core\TOCData;
 
 /**
  * Give information about the version of MediaWiki, PHP, the DB and extensions
@@ -48,15 +57,29 @@ class SpecialVersion extends SpecialPage {
 	 */
 	protected static $extensionTypes = false;
 
+	/** @var TOCData */
+	protected $tocData;
+
+	/** @var int */
+	protected $tocLength;
+
 	/** @var Parser */
 	private $parser;
 
+	/** @var UrlUtils */
+	private $urlUtils;
+
 	/**
 	 * @param Parser $parser
+	 * @param UrlUtils $urlUtils
 	 */
-	public function __construct( Parser $parser ) {
+	public function __construct(
+		Parser $parser,
+		UrlUtils $urlUtils
+	) {
 		parent::__construct( 'Version' );
 		$this->parser = $parser;
+		$this->urlUtils = $urlUtils;
 	}
 
 	/**
@@ -68,7 +91,7 @@ class SpecialVersion extends SpecialPage {
 	 */
 	public static function getCredits( ExtensionRegistry $reg, Config $conf ): array {
 		$credits = $conf->get( MainConfigNames::ExtensionCredits );
-		foreach ( $reg->getAllThings() as $name => $credit ) {
+		foreach ( $reg->getAllThings() as $credit ) {
 			$credits[$credit['type']][] = $credit;
 		}
 		return $credits;
@@ -94,7 +117,7 @@ class SpecialVersion extends SpecialPage {
 		if ( isset( $parts[1] ) ) {
 			$extName = str_replace( '_', ' ', $parts[1] );
 			// Find it!
-			foreach ( $credits as $group => $extensions ) {
+			foreach ( $credits as $extensions ) {
 				foreach ( $extensions as $ext ) {
 					if ( isset( $ext['name'] ) && ( $ext['name'] === $extName ) ) {
 						$extNode = &$ext;
@@ -126,7 +149,7 @@ class SpecialVersion extends SpecialPage {
 					$file = ExtensionInfo::getAuthorsFileName( dirname( $extNode['path'] ) );
 					if ( $file ) {
 						$wikiText = file_get_contents( $file );
-						if ( substr( $file, -4 ) === '.txt' ) {
+						if ( str_ends_with( $file, '.txt' ) ) {
 							$wikiText = Html::element(
 								'pre',
 								[
@@ -155,8 +178,7 @@ class SpecialVersion extends SpecialPage {
 					$licenseFound = true;
 				} elseif ( ( $extNode !== null ) && isset( $extNode['path'] ) ) {
 					$files = ExtensionInfo::getLicenseFileNames( dirname( $extNode['path'] ) );
-
-					if ( count( $files ) ) {
+					if ( $files ) {
 						$licenseFound = true;
 						foreach ( $files as $file ) {
 							$out->addWikiTextAsInterface(
@@ -176,69 +198,108 @@ class SpecialVersion extends SpecialPage {
 					$out->addWikiTextAsInterface( '{{int:version-license-not-found}}' );
 				}
 				break;
+
 			default:
 				$out->addModuleStyles( 'mediawiki.special' );
-				$out->addWikiTextAsInterface(
-					self::getMediaWikiCredits() .
-					self::softwareInformation() .
-					$this->getEntryPointInfo()
-				);
-				$out->addHTML(
-					$this->getSkinCredits( $credits ) .
-					$this->getExtensionCredits( $credits ) .
-					$this->getExternalLibraries( $credits ) .
-					$this->getParserTags() .
-					$this->getParserFunctionHooks()
-				);
-				$out->addWikiTextAsInterface( $this->getHooks() );
-				$out->addHTML( $this->IPInfo() );
+
+				$out->addHTML( $this->getMediaWikiCredits() );
+
+				$this->tocData = new TOCData();
+				$this->tocLength = 0;
+
+				// Build the page contents (this also fills in TOCData)
+				$sections = [
+					$this->softwareInformation(),
+					$this->getEntryPointInfo(),
+					$this->getSkinCredits( $credits ),
+					$this->getExtensionCredits( $credits ),
+					$this->getExternalLibraries( $credits ),
+					$this->getClientSideLibraries(),
+					$this->getParserTags(),
+					$this->getParserFunctionHooks(),
+					$this->getHooks(),
+					$this->IPInfo(),
+				];
+
+				// Insert TOC first
+				$pout = new ParserOutput;
+				$pout->setTOCData( $this->tocData );
+				$pout->setOutputFlag( ParserOutputFlags::SHOW_TOC );
+				$pout->setText( Parser::TOC_PLACEHOLDER );
+				$out->addParserOutput( $pout );
+
+				// Insert contents
+				foreach ( $sections as $content ) {
+					$out->addHTML( $content );
+				}
 
 				break;
 		}
 	}
 
 	/**
-	 * Returns wiki text showing the license information.
+	 * Add a section to the table of contents. This doesn't add the heading to the actual page.
+	 * Assumes that there are only level 2 headings and that the IDs don't use non-ASCII characters.
 	 *
-	 * @return string
+	 * @param string $labelMsg
+	 * @param string $id
 	 */
-	private static function getMediaWikiCredits() {
-		$ret = Xml::element(
+	private function addTocSection( $labelMsg, $id ) {
+		$this->tocLength++;
+		$this->tocData->addSection( new SectionMetadata(
+			1,
+			2,
+			$this->msg( $labelMsg )->escaped(),
+			$this->getLanguage()->formatNum( $this->tocLength ),
+			(string)$this->tocLength,
+			null,
+			null,
+			$id,
+			$id
+		) );
+	}
+
+	/**
+	 * Returns HTML showing the license information.
+	 *
+	 * @return string HTML
+	 */
+	private function getMediaWikiCredits() {
+		// No TOC entry for this heading, we treat it like the lede section
+
+		$ret = Html::element(
 			'h2',
 			[ 'id' => 'mw-version-license' ],
-			wfMessage( 'version-license' )->text()
+			$this->msg( 'version-license' )->text()
 		);
 
-		// This text is always left-to-right.
-		$ret .= '<div class="plainlinks">';
-		$ret .= "__NOTOC__
-		" . self::getCopyrightAndAuthorList() . "\n
-		" . '<div class="mw-version-license-info">' .
-		wfMessage( 'version-license-info' )->text() .
-		'</div>';
-		$ret .= '</div>';
+		$ret .= Html::rawElement( 'div', [ 'class' => 'plainlinks' ],
+			$this->msg( new RawMessage( self::getCopyrightAndAuthorList() ) )->parseAsBlock() .
+			Html::rawElement( 'div', [ 'class' => 'mw-version-license-info' ],
+				$this->msg( 'version-license-info' )->parseAsBlock()
+			)
+		);
 
-		return str_replace( "\t\t", '', $ret ) . "\n";
+		return $ret;
 	}
 
 	/**
 	 * Get the "MediaWiki is copyright 2001-20xx by lots of cool folks" text
 	 *
-	 * @return string
+	 * @internal For use by WebInstallerWelcome
+	 * @return string Wikitext
 	 */
 	public static function getCopyrightAndAuthorList() {
-		global $wgLang;
-
 		if ( defined( 'MEDIAWIKI_INSTALL' ) ) {
 			$othersLink = '[https://www.mediawiki.org/wiki/Special:Version/Credits ' .
-				wfMessage( 'version-poweredby-others' )->text() . ']';
+				wfMessage( 'version-poweredby-others' )->plain() . ']';
 		} else {
 			$othersLink = '[[Special:Version/Credits|' .
-				wfMessage( 'version-poweredby-others' )->text() . ']]';
+				wfMessage( 'version-poweredby-others' )->plain() . ']]';
 		}
 
 		$translatorsLink = '[https://translatewiki.net/wiki/Translating:MediaWiki/Credits ' .
-			wfMessage( 'version-poweredby-translators' )->text() . ']';
+			wfMessage( 'version-poweredby-translators' )->plain() . ']';
 
 		$authorList = [
 			'Magnus Manske', 'Brion Vibber', 'Lee Daniel Crocker',
@@ -256,7 +317,7 @@ class SpecialVersion extends SpecialPage {
 		];
 
 		return wfMessage( 'version-poweredby-credits', MWTimestamp::getLocalInstance()->format( 'Y' ),
-			$wgLang->listToText( $authorList ) )->text();
+			Message::listParam( $authorList ) )->plain();
 	}
 
 	/**
@@ -273,12 +334,9 @@ class SpecialVersion extends SpecialPage {
 		$software = [
 			'[https://www.mediawiki.org/ MediaWiki]' => self::getVersionLinked(),
 			'[https://php.net/ PHP]' => PHP_VERSION . " (" . PHP_SAPI . ")",
+			'[https://icu.unicode.org/ ICU]' => INTL_ICU_VERSION,
 			$dbr->getSoftwareLink() => $dbr->getServerInfo(),
 		];
-
-		if ( defined( 'INTL_ICU_VERSION' ) ) {
-			$software['[https://icu.unicode.org/ ICU]'] = INTL_ICU_VERSION;
-		}
 
 		// Allow a hook to add/remove items.
 		Hooks::runner()->onSoftwareInfo( $software );
@@ -289,28 +347,34 @@ class SpecialVersion extends SpecialPage {
 	/**
 	 * Returns HTML showing the third party software versions (apache, php, mysql).
 	 *
-	 * @return string Wikitext table
+	 * @return string HTML
 	 */
-	private static function softwareInformation() {
-		$out = Xml::element(
-				'h2',
-				[ 'id' => 'mw-version-software' ],
-				wfMessage( 'version-software' )->text()
-			) .
-			Xml::openElement( 'table', [ 'class' => 'wikitable plainlinks', 'id' => 'sv-software' ] ) .
-			"<tr>
-				<th>" . wfMessage( 'version-software-product' )->text() . "</th>
-				<th>" . wfMessage( 'version-software-version' )->text() . "</th>
-			</tr>\n";
+	private function softwareInformation() {
+		$this->addTocSection( 'version-software', 'mw-version-software' );
+
+		$out = Html::element(
+			'h2',
+			[ 'id' => 'mw-version-software' ],
+			$this->msg( 'version-software' )->text()
+		);
+
+		$out .= Html::openElement( 'table', [ 'class' => 'wikitable plainlinks', 'id' => 'sv-software' ] );
+
+		$out .= Html::rawElement( 'tr', [],
+			Html::element( 'th', [], $this->msg( 'version-software-product' )->text() ) .
+			Html::element( 'th', [], $this->msg( 'version-software-version' )->text() )
+		);
 
 		foreach ( self::getSoftwareInformation() as $name => $version ) {
-			$out .= "<tr>
-					<td>" . $name . "</td>
-					<td dir=\"ltr\">" . $version . "</td>
-				</tr>\n";
+			$out .= Html::rawElement( 'tr', [],
+				Html::rawElement( 'td', [], $this->msg( new RawMessage( $name ) )->parse() ) .
+				Html::rawElement( 'td', [ 'dir' => 'ltr' ], $this->msg( new RawMessage( $version ) )->parse() )
+			);
 		}
 
-		return $out . Xml::closeElement( 'table' );
+		$out .= Html::closeElement( 'table' );
+
+		return $out;
 	}
 
 	/**
@@ -319,7 +383,7 @@ class SpecialVersion extends SpecialPage {
 	 * @param string $flags If set to 'nodb', the language-specific parantheses are not used.
 	 * @param Language|string|null $lang Language in which to render the version; ignored if
 	 *   $flags is set to 'nodb'.
-	 * @return mixed
+	 * @return string
 	 */
 	public static function getVersion( $flags = '', $lang = null ) {
 		global $IP;
@@ -348,7 +412,7 @@ class SpecialVersion extends SpecialPage {
 	 * the Git SHA1 of head if available.
 	 * The fallback is just MW_VERSION.
 	 *
-	 * @return mixed
+	 * @return string
 	 */
 	public static function getVersionLinked() {
 		$gitVersion = self::getVersionLinkedGit();
@@ -449,10 +513,10 @@ class SpecialVersion extends SpecialPage {
 	}
 
 	/**
-	 * Generate wikitext showing the name, URL, author and description of each extension.
+	 * Generate HTML showing the name, URL, author and description of each extension.
 	 *
 	 * @param array $credits
-	 * @return string Wikitext
+	 * @return string HTML
 	 */
 	private function getExtensionCredits( array $credits ) {
 		if (
@@ -464,6 +528,8 @@ class SpecialVersion extends SpecialPage {
 		}
 
 		$extensionTypes = self::getExtensionTypes();
+
+		$this->addTocSection( 'version-extensions', 'mw-version-ext' );
 
 		$out = Xml::element(
 				'h2',
@@ -502,27 +568,29 @@ class SpecialVersion extends SpecialPage {
 	}
 
 	/**
-	 * Generate wikitext showing the name, URL, author and description of each skin.
+	 * Generate HTML showing the name, URL, author and description of each skin.
 	 *
 	 * @param array $credits
-	 * @return string Wikitext
+	 * @return string HTML
 	 */
 	private function getSkinCredits( array $credits ) {
-		if ( !isset( $credits['skin'] ) || count( $credits['skin'] ) === 0 ) {
+		if ( !isset( $credits['skin'] ) || !$credits['skin'] ) {
 			return '';
 		}
 
-		$out = Xml::element(
+		$this->addTocSection( 'version-skins', 'mw-version-skin' );
+
+		$out = Html::element(
 				'h2',
 				[ 'id' => 'mw-version-skin' ],
 				$this->msg( 'version-skins' )->text()
 			) .
-			Xml::openElement( 'table', [ 'class' => 'wikitable plainlinks', 'id' => 'sv-skin' ] );
+			Html::openElement( 'table', [ 'class' => 'wikitable plainlinks', 'id' => 'sv-skin' ] );
 
 		$this->firstExtOpened = false;
 		$out .= $this->getExtensionCategory( 'skin', null, $credits['skin'] );
 
-		$out .= Xml::closeElement( 'table' );
+		$out .= Html::closeElement( 'table' );
 
 		return $out;
 	}
@@ -570,6 +638,8 @@ class SpecialVersion extends SpecialPage {
 
 		ksort( $dependencies );
 
+		$this->addTocSection( 'version-libraries', 'mw-version-libraries' );
+
 		$out = Html::element(
 			'h2',
 			[ 'id' => 'mw-version-libraries' ],
@@ -588,7 +658,7 @@ class SpecialVersion extends SpecialPage {
 			. Html::closeElement( 'tr' );
 
 		foreach ( $dependencies as $name => $info ) {
-			if ( !is_array( $info ) || strpos( $info['type'], 'mediawiki-' ) === 0 ) {
+			if ( !is_array( $info ) || str_starts_with( $info['type'], 'mediawiki-' ) ) {
 				// Skip any extensions or skins since they'll be listed
 				// in their proper section
 				continue;
@@ -621,10 +691,65 @@ class SpecialVersion extends SpecialPage {
 					)
 				)
 				. Html::element( 'td', [ 'dir' => 'auto' ], $info['version'] )
-				// @phan-suppress-next-line SecurityCheck-DoubleEscaped false positive
 				. Html::element( 'td', [ 'dir' => 'auto' ], $this->listToText( $info['licenses'] ) )
 				. Html::element( 'td', [ 'lang' => 'en', 'dir' => 'ltr' ], $info['description'] )
 				. Html::rawElement( 'td', [], $authors )
+				. Html::closeElement( 'tr' );
+		}
+		$out .= Html::closeElement( 'table' );
+
+		return $out;
+	}
+
+	/**
+	 * Generate an HTML table for client-side libraries that are installed
+	 *
+	 * @return string HTML output
+	 */
+	private function getClientSideLibraries() {
+		global $IP;
+		$registryFile = "{$IP}/resources/lib/foreign-resources.yaml";
+		$modules = Yaml::parseFile( $registryFile );
+		ksort( $modules );
+
+		$this->addTocSection( 'version-libraries-client', 'mw-version-libraries-client' );
+
+		$out = Html::element(
+			'h2',
+			[ 'id' => 'mw-version-libraries-client' ],
+			$this->msg( 'version-libraries-client' )->text()
+		);
+		$out .= Html::openElement(
+			'table',
+			[ 'class' => 'wikitable plainlinks', 'id' => 'sv-libraries-client' ]
+		);
+		$out .= Html::openElement( 'tr' )
+			. Html::element( 'th', [], $this->msg( 'version-libraries-library' )->text() )
+			. Html::element( 'th', [], $this->msg( 'version-libraries-version' )->text() )
+			. Html::element( 'th', [], $this->msg( 'version-libraries-license' )->text() )
+			. Html::closeElement( 'tr' );
+
+		foreach ( $modules as $name => $info ) {
+			// We can safely assume that the libraries' names and descriptions
+			// are written in English and aren't going to be translated,
+			// so set appropriate lang and dir attributes
+			$out .= Html::openElement( 'tr', [
+				// Add an anchor so docs can link easily to the version of
+				// this specific library
+				'id' => Sanitizer::escapeIdForAttribute(
+					"mw-version-library-$name"
+				) ] )
+				. Html::rawElement(
+					'td',
+					[],
+					Linker::makeExternalLink(
+						$info['homepage'], $name,
+						true, '',
+						[ 'class' => 'mw-version-library-name' ]
+					)
+				)
+				. Html::element( 'td', [ 'dir' => 'auto' ], $info['version'] )
+				. Html::element( 'td', [ 'dir' => 'auto' ], $info['license'] )
 				. Html::closeElement( 'tr' );
 		}
 		$out .= Html::closeElement( 'table' );
@@ -639,38 +764,38 @@ class SpecialVersion extends SpecialPage {
 	 */
 	protected function getParserTags() {
 		$tags = $this->parser->getTags();
+		if ( !$tags ) {
+			return '';
+		}
 
-		if ( count( $tags ) ) {
-			$out = Html::rawElement(
-				'h2',
-				[
-					'class' => 'mw-headline plainlinks',
-					'id' => 'mw-version-parser-extensiontags',
-				],
-				// @phan-suppress-next-line SecurityCheck-DoubleEscaped Using false for escape is safe
+		$this->addTocSection( 'version-parser-extensiontags', 'mw-version-parser-extensiontags' );
+
+		$out = Html::rawElement(
+			'h2',
+			[ 'id' => 'mw-version-parser-extensiontags' ],
+			Html::rawElement(
+				'span',
+				[ 'class' => 'plainlinks' ],
 				Linker::makeExternalLink(
 					'https://www.mediawiki.org/wiki/Special:MyLanguage/Manual:Tag_extensions',
-					$this->msg( 'version-parser-extensiontags' )->parse(),
-					false /* msg()->parse() already escapes */
+					$this->msg( 'version-parser-extensiontags' )->text()
 				)
+			)
+		);
+
+		array_walk( $tags, static function ( &$value ) {
+			// Bidirectional isolation improves readability in RTL wikis
+			$value = Html::element(
+				'bdi',
+				// Prevent < and > from slipping to another line
+				[
+					'style' => 'white-space: nowrap;',
+				],
+				"<$value>"
 			);
+		} );
 
-			array_walk( $tags, static function ( &$value ) {
-				// Bidirectional isolation improves readability in RTL wikis
-				$value = Html::element(
-					'bdi',
-					// Prevent < and > from slipping to another line
-					[
-						'style' => 'white-space: nowrap;',
-					],
-					"<$value>"
-				);
-			} );
-
-			$out .= $this->listToText( $tags );
-		} else {
-			$out = '';
-		}
+		$out .= $this->listToText( $tags );
 
 		return $out;
 	}
@@ -681,26 +806,27 @@ class SpecialVersion extends SpecialPage {
 	 * @return string HTML output
 	 */
 	protected function getParserFunctionHooks() {
-		$fhooks = $this->parser->getFunctionHooks();
-		if ( count( $fhooks ) ) {
-			$out = Html::rawElement(
-				'h2',
-				[
-					'class' => 'mw-headline plainlinks',
-					'id' => 'mw-version-parser-function-hooks',
-				],
-				// @phan-suppress-next-line SecurityCheck-DoubleEscaped Using false for escape is safe
+		$funcHooks = $this->parser->getFunctionHooks();
+		if ( !$funcHooks ) {
+			return '';
+		}
+
+		$this->addTocSection( 'version-parser-function-hooks', 'mw-version-parser-function-hooks' );
+
+		$out = Html::rawElement(
+			'h2',
+			[ 'id' => 'mw-version-parser-function-hooks' ],
+			Html::rawElement(
+				'span',
+				[ 'class' => 'plainlinks' ],
 				Linker::makeExternalLink(
 					'https://www.mediawiki.org/wiki/Special:MyLanguage/Manual:Parser_functions',
-					$this->msg( 'version-parser-function-hooks' )->parse(),
-					false /* msg()->parse() already escapes */
+					$this->msg( 'version-parser-function-hooks' )->text()
 				)
-			);
+			)
+		);
 
-			$out .= $this->listToText( $fhooks );
-		} else {
-			$out = '';
-		}
+		$out .= $this->listToText( $funcHooks );
 
 		return $out;
 	}
@@ -715,9 +841,6 @@ class SpecialVersion extends SpecialPage {
 	 * @return string
 	 */
 	protected function getExtensionCategory( $type, ?string $text, array $creditsGroup ) {
-		$config = $this->getConfig();
-		$credits = $config->get( MainConfigNames::ExtensionCredits );
-
 		$out = '';
 
 		if ( $creditsGroup ) {
@@ -815,7 +938,7 @@ class SpecialVersion extends SpecialPage {
 			$memcKey = $cache->makeKey(
 				'specialversion-ext-version-text', $extension['path'], $this->coreId
 			);
-			list( $vcsVersion, $vcsLink, $vcsDate ) = $cache->get( $memcKey );
+			[ $vcsVersion, $vcsLink, $vcsDate ] = $cache->get( $memcKey );
 
 			if ( !$vcsVersion ) {
 				wfDebug( "Getting VCS info for extension {$extension['name']}" );
@@ -935,28 +1058,36 @@ class SpecialVersion extends SpecialPage {
 	}
 
 	/**
-	 * Generate wikitext showing hooks in $wgHooks.
+	 * Generate HTML showing hooks in $wgHooks.
 	 *
-	 * @return string Wikitext
+	 * @return string HTML
 	 */
 	private function getHooks() {
-		if ( $this->getConfig()->get( MainConfigNames::SpecialVersionShowHooks ) &&
-		count( $this->getConfig()->get( MainConfigNames::Hooks ) ) ) {
-			$myHooks = $this->getConfig()->get( MainConfigNames::Hooks );
-			ksort( $myHooks );
+		if ( $this->getConfig()->get( MainConfigNames::SpecialVersionShowHooks ) ) {
+			$hookContainer = MediaWikiServices::getInstance()->getHookContainer();
+			$hookNames = $hookContainer->getHookNames();
+			sort( $hookNames );
 
 			$ret = [];
-			$ret[] = '== {{int:version-hooks}} ==';
+			$this->addTocSection( 'version-hooks', 'mw-version-hooks' );
+			$ret[] = Html::element(
+				'h2',
+				[ 'id' => 'mw-version-hooks' ],
+				$this->msg( 'version-hooks' )->text()
+			);
 			$ret[] = Html::openElement( 'table', [ 'class' => 'wikitable', 'id' => 'sv-hooks' ] );
 			$ret[] = Html::openElement( 'tr' );
 			$ret[] = Html::element( 'th', [], $this->msg( 'version-hook-name' )->text() );
 			$ret[] = Html::element( 'th', [], $this->msg( 'version-hook-subscribedby' )->text() );
 			$ret[] = Html::closeElement( 'tr' );
 
-			foreach ( $myHooks as $hook => $hooks ) {
+			foreach ( $hookNames as $hook ) {
+				$hooks = $hookContainer->getLegacyHandlers( $hook );
+				if ( !$hooks ) {
+					continue;
+				}
 				$ret[] = Html::openElement( 'tr' );
 				$ret[] = Html::element( 'td', [], $hook );
-				// @phan-suppress-next-line SecurityCheck-DoubleEscaped false positive
 				$ret[] = Html::element( 'td', [], $this->listToText( $hooks ) );
 				$ret[] = Html::closeElement( 'tr' );
 			}
@@ -1039,10 +1170,9 @@ class SpecialVersion extends SpecialPage {
 	 * @param string|bool $extName Name of the extension for link creation,
 	 *   false if no links should be created
 	 * @param string $extDir Path to the extension root directory
-	 *
 	 * @return string HTML fragment
 	 */
-	public function listAuthors( $authors, $extName, $extDir ) {
+	public function listAuthors( $authors, $extName, $extDir ): string {
 		$hasOthers = false;
 		$linkRenderer = $this->getLinkRenderer();
 
@@ -1080,7 +1210,7 @@ class SpecialVersion extends SpecialPage {
 					$text = $this->msg( 'version-poweredby-others' )->escaped();
 				}
 				$list[] = $text;
-			} elseif ( substr( $item, -5 ) == ' ...]' ) {
+			} elseif ( str_ends_with( $item, ' ...]' ) ) {
 				$hasOthers = true;
 				$list[] = $this->getOutput()->parseInlineAsInterface(
 					substr( $item, 0, -4 ) . $this->msg( 'version-poweredby-others' )->text() . "]"
@@ -1105,11 +1235,10 @@ class SpecialVersion extends SpecialPage {
 	 *
 	 * @param array $list List of elements to display
 	 * @param bool $sort Whether to sort the items in $list
-	 *
 	 * @return string
 	 */
-	public function listToText( $list, $sort = true ) {
-		if ( !count( $list ) ) {
+	private function listToText( array $list, bool $sort = true ): string {
+		if ( !$list ) {
 			return '';
 		}
 		if ( $sort ) {
@@ -1123,9 +1252,9 @@ class SpecialVersion extends SpecialPage {
 	/**
 	 * Convert an array or object to a string for display.
 	 *
+	 * @internal For use by ApiQuerySiteinfo (TODO: Turn into more stable method)
 	 * @param mixed $list Will convert an array to string if given and return
 	 *   the parameter unaltered otherwise
-	 *
 	 * @return mixed
 	 */
 	public static function arrayToString( $list ) {
@@ -1136,9 +1265,7 @@ class SpecialVersion extends SpecialPage {
 			// Don't output stuff like "Closure$;1028376090#8$48499d94fe0147f7c633b365be39952b$"
 			return 'Closure';
 		} elseif ( is_object( $list ) ) {
-			$class = wfMessage( 'parentheses' )->params( get_class( $list ) )->escaped();
-
-			return $class;
+			return wfMessage( 'parentheses' )->params( get_class( $list ) )->escaped();
 		} elseif ( !is_array( $list ) ) {
 			return $list;
 		} else {
@@ -1154,12 +1281,10 @@ class SpecialVersion extends SpecialPage {
 
 	/**
 	 * @param string $dir Directory of the git checkout
-	 * @return bool|string Sha1 of commit HEAD points to
+	 * @return string|false Sha1 of commit HEAD points to
 	 */
 	public static function getGitHeadSha1( $dir ) {
-		$repo = new GitInfo( $dir );
-
-		return $repo->getHeadSHA1();
+		return ( new GitInfo( $dir ) )->getHeadSHA1();
 	}
 
 	/**
@@ -1167,13 +1292,12 @@ class SpecialVersion extends SpecialPage {
 	 * @return bool|string Branch currently checked out
 	 */
 	public static function getGitCurrentBranch( $dir ) {
-		$repo = new GitInfo( $dir );
-		return $repo->getCurrentBranch();
+		return ( new GitInfo( $dir ) )->getCurrentBranch();
 	}
 
 	/**
 	 * Get the list of entry points and their URLs
-	 * @return string Wikitext
+	 * @return string HTML
 	 */
 	public function getEntryPointInfo() {
 		$config = $this->getConfig();
@@ -1188,10 +1312,13 @@ class SpecialVersion extends SpecialPage {
 		];
 
 		$language = $this->getLanguage();
-		$thAttribures = [
+		$thAttributes = [
 			'dir' => $language->getDir(),
 			'lang' => $language->getHtmlCode()
 		];
+
+		$this->addTocSection( 'version-entrypoints', 'mw-version-entrypoints' );
+
 		$out = Html::element(
 				'h2',
 				[ 'id' => 'mw-version-entrypoints' ],
@@ -1208,23 +1335,22 @@ class SpecialVersion extends SpecialPage {
 			Html::openElement( 'tr' ) .
 			Html::element(
 				'th',
-				$thAttribures,
+				$thAttributes,
 				$this->msg( 'version-entrypoints-header-entrypoint' )->text()
 			) .
 			Html::element(
 				'th',
-				$thAttribures,
+				$thAttributes,
 				$this->msg( 'version-entrypoints-header-url' )->text()
 			) .
 			Html::closeElement( 'tr' );
 
 		foreach ( $entryPoints as $message => $value ) {
-			$url = wfExpandUrl( $value, PROTO_RELATIVE );
+			$url = $this->urlUtils->expand( $value, PROTO_RELATIVE );
 			$out .= Html::openElement( 'tr' ) .
-				// ->plain() looks like it should be ->parse(), but this function
-				// returns wikitext, not HTML, boo
-				Html::rawElement( 'td', [], $this->msg( $message )->plain() ) .
-				Html::rawElement( 'td', [], Html::rawElement( 'code', [], "[$url $value]" ) ) .
+				Html::rawElement( 'td', [], $this->msg( $message )->parse() ) .
+				Html::rawElement( 'td', [], Html::rawElement( 'code', [],
+					$this->msg( new RawMessage( "[$url $value]" ) )->parse() ) ) .
 				Html::closeElement( 'tr' );
 		}
 

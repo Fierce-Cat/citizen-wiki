@@ -1,5 +1,9 @@
 <?php
 
+use MediaWiki\Language\RawMessage;
+use MediaWiki\Request\FauxRequest;
+use MediaWiki\Title\Title;
+
 /**
  * @covers HTMLForm
  *
@@ -116,7 +120,7 @@ class HTMLFormTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $shouldBeAuthorized, $form->tryAuthorizedSubmit() );
 	}
 
-	public function provideCsrf() {
+	public static function provideCsrf() {
 		return [
 			// form token salt, request data, tokens, should be authorized?
 			'Anon user, CSRF token ignored' => [ null, [], null, true ],

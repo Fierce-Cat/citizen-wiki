@@ -1,6 +1,7 @@
 <?php
 
 use MediaWiki\MainConfigNames;
+use MediaWiki\Request\FauxRequest;
 use MediaWiki\Session\SessionManager;
 use Wikimedia\ScopedCallback;
 use Wikimedia\TestingAccessWrapper;
@@ -44,7 +45,7 @@ class BotPasswordTest extends MediaWikiIntegrationTestCase {
 		$mock2->method( 'isAttached' )
 			->willReturn( false );
 		$mock2->method( 'lookupUserNames' )
-			->will( $this->returnArgument( 0 ) );
+			->willReturnArgument( 0 );
 		$mock2->expects( $this->never() )->method( 'lookupCentralIds' );
 
 		$this->mergeMwGlobalArrayValue( 'wgCentralIdLookupProviders', [
@@ -138,7 +139,6 @@ class BotPasswordTest extends MediaWikiIntegrationTestCase {
 		$this->assertEquals( '{"IPAddresses":["127.0.0.0/8"]}', $bp->getRestrictions()->toJson() );
 		$this->assertSame( [ 'test' ], $bp->getGrants() );
 
-		$user = $this->testUser->getUser();
 		$bp = BotPassword::newUnsaved( [
 			'centralId' => 45,
 			'appId' => 'DoesNotExist'
@@ -237,7 +237,7 @@ class BotPasswordTest extends MediaWikiIntegrationTestCase {
 		}
 	}
 
-	public function provideCanonicalizeLoginData() {
+	public static function provideCanonicalizeLoginData() {
 		return [
 			[ 'user', 'pass', false ],
 			[ 'user', 'abc@def', false ],

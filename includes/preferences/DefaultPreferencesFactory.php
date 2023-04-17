@@ -20,10 +20,7 @@
 
 namespace MediaWiki\Preferences;
 
-use DateTime;
-use DateTimeZone;
-use Exception;
-use Html;
+use Config;
 use HTMLForm;
 use HTMLFormField;
 use IContextSource;
@@ -36,19 +33,21 @@ use MediaWiki\Auth\PasswordAuthenticationRequest;
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\HookContainer\HookContainer;
 use MediaWiki\HookContainer\HookRunner;
+use MediaWiki\Html\Html;
 use MediaWiki\Languages\LanguageConverterFactory;
 use MediaWiki\Languages\LanguageNameUtils;
 use MediaWiki\Linker\LinkRenderer;
 use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Permissions\PermissionManager;
+use MediaWiki\Title\Title;
 use MediaWiki\User\UserGroupManager;
 use MediaWiki\User\UserOptionsLookup;
 use MediaWiki\User\UserOptionsManager;
+use MediaWiki\User\UserTimeCorrection;
 use Message;
 use MessageLocalizer;
 use MWException;
-use MWTimestamp;
 use NamespaceInfo;
 use OutputPage;
 use Parser;
@@ -59,11 +58,9 @@ use Psr\Log\NullLogger;
 use SkinFactory;
 use SpecialPage;
 use Status;
-use Title;
 use UnexpectedValueException;
 use User;
 use UserGroupMembership;
-use Wikimedia\RequestTimeout\TimeoutException;
 use Xml;
 
 /**
@@ -117,6 +114,9 @@ class DefaultPreferencesFactory implements PreferencesFactory {
 	/** @var SignatureValidatorFactory */
 	private $signatureValidatorFactory;
 
+	/** @var Config */
+	private $config;
+
 	/**
 	 * @internal For use by ServiceWiring
 	 */
@@ -167,6 +167,7 @@ class DefaultPreferencesFactory implements PreferencesFactory {
 	 * @param SkinFactory|null $skinFactory
 	 * @param UserGroupManager|null $userGroupManager
 	 * @param SignatureValidatorFactory|null $signatureValidatorFactory
+	 * @param Config|null $config
 	 */
 	public function __construct(
 		ServiceOptions $options,
@@ -183,7 +184,8 @@ class DefaultPreferencesFactory implements PreferencesFactory {
 		Parser $parser = null,
 		SkinFactory $skinFactory = null,
 		UserGroupManager $userGroupManager = null,
-		SignatureValidatorFactory $signatureValidatorFactory = null
+		SignatureValidatorFactory $signatureValidatorFactory = null,
+		Config $config = null
 	) {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
 
@@ -219,6 +221,7 @@ class DefaultPreferencesFactory implements PreferencesFactory {
 		$this->userGroupManager = $userGroupManager ?? $services()->getUserGroupManager();
 		$this->signatureValidatorFactory = $signatureValidatorFactory
 			?? $services()->getSignatureValidatorFactory();
+		$this->config = $config ?? $services()->getMainConfig();
 	}
 
 	/**
@@ -782,7 +785,7 @@ class DefaultPreferencesFactory implements PreferencesFactory {
 					'label-message' => 'tog-requireemail',
 					'help-message' => 'prefs-help-requireemail',
 					'section' => 'personal/email',
-					'disabled' => $user->getEmail() ? false : true,
+					'disabled' => !$user->getEmail(),
 				];
 			}
 
@@ -914,19 +917,29 @@ class DefaultPreferencesFactory implements PreferencesFactory {
 	 */
 	protected function skinPreferences( User $user, IContextSource $context, &$defaultPreferences ) {
 		// Skin selector, if there is at least one valid skin
-		$skinOptions = $this->generateSkinOptions( $user, $context );
-		if ( $skinOptions ) {
+		$validSkinNames = $this->getValidSkinNames( $user, $context );
+		if ( $validSkinNames ) {
 			$defaultPreferences['skin'] = [
-				// @phan-suppress-next-line SecurityCheck-XSS False positive, key is escaped
 				'type' => 'radio',
-				'options' => $skinOptions,
+				'options' => $this->generateSkinOptions( $user, $context, $validSkinNames ),
 				'section' => 'rendering/skin',
 			];
+			$hideCond = [ 'AND' ];
+			foreach ( $validSkinNames as $skinName => $_ ) {
+				$options = $this->skinFactory->getSkinOptions( $skinName );
+				if ( $options['responsive'] ?? false ) {
+					$hideCond[] = [ '!==', 'skin', $skinName ];
+				}
+			}
+			if ( $hideCond === [ 'AND' ] ) {
+				$hideCond = [];
+			}
 			$defaultPreferences['skin-responsive'] = [
 				'type' => 'check',
 				'label-message' => 'prefs-skin-responsive',
 				'section' => 'rendering/skin/skin-prefs',
 				'help-message' => 'prefs-help-skin-responsive',
+				'hide-if' => $hideCond,
 			];
 		}
 
@@ -1023,43 +1036,30 @@ class DefaultPreferencesFactory implements PreferencesFactory {
 			'section' => 'rendering/timeoffset',
 		];
 
-		// Grab existing pref.
-		$tzOffset = $this->userOptionsManager->getOption( $user, 'timecorrection' );
-		$tz = explode( '|', $tzOffset, 3 );
+		$userTimeCorrection = (string)$this->userOptionsManager->getOption( $user, 'timecorrection' );
+		// This value should already be normalized by UserTimeCorrection, so it should always be valid and not
+		// in the legacy format. However, let's be sure about that and normalize it again.
+		// Also, recompute the offset because it can change with DST.
+		$userTimeCorrectionObj = new UserTimeCorrection(
+			$userTimeCorrection,
+			null,
+			$this->options->get( MainConfigNames::LocalTZoffset )
+		);
 
-		$tzOptions = $this->getTimezoneOptions( $context );
-
-		$tzSetting = $tzOffset;
-		if ( count( $tz ) > 1 && $tz[0] == 'ZoneInfo' &&
-			!in_array( $tzOffset, HTMLFormField::flattenOptions( $tzOptions ) )
-		) {
-			// Timezone offset can vary with DST
-			try {
-				$userTZ = new DateTimeZone( $tz[2] );
-				$minDiff = floor( $userTZ->getOffset( new DateTime( 'now' ) ) / 60 );
-				$tzSetting = "ZoneInfo|$minDiff|{$tz[2]}";
-			} catch ( TimeoutException $e ) {
-				throw $e;
-			} catch ( Exception $e ) {
-				// User has an invalid time zone set. Fall back to just using the offset
-				$tz[0] = 'Offset';
-			}
-		}
-		if ( count( $tz ) > 1 && $tz[0] == 'Offset' ) {
-			$minDiff = (int)$tz[1];
-			$tzSetting = sprintf( '%+03d:%02d', floor( $minDiff / 60 ), abs( $minDiff ) % 60 );
+		if ( $userTimeCorrectionObj->getCorrectionType() === UserTimeCorrection::OFFSET ) {
+			$tzDefault = UserTimeCorrection::formatTimezoneOffset( $userTimeCorrectionObj->getTimeOffset() );
+		} else {
+			$tzDefault = $userTimeCorrectionObj->toString();
 		}
 
 		$defaultPreferences['timecorrection'] = [
-			'class' => \HTMLSelectOrOtherField::class,
+			'type' => 'timezone',
 			'label-message' => 'timezonelegend',
-			'options' => $tzOptions,
-			'default' => $tzSetting,
+			'default' => $tzDefault,
 			'size' => 20,
 			'section' => 'rendering/timeoffset',
 			'id' => 'wpTimeCorrection',
 			'filter' => TimezoneFilter::class,
-			'placeholder-message' => 'timezone-useoffset-placeholder',
 		];
 	}
 
@@ -1493,6 +1493,39 @@ class DefaultPreferencesFactory implements PreferencesFactory {
 			'help-message' => $context->msg( 'searchlimit-help', 500 ),
 			'filter' => IntvalFilter::class,
 		];
+
+		// show a preference for thumbnails from namespaces other than NS_FILE,
+		// only when there they're actually configured to be served
+		$thumbNamespaces = $this->config->get( 'ThumbnailNamespaces' );
+		$thumbNamespacesFormatted = array_combine(
+			$thumbNamespaces,
+			array_map(
+				static function ( $namespaceId ) use ( $context ) {
+					return $namespaceId === NS_MAIN
+						? $context->msg( 'blanknamespace' )->escaped()
+						: $context->getLanguage()->getFormattedNsText( $namespaceId );
+				},
+				$thumbNamespaces
+			)
+		);
+		$defaultThumbNamespacesFormatted =
+			array_intersect_key( $thumbNamespacesFormatted, [ NS_FILE => 1 ] ) ?? [];
+		$extraThumbNamespacesFormatted =
+			array_diff_key( $thumbNamespacesFormatted, [ NS_FILE => 1 ] );
+		if ( $extraThumbNamespacesFormatted ) {
+			$defaultPreferences['search-thumbnail-extra-namespaces'] = [
+				'type' => 'toggle',
+				'section' => 'searchoptions/searchmisc',
+				'label-message' => 'search-thumbnail-extra-namespaces-label',
+				'help-message' => $context->msg(
+					'search-thumbnail-extra-namespaces-message',
+					$context->getLanguage()->listToText( $extraThumbNamespacesFormatted ),
+					count( $extraThumbNamespacesFormatted ),
+					$context->getLanguage()->listToText( $defaultThumbNamespacesFormatted ),
+					count( $defaultThumbNamespacesFormatted )
+				),
+			];
+		}
 	}
 
 	/*
@@ -1535,16 +1568,14 @@ class DefaultPreferencesFactory implements PreferencesFactory {
 	}
 
 	/**
+	 * Gat valid skin names for the given user, which the 'useskin' query string and user
+	 * options should be taken into account.
+	 *
 	 * @param User $user
 	 * @param IContextSource $context
-	 * @return array Text/links to display as key; $skinkey as value
+	 * @return array Associative array in the format of [ 'skin name' => 'display name' ].
 	 */
-	protected function generateSkinOptions( User $user, IContextSource $context ) {
-		$ret = [];
-
-		$mptitle = Title::newMainPage();
-		$previewtext = $context->msg( 'skin-preview' )->escaped();
-
+	private function getValidSkinNames( User $user, IContextSource $context ) {
 		// Only show skins that aren't disabled
 		$validSkinNames = $this->skinFactory->getAllowedSkins();
 		$allInstalledSkins = $this->skinFactory->getInstalledSkins();
@@ -1572,14 +1603,27 @@ class DefaultPreferencesFactory implements PreferencesFactory {
 			}
 		}
 
-		$preferredSkins = MediaWikiServices::getInstance()->getMainConfig()->get(
-			MainConfigNames::SkinsPreferred );
+		$preferredSkins = $this->config->get( MainConfigNames::SkinsPreferred );
 		// Sort by the internal name, so that the ordering is the same for each display language,
 		// especially if some skin names are translated to use a different alphabet and some are not.
 		uksort( $validSkinNames, function ( $a, $b ) use ( $currentUserSkin, $preferredSkins ) {
 			return $this->sortSkinNames( $a, $b, $currentUserSkin, $preferredSkins );
 		} );
 
+		return $validSkinNames;
+	}
+
+	/**
+	 * @param User $user
+	 * @param IContextSource $context
+	 * @param array $validSkinNames
+	 * @return array Text/links to display as key; $skinkey as value
+	 */
+	protected function generateSkinOptions( User $user, IContextSource $context, array $validSkinNames ) {
+		$ret = [];
+
+		$mptitle = Title::newMainPage();
+		$previewtext = $context->msg( 'skin-preview' )->escaped();
 		$defaultSkin = $this->options->get( MainConfigNames::DefaultSkin );
 		$allowUserCss = $this->options->get( MainConfigNames::AllowUserCss );
 		$allowUserJs = $this->options->get( MainConfigNames::AllowUserJs );
@@ -1842,50 +1886,6 @@ class DefaultPreferencesFactory implements PreferencesFactory {
 	}
 
 	/**
-	 * @param IContextSource $context
-	 * @return array
-	 */
-	protected function getTimezoneOptions( IContextSource $context ) {
-		$opt = [];
-
-		$localTZoffset = $this->options->get( MainConfigNames::LocalTZoffset );
-		$timeZoneList = $this->getTimeZoneList( $context->getLanguage() );
-
-		$timestamp = MWTimestamp::getLocalInstance();
-		// Check that the LocalTZoffset is the same as the local time zone offset
-		if ( $localTZoffset === (int)$timestamp->format( 'Z' ) / 60 ) {
-			$timezoneName = $timestamp->getTimezone()->getName();
-			// Localize timezone
-			if ( isset( $timeZoneList[$timezoneName] ) ) {
-				$timezoneName = $timeZoneList[$timezoneName]['name'];
-			}
-			$server_tz_msg = $context->msg(
-				'timezoneuseserverdefault',
-				$timezoneName
-			)->text();
-		} else {
-			$tzstring = sprintf(
-				'%+03d:%02d',
-				floor( $localTZoffset / 60 ),
-				abs( $localTZoffset ) % 60
-			);
-			$server_tz_msg = $context->msg( 'timezoneuseserverdefault', $tzstring )->text();
-		}
-		$opt[$server_tz_msg] = "System|$localTZoffset";
-		$opt[$context->msg( 'timezoneuseoffset' )->text()] = 'other';
-		$opt[$context->msg( 'guesstimezone' )->text()] = 'guess';
-
-		foreach ( $timeZoneList as $timeZoneInfo ) {
-			$region = $timeZoneInfo['region'];
-			if ( !isset( $opt[$region] ) ) {
-				$opt[$region] = [];
-			}
-			$opt[$region][$timeZoneInfo['name']] = $timeZoneInfo['timecorrection'];
-		}
-		return $opt;
-	}
-
-	/**
 	 * Handle the form submission if everything validated properly
 	 *
 	 * @param array $formData
@@ -2016,68 +2016,5 @@ class DefaultPreferencesFactory implements PreferencesFactory {
 		}
 
 		return ( $res === true ? Status::newGood() : $res );
-	}
-
-	/**
-	 * Get a list of all time zones
-	 * @param Language $language Language used for the localized names
-	 * @return array[] A list of all time zones. The system name of the time zone is used as key and
-	 *  the value is an array which contains localized name, the timecorrection value used for
-	 *  preferences and the region
-	 * @since 1.26
-	 */
-	protected function getTimeZoneList( Language $language ) {
-		$identifiers = DateTimeZone::listIdentifiers();
-		'@phan-var array|false $identifiers'; // See phan issue #3162
-		if ( $identifiers === false ) {
-			return [];
-		}
-		sort( $identifiers );
-
-		$tzRegions = [
-			'Africa' => wfMessage( 'timezoneregion-africa' )->inLanguage( $language )->text(),
-			'America' => wfMessage( 'timezoneregion-america' )->inLanguage( $language )->text(),
-			'Antarctica' => wfMessage( 'timezoneregion-antarctica' )->inLanguage( $language )->text(),
-			'Arctic' => wfMessage( 'timezoneregion-arctic' )->inLanguage( $language )->text(),
-			'Asia' => wfMessage( 'timezoneregion-asia' )->inLanguage( $language )->text(),
-			'Atlantic' => wfMessage( 'timezoneregion-atlantic' )->inLanguage( $language )->text(),
-			'Australia' => wfMessage( 'timezoneregion-australia' )->inLanguage( $language )->text(),
-			'Europe' => wfMessage( 'timezoneregion-europe' )->inLanguage( $language )->text(),
-			'Indian' => wfMessage( 'timezoneregion-indian' )->inLanguage( $language )->text(),
-			'Pacific' => wfMessage( 'timezoneregion-pacific' )->inLanguage( $language )->text(),
-		];
-		asort( $tzRegions );
-
-		$timeZoneList = [];
-
-		$now = new DateTime();
-
-		foreach ( $identifiers as $identifier ) {
-			$parts = explode( '/', $identifier, 2 );
-
-			// DateTimeZone::listIdentifiers() returns a number of
-			// backwards-compatibility entries. This filters them out of the
-			// list presented to the user.
-			if ( count( $parts ) !== 2 || !array_key_exists( $parts[0], $tzRegions ) ) {
-				continue;
-			}
-
-			// Localize region
-			$parts[0] = $tzRegions[$parts[0]];
-
-			$dateTimeZone = new DateTimeZone( $identifier );
-			$minDiff = floor( $dateTimeZone->getOffset( $now ) / 60 );
-
-			$display = str_replace( '_', ' ', $parts[0] . '/' . $parts[1] );
-			$value = "ZoneInfo|$minDiff|$identifier";
-
-			$timeZoneList[$identifier] = [
-				'name' => $display,
-				'timecorrection' => $value,
-				'region' => $parts[0],
-			];
-		}
-
-		return $timeZoneList;
 	}
 }

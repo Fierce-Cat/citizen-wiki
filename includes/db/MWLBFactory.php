@@ -27,7 +27,6 @@ use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MainConfigNames;
 use Wikimedia\Rdbms\ChronologyProtector;
 use Wikimedia\Rdbms\DatabaseDomain;
-use Wikimedia\Rdbms\DatabaseFactory;
 use Wikimedia\Rdbms\IDatabase;
 use Wikimedia\Rdbms\ILBFactory;
 use Wikimedia\Rdbms\LBFactory;
@@ -96,10 +95,6 @@ class MWLBFactory {
 	 * @var StatsdDataFactoryInterface
 	 */
 	private $statsdDataFactory;
-	/**
-	 * @var DatabaseFactory
-	 */
-	private $databaseFactory;
 
 	/**
 	 * @param ServiceOptions $options
@@ -109,7 +104,6 @@ class MWLBFactory {
 	 * @param WANObjectCache $wanCache
 	 * @param CriticalSectionProvider $csProvider
 	 * @param StatsdDataFactoryInterface $statsdDataFactory
-	 * @param DatabaseFactory $databaseFactory
 	 */
 	public function __construct(
 		ServiceOptions $options,
@@ -118,8 +112,7 @@ class MWLBFactory {
 		BagOStuff $srvCache,
 		WANObjectCache $wanCache,
 		CriticalSectionProvider $csProvider,
-		StatsdDataFactoryInterface $statsdDataFactory,
-		DatabaseFactory $databaseFactory
+		StatsdDataFactoryInterface $statsdDataFactory
 	) {
 		$this->options = $options;
 		$this->readOnlyMode = $readOnlyMode;
@@ -128,7 +121,6 @@ class MWLBFactory {
 		$this->wanCache = $wanCache;
 		$this->csProvider = $csProvider;
 		$this->statsdDataFactory = $statsdDataFactory;
-		$this->databaseFactory = $databaseFactory;
 	}
 
 	/**
@@ -151,10 +143,7 @@ class MWLBFactory {
 				return Profiler::instance()->scopedProfileIn( $section );
 			},
 			'trxProfiler' => Profiler::instance()->getTransactionProfiler(),
-			'replLogger' => LoggerFactory::getInstance( 'DBReplication' ),
-			'queryLogger' => LoggerFactory::getInstance( 'DBQuery' ),
-			'connLogger' => LoggerFactory::getInstance( 'DBConnection' ),
-			'perfLogger' => LoggerFactory::getInstance( 'DBPerformance' ),
+			'logger' => LoggerFactory::getInstance( 'rdbms' ),
 			'errorLogger' => [ MWExceptionHandler::class, 'logException' ],
 			'deprecationLogger' => [ static::class, 'logDeprecation' ],
 			'statsdDataFactory' => $this->statsdDataFactory,
@@ -220,7 +209,6 @@ class MWLBFactory {
 		$lbConf['cpStash'] = $this->cpStash;
 		$lbConf['srvCache'] = $this->srvCache;
 		$lbConf['wanCache'] = $this->wanCache;
-		$lbConf['databaseFactory'] = $this->databaseFactory;
 
 		return $lbConf;
 	}

@@ -27,6 +27,7 @@ use MediaWiki\Export\WikiExporterFactory;
 use MediaWiki\Linker\LinksMigration;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MainConfigNames;
+use MediaWiki\Title\Title;
 use Wikimedia\Rdbms\ILoadBalancer;
 
 /**
@@ -276,7 +277,7 @@ class SpecialExport extends SpecialPage {
 					'label-message' => 'exportall',
 					'name' => 'exportall',
 					'id' => 'exportall',
-					'default' => $request->wasPosted() ? $request->getCheck( 'exportall' ) : false,
+					'default' => $request->wasPosted() && $request->getCheck( 'exportall' ),
 				],
 			];
 		}
@@ -299,7 +300,7 @@ class SpecialExport extends SpecialPage {
 					'label-message' => 'exportcuronly',
 					'name' => 'curonly',
 					'id' => 'curonly',
-					'default' => $request->wasPosted() ? $request->getCheck( 'curonly' ) : true,
+					'default' => !$request->wasPosted() || $request->getCheck( 'curonly' ),
 				],
 			];
 		} else {
@@ -312,7 +313,7 @@ class SpecialExport extends SpecialPage {
 				'label-message' => 'export-templates',
 				'name' => 'templates',
 				'id' => 'wpExportTemplates',
-				'default' => $request->wasPosted() ? $request->getCheck( 'templates' ) : false,
+				'default' => $request->wasPosted() && $request->getCheck( 'templates' ),
 			],
 		];
 
@@ -335,7 +336,7 @@ class SpecialExport extends SpecialPage {
 				'type' => 'check',
 				'name' => 'wpDownload',
 				'id' => 'wpDownload',
-				'default' => $request->wasPosted() ? $request->getCheck( 'wpDownload' ) : true,
+				'default' => !$request->wasPosted() || $request->getCheck( 'wpDownload' ),
 				'label-message' => 'export-download',
 			],
 		];
@@ -345,7 +346,7 @@ class SpecialExport extends SpecialPage {
 				'listauthors' => [
 					'type' => 'check',
 					'label-message' => 'exportlistauthors',
-					'default' => $request->wasPosted() ? $request->getCheck( 'listauthors' ) : false,
+					'default' => $request->wasPosted() && $request->getCheck( 'listauthors' ),
 					'name' => 'listauthors',
 					'id' => 'listauthors',
 				],
@@ -504,7 +505,7 @@ class SpecialExport extends SpecialPage {
 	 * @return array Associative array index by titles
 	 */
 	protected function getTemplates( $inputPages, $pageSet ) {
-		list( $nsField, $titleField ) = $this->linksMigration->getTitleFields( 'templatelinks' );
+		[ $nsField, $titleField ] = $this->linksMigration->getTitleFields( 'templatelinks' );
 		$queryInfo = $this->linksMigration->getQueryInfo( 'templatelinks' );
 		return $this->getLinks( $inputPages, $pageSet,
 			$queryInfo['tables'],

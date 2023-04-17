@@ -24,11 +24,6 @@
 		},
 		afterEach: function () {
 			mw.loader.maxQueryLength = 2000;
-			// Teardown for StringSet shim test
-			if ( this.nativeSet ) {
-				window.Set = this.nativeSet;
-				mw.redefineFallbacksForTest();
-			}
 			if ( this.resetStore ) {
 				mw.loader.store.enabled = null;
 				mw.loader.store.items = {};
@@ -36,7 +31,6 @@
 			}
 			// Remove any remaining temporary static state
 			// exposed for mocking and stubbing.
-			delete mw.loader.isES6ForTest;
 			delete mw.loader.testCallback;
 			delete mw.loader.testFail;
 			delete mw.getScriptExampleScriptLoaded;
@@ -143,8 +137,8 @@
 		} );
 	} );
 
-	// Covers mw.loader#sortDependencies (with native Set if available)
-	QUnit.test( '.using() - Error: Circular dependency [StringSet default]', function ( assert ) {
+	// Covers mw.loader#sortDependencies (with native Set)
+	QUnit.test( '.using() - Error: Circular dependency [Set]', function ( assert ) {
 		var done = assert.async();
 
 		mw.loader.register( [
@@ -153,36 +147,6 @@
 			[ 'test.set.circleC', '0', [ 'test.set.circleA' ] ]
 		] );
 		mw.loader.using( 'test.set.circleC' ).then(
-			function () {
-				assert.true( false, 'Unexpected resolution, expected error.' );
-			},
-			function ( e ) {
-				assert.true( /Circular/.test( String( e ) ), 'Detect circular dependency' );
-			}
-		)
-			.always( done );
-	} );
-
-	// @covers mw.loader#sortDependencies (with fallback shim)
-	QUnit.test( '.using() - Error: Circular dependency [StringSet shim]', function ( assert ) {
-		var done = assert.async();
-
-		if ( !window.Set ) {
-			assert.expect( 0 );
-			done();
-			return;
-		}
-
-		this.nativeSet = window.Set;
-		window.Set = undefined;
-		mw.redefineFallbacksForTest();
-
-		mw.loader.register( [
-			[ 'test.shim.circleA', '0', [ 'test.shim.circleB' ] ],
-			[ 'test.shim.circleB', '0', [ 'test.shim.circleC' ] ],
-			[ 'test.shim.circleC', '0', [ 'test.shim.circleA' ] ]
-		] );
-		mw.loader.using( 'test.shim.circleC' ).then(
 			function () {
 				assert.true( false, 'Unexpected resolution, expected error.' );
 			},
@@ -489,7 +453,7 @@
 	} );
 
 	QUnit.test( '.implement( only messages )', function ( assert ) {
-		assert.assertFalse( mw.messages.exists( 'T31107' ), 'Verify that the test message doesn\'t exist yet' );
+		assert.false( mw.messages.exists( 'T31107' ), 'Verify that the test message doesn\'t exist yet' );
 
 		mw.loader.implement( 'test.implement.msgs', [], {}, { T31107: 'loaded' } );
 
@@ -581,18 +545,11 @@
 		}, /already registered/, 'duplicate ID from addSource(Object)' );
 	} );
 
-	QUnit.test( '.register() - ES6 support', function ( assert ) {
-		// Implied: isES6Supported correctly evaluates to true in a modern browsers
+	QUnit.test( '.register() - ES6 support always true', function ( assert ) {
 		mw.loader.register( 'test1.regular', 'aaa' );
 		mw.loader.register( 'test1.es6only', 'bbb!' );
 		assert.strictEqual( mw.loader.getState( 'test1.regular' ), 'registered' );
 		assert.strictEqual( mw.loader.getState( 'test1.es6only' ), 'registered' );
-
-		mw.loader.isES6ForTest = false;
-		mw.loader.register( 'test2.regular', 'aaa' );
-		mw.loader.register( 'test2.es6only', 'bbb!' );
-		assert.strictEqual( mw.loader.getState( 'test2.regular' ), 'registered' );
-		assert.strictEqual( mw.loader.getState( 'test2.es6only' ), null );
 	} );
 
 	// This is a regression test because in the past we called getCombinedVersion()
@@ -791,6 +748,46 @@
 				assert.true( modules.indexOf( 'testMissing' ) !== -1, 'Triggered by testMissing.' );
 
 				verifyModuleStates();
+			}
+		);
+	} );
+
+	// Regresion test for T68598
+	QUnit.test( 'Network failure', function ( assert ) {
+		// Modules named "test.*Dump" always exist via load.mock.php (testloader)
+		mw.loader.register( [
+			// [module, version, dependencies, group, source, skip]
+			[ 'testNetfailBadDump', '1', [], 'unlucky', 'testloader' ],
+			[ 'testNetfailGoodDump', '1', [], 'lucky', 'testloader' ],
+			[ 'testNetfailDump', '1', [ 'testNetfailBadDump', 'testNetfailGoodDump' ], null, 'testloader' ]
+		] );
+
+		// Simulate network failure
+		var appendSuper = document.head.appendChild;
+		var appendStub = this.sandbox.stub( document.head, 'appendChild', function ( node ) {
+			if ( node.nodeName === 'SCRIPT' && node.src.indexOf( 'testNetfailBadDump' ) !== -1 ) {
+				Promise.resolve().then( node.onerror );
+				appendStub.restore();
+				return;
+			}
+			return appendSuper.apply( this, arguments );
+		} );
+
+		return mw.loader.using( [ 'testNetfailDump' ] ).then(
+			function () {
+				throw new Error( 'Unexpected success.' );
+			},
+			function ( e, modules ) {
+				assert.propEqual( {
+					testNetfailDump: mw.loader.getState( 'testNetfailDump' ),
+					testNetfailBadDump: mw.loader.getState( 'testNetfailBadDump' )
+				}, {
+					testNetfailDump: 'error',
+					testNetfailBadDump: 'error'
+				}, 'module state' );
+
+				assert.strictEqual( e.message, 'Failed dependency: testNetfailBadDump', 'error message' );
+				assert.true( modules.indexOf( 'testNetfailBadDump' ) !== -1, 'attribute failure' );
 			}
 		);
 	} );

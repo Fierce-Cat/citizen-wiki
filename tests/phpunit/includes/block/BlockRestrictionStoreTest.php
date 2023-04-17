@@ -114,11 +114,11 @@ class BlockRestrictionStoreTest extends \MediaWikiLangTestCase {
 
 		$restrictions = $this->blockRestrictionStore->loadByBlockId( $block->getId() );
 
-		list( $pageRestriction ) = $restrictions;
+		[ $pageRestriction ] = $restrictions;
 		$this->assertInstanceOf( PageRestriction::class, $pageRestriction );
 		$this->assertEquals( $block->getId(), $pageRestriction->getBlockId() );
 		$this->assertEquals( $page->getId(), $pageRestriction->getValue() );
-		$this->assertEquals( $pageRestriction->getType(), PageRestriction::TYPE );
+		$this->assertEquals( PageRestriction::TYPE, $pageRestriction->getType() );
 		$this->assertEquals( $pageRestriction->getTitle()->getText(), $title );
 	}
 
@@ -136,11 +136,11 @@ class BlockRestrictionStoreTest extends \MediaWikiLangTestCase {
 
 		$restrictions = $this->blockRestrictionStore->loadByBlockId( $block->getId() );
 
-		list( $namespaceRestriction ) = $restrictions;
+		[ $namespaceRestriction ] = $restrictions;
 		$this->assertInstanceOf( NamespaceRestriction::class, $namespaceRestriction );
 		$this->assertEquals( $block->getId(), $namespaceRestriction->getBlockId() );
 		$this->assertSame( NS_USER, $namespaceRestriction->getValue() );
-		$this->assertEquals( $namespaceRestriction->getType(), NamespaceRestriction::TYPE );
+		$this->assertEquals( NamespaceRestriction::TYPE, $namespaceRestriction->getType() );
 	}
 
 	/**
@@ -469,9 +469,7 @@ class BlockRestrictionStoreTest extends \MediaWikiLangTestCase {
 		$this->assertCount( 1, $restrictions );
 
 		// Remove all of the restrictions on the autoblock (but leave the block unchanged).
-		$result = $this->blockRestrictionStore->deleteByParentBlockId( $block->getId() );
-		// NOTE: commented out until https://gerrit.wikimedia.org/r/c/mediawiki/core/+/469324 is merged
-		//$this->assertTrue( $result );
+		$this->blockRestrictionStore->deleteByParentBlockId( $block->getId() );
 
 		// Ensure that the restrictions on the block have not changed.
 		$restrictions = $this->blockRestrictionStore->loadByBlockId( $block->getId() );

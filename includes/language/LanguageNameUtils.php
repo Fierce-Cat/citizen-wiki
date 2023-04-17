@@ -22,6 +22,7 @@ namespace MediaWiki\Languages;
 
 use BagOStuff;
 use HashBagOStuff;
+use LanguageCode;
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\HookContainer\HookContainer;
 use MediaWiki\HookContainer\HookRunner;
@@ -110,6 +111,13 @@ class LanguageNameUtils {
 			// Special code for internal use, not supported even though there is a qqq.json
 			return false;
 		}
+		if (
+			$code === 'en-x-piglatin' &&
+			!$this->options->get( MainConfigNames::UsePigLatinVariant )
+		) {
+			// Suppress Pig Latin unless explicitly enabled.
+			return false;
+		}
 
 		return is_readable( $this->getMessagesFileName( $code ) ) ||
 			is_readable( $this->getJsonMessagesFileName( $code ) );
@@ -183,6 +191,9 @@ class LanguageNameUtils {
 	 * @return array Language code => language name (sorted by key)
 	 */
 	public function getLanguageNames( $inLanguage = self::AUTONYMS, $include = self::DEFINED ) {
+		if ( $inLanguage !== self::AUTONYMS ) {
+			$inLanguage = LanguageCode::replaceDeprecatedCodes( LanguageCode::bcp47ToInternal( $inLanguage ) );
+		}
 		$cacheKey = $inLanguage === self::AUTONYMS ? 'null' : $inLanguage;
 		$cacheKey .= ":$include";
 		if ( !$this->languageNameCache ) {
@@ -219,9 +230,9 @@ class LanguageNameUtils {
 		}
 
 		$mwNames = $this->options->get( MainConfigNames::ExtraLanguageNames ) + Data\Names::$names;
-		if ( $this->options->get( MainConfigNames::UsePigLatinVariant ) ) {
-			// Pig Latin (for variant development)
-			$mwNames['en-x-piglatin'] = 'Igpay Atinlay';
+		if ( !$this->options->get( MainConfigNames::UsePigLatinVariant ) ) {
+			// Suppress Pig Latin unless explicitly enabled.
+			unset( $mwNames['en-x-piglatin'] );
 		}
 
 		foreach ( $mwNames as $mwCode => $mwName ) {
@@ -272,10 +283,9 @@ class LanguageNameUtils {
 	 * @param string $include See getLanguageNames(), except this defaults to self::ALL instead of
 	 *   self::DEFINED
 	 * @return string Language name or empty
-	 * @since 1.20
 	 */
 	public function getLanguageName( $code, $inLanguage = self::AUTONYMS, $include = self::ALL ) {
-		$code = strtolower( $code );
+		$code = LanguageCode::replaceDeprecatedCodes( LanguageCode::bcp47ToInternal( $code ) );
 		$array = $this->getLanguageNames( $inLanguage, $include );
 		return $array[$code] ?? '';
 	}

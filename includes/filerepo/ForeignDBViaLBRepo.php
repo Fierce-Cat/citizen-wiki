@@ -47,11 +47,6 @@ class ForeignDBViaLBRepo extends LocalRepo {
 		return $this->getDBLoadBalancer()->getConnectionRef( DB_PRIMARY, [], $this->dbDomain );
 	}
 
-	public function getMasterDB() {
-		wfDeprecated( __METHOD__, '1.37' );
-		return $this->getPrimaryDB();
-	}
-
 	public function getReplicaDB() {
 		return $this->getDBLoadBalancer()->getConnectionRef( DB_REPLICA, [], $this->dbDomain );
 	}
@@ -75,6 +70,7 @@ class ForeignDBViaLBRepo extends LocalRepo {
 	}
 
 	protected function assertWritableRepo() {
+		// @phan-suppress-previous-line PhanPluginNeverReturnMethod
 		throw new MWException( static::class . ': write operations are not supported.' );
 	}
 

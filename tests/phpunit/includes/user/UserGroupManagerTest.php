@@ -232,7 +232,7 @@ class UserGroupManagerTest extends MediaWikiIntegrationTestCase {
 		);
 	}
 
-	public function provideGetEffectiveGroups() {
+	public static function provideGetEffectiveGroups() {
 		yield [ [], [ '*', 'user', 'named', 'autoconfirmed' ] ];
 		yield [ [ 'bureaucrat', 'test' ], [ '*', 'user', 'named', 'autoconfirmed', 'bureaucrat', 'test' ] ];
 		yield [ [ 'autoconfirmed', 'test' ], [ '*', 'user', 'named', 'autoconfirmed', 'test' ] ];
@@ -376,7 +376,7 @@ class UserGroupManagerTest extends MediaWikiIntegrationTestCase {
 		$manager = $this->getManager();
 		$anon = new UserIdentityValue( 0, 'Anon' );
 
-		$this->assertEmpty( $manager->getUserGroupMemberships( $anon ) );
+		$this->assertSame( [], $manager->getUserGroupMemberships( $anon ) );
 	}
 
 	/**
@@ -386,7 +386,7 @@ class UserGroupManagerTest extends MediaWikiIntegrationTestCase {
 		$manager = $this->getManager();
 		$anon = new UserIdentityValue( 0, 'Anon' );
 
-		$this->assertEmpty( $manager->getUserFormerGroups( $anon ) );
+		$this->assertSame( [], $manager->getUserFormerGroups( $anon ) );
 	}
 
 	/**
@@ -625,7 +625,7 @@ class UserGroupManagerTest extends MediaWikiIntegrationTestCase {
 		$this->assertArrayEquals( $expected, $manager->getUserAutopromoteGroups( $user ) );
 	}
 
-	public function provideGetUserAutopromoteEditCount() {
+	public static function provideGetUserAutopromoteEditCount() {
 		yield 'Successfull promote' => [
 			[ APCOND_EDITCOUNT, 5 ], true, 10, [ 'test_autoconfirmed' ]
 		];
@@ -681,7 +681,7 @@ class UserGroupManagerTest extends MediaWikiIntegrationTestCase {
 		$this->assertArrayEquals( $expected, $manager->getUserAutopromoteGroups( $user ) );
 	}
 
-	public function provideGetUserAutopromoteAge() {
+	public static function provideGetUserAutopromoteAge() {
 		yield 'Successfull promote' => [
 			[ APCOND_AGE, 1000 ],
 			MWTimestamp::convert( TS_MW, time() - 1000000 ),
@@ -721,7 +721,7 @@ class UserGroupManagerTest extends MediaWikiIntegrationTestCase {
 		$this->assertArrayEquals( $expected, $manager->getUserAutopromoteGroups( $user ) );
 	}
 
-	public function provideGetUserAutopromoteEditAge() {
+	public static function provideGetUserAutopromoteEditAge() {
 		yield 'Successfull promote' => [
 			[ APCOND_AGE_FROM_EDIT, 1000 ],
 			MWTimestamp::convert( TS_MW, time() - 1000000 ),
@@ -757,7 +757,7 @@ class UserGroupManagerTest extends MediaWikiIntegrationTestCase {
 		$this->assertArrayEquals( $expected, $manager->getUserAutopromoteGroups( $user ) );
 	}
 
-	public function provideGetUserAutopromoteGroups() {
+	public static function provideGetUserAutopromoteGroups() {
 		yield 'Successfull promote' => [
 			[ 'group1', 'group2' ], [ 'group1', 'group2' ], [ 'test_autoconfirmed' ]
 		];
@@ -783,7 +783,7 @@ class UserGroupManagerTest extends MediaWikiIntegrationTestCase {
 		$this->assertArrayEquals( $expected, $manager->getUserAutopromoteGroups( $user ) );
 	}
 
-	public function provideGetUserAutopromoteIP() {
+	public static function provideGetUserAutopromoteIP() {
 		yield 'Individual ip, success' => [
 			[ APCOND_ISIP, '123.123.123.123' ], '123.123.123.123', [ 'test_autoconfirmed' ]
 		];
@@ -837,7 +837,7 @@ class UserGroupManagerTest extends MediaWikiIntegrationTestCase {
 			'GetAutoPromoteGroups',
 			function ( User $hookUser, array &$promote ) use ( $user ){
 				$this->assertTrue( $user->equals( $hookUser ) );
-				$this->assertEmpty( $promote );
+				$this->assertSame( [], $promote );
 				$promote[] = 'from_hook';
 			}
 		);
@@ -859,16 +859,16 @@ class UserGroupManagerTest extends MediaWikiIntegrationTestCase {
 				]
 			]
 		] );
-		$this->assertEmpty( $manager->getUserAutopromoteGroups(
+		$this->assertSame( [], $manager->getUserAutopromoteGroups(
 			$this->getTestUser( [ 'group1' ] )->getUser() )
 		);
-		$this->assertEmpty( $manager->getUserAutopromoteGroups(
+		$this->assertSame( [], $manager->getUserAutopromoteGroups(
 			$this->getTestUser( [ 'group1', 'group2' ] )->getUser() )
 		);
-		$this->assertEmpty( $manager->getUserAutopromoteGroups(
+		$this->assertSame( [], $manager->getUserAutopromoteGroups(
 			$this->getTestUser( [ 'group1', 'group3', 'group4' ] )->getUser() )
 		);
-		$this->assertEmpty( $manager->getUserAutopromoteGroups(
+		$this->assertSame( [], $manager->getUserAutopromoteGroups(
 			$this->getTestUser( [ 'group1', 'group3' ] )->getUser() )
 		);
 		$this->assertArrayEquals(
@@ -886,7 +886,7 @@ class UserGroupManagerTest extends MediaWikiIntegrationTestCase {
 			'Autopromote' => [ 'test_autoconfirmed' => [ APCOND_ISBOT ] ]
 		] );
 		$notBot = $this->getTestUser()->getUser();
-		$this->assertEmpty( $manager->getUserAutopromoteGroups( $notBot ) );
+		$this->assertSame( [], $manager->getUserAutopromoteGroups( $notBot ) );
 		$bot = $this->getTestUser( [ 'bot' ] )->getUser();
 		$this->assertArrayEquals( [ 'test_autoconfirmed' ],
 			$manager->getUserAutopromoteGroups( $bot ) );
@@ -901,7 +901,7 @@ class UserGroupManagerTest extends MediaWikiIntegrationTestCase {
 			'Autopromote' => [ 'test_autoconfirmed' => [ APCOND_BLOCKED ] ]
 		] );
 		$nonBlockedUser = $this->getTestUser()->getUser();
-		$this->assertEmpty( $manager->getUserAutopromoteGroups( $nonBlockedUser ) );
+		$this->assertSame( [], $manager->getUserAutopromoteGroups( $nonBlockedUser ) );
 		$blockedUser = $this->getTestUser( [ 'blocked' ] )->getUser();
 		$block = new DatabaseBlock();
 		$block->setTarget( $blockedUser );
@@ -948,7 +948,7 @@ class UserGroupManagerTest extends MediaWikiIntegrationTestCase {
 		$sc = RequestContext::importScopedSession( $sinfo ); // load new context
 		$info = $context->exportSession();
 
-		$this->assertEmpty( $user->getBlock() );
+		$this->assertNull( $user->getBlock() );
 	}
 
 	/**
@@ -984,7 +984,7 @@ class UserGroupManagerTest extends MediaWikiIntegrationTestCase {
 		$this->assertArrayEquals( [ 'test_autoconfirmed' ], $manager->getUserAutopromoteGroups( $user ) );
 	}
 
-	public function provideGetUserAutopromoteOnce() {
+	public static function provideGetUserAutopromoteOnce() {
 		yield 'Events are not matching' => [
 			[ 'NOT_EVENT' => [ 'autopromoteonce' => [ APCOND_EDITCOUNT, 0 ] ] ], [], [], []
 		];
@@ -1044,7 +1044,7 @@ class UserGroupManagerTest extends MediaWikiIntegrationTestCase {
 			->getUserGroupManager( 'TEST_DOMAIN' );
 		$user = $this->getTestUser()->getUser();
 		$this->expectException( PreconditionException::class );
-		$this->assertEmpty( $manager->addUserToAutopromoteOnceGroups( $user, 'TEST' ) );
+		$this->assertSame( [], $manager->addUserToAutopromoteOnceGroups( $user, 'TEST' ) );
 	}
 
 	/**
@@ -1053,7 +1053,7 @@ class UserGroupManagerTest extends MediaWikiIntegrationTestCase {
 	public function testAddUserToAutopromoteOnceGroupsAnon() {
 		$manager = $this->getManager();
 		$anon = new UserIdentityValue( 0, 'TEST' );
-		$this->assertEmpty( $manager->addUserToAutopromoteOnceGroups( $anon, 'TEST' ) );
+		$this->assertSame( [], $manager->addUserToAutopromoteOnceGroups( $anon, 'TEST' ) );
 	}
 
 	/**
@@ -1063,7 +1063,7 @@ class UserGroupManagerTest extends MediaWikiIntegrationTestCase {
 		$manager = $this->getManager();
 		$user = $this->getTestUser()->getUser();
 		$this->getServiceContainer()->getConfiguredReadOnlyMode()->setReason( 'TEST' );
-		$this->assertEmpty( $manager->addUserToAutopromoteOnceGroups( $user, 'TEST' ) );
+		$this->assertSame( [], $manager->addUserToAutopromoteOnceGroups( $user, 'TEST' ) );
 	}
 
 	/**
@@ -1072,7 +1072,7 @@ class UserGroupManagerTest extends MediaWikiIntegrationTestCase {
 	public function testAddUserToAutopromoteOnceGroupsNoGroups() {
 		$manager = $this->getManager();
 		$user = $this->getTestUser()->getUser();
-		$this->assertEmpty( $manager->addUserToAutopromoteOnceGroups( $user, 'TEST' ) );
+		$this->assertSame( [], $manager->addUserToAutopromoteOnceGroups( $user, 'TEST' ) );
 	}
 
 	/**
@@ -1090,7 +1090,7 @@ class UserGroupManagerTest extends MediaWikiIntegrationTestCase {
 			function ( User $hookUser, array $added, array $removed ) use ( $user, &$hookCalled ) {
 				$this->assertTrue( $user->equals( $hookUser ) );
 				$this->assertArrayEquals( [ 'autopromoteonce' ], $added );
-				$this->assertEmpty( $removed );
+				$this->assertSame( [], $removed );
 				$hookCalled = true;
 			}
 		);
@@ -1183,7 +1183,7 @@ class UserGroupManagerTest extends MediaWikiIntegrationTestCase {
 		);
 	}
 
-	public function provideChangeableByGroup() {
+	public static function provideChangeableByGroup() {
 		yield 'sysop' => [ 'sysop', [
 			'add' => [ 'rollback' ],
 			'remove' => [ 'rollback' ],

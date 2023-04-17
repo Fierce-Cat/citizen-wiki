@@ -1,5 +1,6 @@
 <?php
 
+use MediaWiki\Html\FormOptions;
 use Wikimedia\Rdbms\IDatabase;
 use Wikimedia\TestingAccessWrapper;
 
@@ -22,7 +23,7 @@ class ChangesListStringOptionsFilterGroupTest extends MediaWikiUnitTestCase {
 
 		$this->assertFalse( $falseGroup->isFullCoverage );
 
-		$this->expectException( MWException::class );
+		$this->expectException( InvalidArgumentException::class );
 		$this->expectExceptionMessage( 'You must specify isFullCoverage' );
 		$undefinedFullCoverageGroup = new ChangesListStringOptionsFilterGroup( [
 			'name' => 'othergroup',
@@ -66,7 +67,7 @@ class ChangesListStringOptionsFilterGroupTest extends MediaWikiUnitTestCase {
 		$this->modifyQueryHelper( $groupDefinition, $input );
 	}
 
-	public function provideModifyQuery() {
+	public static function provideModifyQuery() {
 		$mixedFilters = [
 			[
 				'name' => 'foo',
@@ -132,7 +133,7 @@ class ChangesListStringOptionsFilterGroupTest extends MediaWikiUnitTestCase {
 		);
 	}
 
-	public function provideNoOpModifyQuery() {
+	public static function provideNoOpModifyQuery() {
 		$noFilters = [];
 
 		$normalFilters = [

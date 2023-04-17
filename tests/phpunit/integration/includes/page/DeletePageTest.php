@@ -14,9 +14,9 @@ use MediaWiki\Permissions\Authority;
 use MediaWiki\Permissions\UltimateAuthority;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Revision\SlotRecord;
+use MediaWiki\Title\Title;
 use MediaWikiIntegrationTestCase;
 use PageArchive;
-use Title;
 use User;
 use Wikimedia\ScopedCallback;
 use WikiPage;
@@ -71,7 +71,7 @@ class DeletePageTest extends MediaWikiIntegrationTestCase {
 		$content = ContentHandler::makeContent( $content, $page->getTitle(), CONTENT_MODEL_WIKITEXT );
 
 		$updater = $page->newPageUpdater( $performer )
-			->setContent( 'main', $content );
+			->setContent( SlotRecord::MAIN, $content );
 
 		$updater->saveRevision( CommentStoreComment::newUnsavedComment( "testing" ) );
 		if ( !$updater->wasSuccessful() ) {
@@ -326,7 +326,7 @@ class DeletePageTest extends MediaWikiIntegrationTestCase {
 		ScopedCallback::consume( $teardownScope );
 	}
 
-	public function provideDeleteUnsafe(): iterable {
+	public static function provideDeleteUnsafe(): iterable {
 		// Note that we're using immediate deletion as default
 		yield 'standard deletion' => [ false, [], true, 'delete' ];
 		yield 'suppression' => [ true, [], true, 'delete' ];

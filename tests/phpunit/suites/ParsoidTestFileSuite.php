@@ -46,32 +46,21 @@ class ParsoidTestFileSuite extends TestSuite {
 		if ( $skipMessage !== null ) {
 			return;
 		}
-		$validTestModes = $this->ptRunner->getRequestedTestModes();
-		// Dummy mode, for the purpose of satisfying the signature of getTestSkipMessage
-		// Only used for an isLegacy check, which should always be false for this file
-		$skipMode = new ParserTestMode( 'not-legacy' );
 
 		// This is expected to be set at this point. $skipMessage above will have
 		// skipped the file if not.
-		$modeRestriction = $this->ptFileInfo->fileOptions['parsoid-compatible'];
-		// Treat 'parsoid-compatible' as enabling all modes.
-		if ( $modeRestriction !== '' ) {
-			if ( is_string( $modeRestriction ) ) {
-				// shorthand
-				$modeRestriction = [ $modeRestriction ];
-			}
-			$validTestModes = array_intersect( $validTestModes, $modeRestriction );
-		}
+		$validTestModes = $this->ptRunner->computeValidTestModes(
+			$this->ptRunner->getRequestedTestModes(), $this->ptFileInfo->fileOptions );
 
 		$suite = $this;
 		foreach ( $this->ptFileInfo->testCases as $t ) {
-			$skipMessage = $this->ptRunner->getTestSkipMessage( $t, $skipMode );
+			$skipMessage = $this->ptRunner->getTestSkipMessage( $t, false );
 			if ( $skipMessage ) {
 				continue;
 			}
 			$testModes = $t->computeTestModes( $validTestModes );
 			$t->testAllModes( $testModes, $runner->getOptions(),
-				// $options is being ignored but it is identical to $runnerOpts
+				// $options is being ignored but it is identical to $runner->getOptions()
 				function ( ParserTest $test, string $modeStr, array $options ) use (
 					$t, $suite, $fileName, $skipMessage
 				) {
@@ -80,7 +69,6 @@ class ParsoidTestFileSuite extends TestSuite {
 						// Ensure that updates to knownFailures in $test are reflected in $t
 						$test->knownFailures = &$t->knownFailures;
 						$runner = $this->ptRunner;
-						$runnerOpts = $runner->getOptions();
 						$mode = new ParserTestMode( $modeStr, $test->changetree );
 						$pit = new ParserIntegrationTest( $runner, $fileName, $test, $mode, $skipMessage );
 						$suite->addTest( $pit, [ 'Database', 'Parser', 'ParserTests' ] );

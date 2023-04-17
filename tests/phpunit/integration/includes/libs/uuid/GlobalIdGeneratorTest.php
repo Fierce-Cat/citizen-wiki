@@ -3,21 +3,19 @@
 use Wikimedia\Timestamp\ConvertibleTimestamp;
 use Wikimedia\UUID\GlobalIdGenerator;
 
+/**
+ * @covers \Wikimedia\UUID\GlobalIdGenerator
+ */
 class GlobalIdGeneratorTest extends PHPUnit\Framework\TestCase {
 
 	use MediaWikiCoversValidator;
+	use MediaWikiTestCaseTrait;
 
 	/** @var GlobalIdGenerator */
 	private $globalIdGenerator;
 
 	/**
-	 * Test that generated UIDs have the expected properties
-	 *
 	 * @dataProvider provider_testTimestampedUID
-	 * @covers \Wikimedia\UUID\GlobalIdGenerator::newTimestampedUID88
-	 * @covers \Wikimedia\UUID\GlobalIdGenerator::getTimestampedID88
-	 * @covers \Wikimedia\UUID\GlobalIdGenerator::newTimestampedUID128
-	 * @covers \Wikimedia\UUID\GlobalIdGenerator::getTimestampedID128
 	 */
 	public function testTimestampedUID( $method, $digitlen, $bits, $tbits, $hostbits ) {
 		$id = $this->globalIdGenerator->$method();
@@ -66,11 +64,8 @@ class GlobalIdGeneratorTest extends PHPUnit\Framework\TestCase {
 		}
 	}
 
-	/**
-	 * [ method, length, bits, hostbits ]
-	 * NOTE: When adding a new method name here please update the covers tags for the tests!
-	 */
 	public static function provider_testTimestampedUID() {
+		// [ method name, expected length, bits, hostbits ]
 		return [
 			[ 'newTimestampedUID128', 39, 128, 46, 48 ],
 			[ 'newTimestampedUID128', 39, 128, 46, 48 ],
@@ -78,15 +73,11 @@ class GlobalIdGeneratorTest extends PHPUnit\Framework\TestCase {
 		];
 	}
 
-	/**
-	 * @covers \Wikimedia\UUID\GlobalIdGenerator::newUUIDv1
-	 * @covers \Wikimedia\UUID\GlobalIdGenerator::getUUIDv1
-	 */
 	public function testUUIDv1() {
 		$ids = [];
 		for ( $i = 0; $i < 100; $i++ ) {
 			$id = $this->globalIdGenerator->newUUIDv1();
-			$this->assertRegExp(
+			$this->assertMatchesRegularExpression(
 				'!^[0-9a-f]{8}-[0-9a-f]{4}-1[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$!',
 				$id,
 				"UID $id has the right format"
@@ -94,14 +85,14 @@ class GlobalIdGeneratorTest extends PHPUnit\Framework\TestCase {
 			$ids[] = $id;
 
 			$id = $this->globalIdGenerator->newRawUUIDv1();
-			$this->assertRegExp(
+			$this->assertMatchesRegularExpression(
 				'!^[0-9a-f]{12}1[0-9a-f]{3}[89ab][0-9a-f]{15}$!',
 				$id,
 				"UID $id has the right format"
 			);
 
 			$id = $this->globalIdGenerator->newRawUUIDv1();
-			$this->assertRegExp(
+			$this->assertMatchesRegularExpression(
 				'!^[0-9a-f]{12}1[0-9a-f]{3}[89ab][0-9a-f]{15}$!',
 				$id,
 				"UID $id has the right format"
@@ -111,15 +102,12 @@ class GlobalIdGeneratorTest extends PHPUnit\Framework\TestCase {
 		$this->assertEquals( array_unique( $ids ), $ids, "All generated IDs are unique." );
 	}
 
-	/**
-	 * @covers \Wikimedia\UUID\GlobalIdGenerator::newUUIDv4
-	 */
 	public function testUUIDv4() {
 		$ids = [];
 		for ( $i = 0; $i < 100; $i++ ) {
 			$id = $this->globalIdGenerator->newUUIDv4();
 			$ids[] = $id;
-			$this->assertRegExp(
+			$this->assertMatchesRegularExpression(
 				'!^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$!',
 				$id,
 				"UID $id has the right format"
@@ -129,13 +117,10 @@ class GlobalIdGeneratorTest extends PHPUnit\Framework\TestCase {
 		$this->assertEquals( array_unique( $ids ), $ids, 'All generated IDs are unique.' );
 	}
 
-	/**
-	 * @covers \Wikimedia\UUID\GlobalIdGenerator::newRawUUIDv4
-	 */
 	public function testRawUUIDv4() {
 		for ( $i = 0; $i < 100; $i++ ) {
 			$id = $this->globalIdGenerator->newRawUUIDv4();
-			$this->assertRegExp(
+			$this->assertMatchesRegularExpression(
 				'!^[0-9a-f]{12}4[0-9a-f]{3}[89ab][0-9a-f]{15}$!',
 				$id,
 				"UID $id has the right format"
@@ -144,7 +129,7 @@ class GlobalIdGeneratorTest extends PHPUnit\Framework\TestCase {
 
 		for ( $i = 0; $i < 100; $i++ ) {
 			$id = $this->globalIdGenerator->newRawUUIDv4( UIDGenerator::QUICK_RAND );
-			$this->assertRegExp(
+			$this->assertMatchesRegularExpression(
 				'!^[0-9a-f]{12}4[0-9a-f]{3}[89ab][0-9a-f]{15}$!',
 				$id,
 				"UID $id has the right format"
@@ -152,9 +137,6 @@ class GlobalIdGeneratorTest extends PHPUnit\Framework\TestCase {
 		}
 	}
 
-	/**
-	 * @covers \Wikimedia\UUID\GlobalIdGenerator::newSequentialPerNodeID
-	 */
 	public function testNewSequentialID() {
 		$id1 = $this->globalIdGenerator->newSequentialPerNodeID( 'test', 32 );
 		$id2 = $this->globalIdGenerator->newSequentialPerNodeID( 'test', 32 );
@@ -165,10 +147,6 @@ class GlobalIdGeneratorTest extends PHPUnit\Framework\TestCase {
 		$this->assertGreaterThan( $id1, $id2, "IDs increasing in value" );
 	}
 
-	/**
-	 * @covers \Wikimedia\UUID\GlobalIdGenerator::newSequentialPerNodeIDs
-	 * @covers \Wikimedia\UUID\GlobalIdGenerator::getSequentialPerNodeIDs
-	 */
 	public function testNewSequentialIDs() {
 		$ids = $this->globalIdGenerator->newSequentialPerNodeIDs( 'test', 32, 5 );
 		$lastId = null;
@@ -182,7 +160,7 @@ class GlobalIdGeneratorTest extends PHPUnit\Framework\TestCase {
 		}
 	}
 
-	public function provideGetTimestampFromUUIDv1() {
+	public static function provideGetTimestampFromUUIDv1() {
 		yield [ '65d143b0-3c7a-11ea-b77f-2e728ce88125', '20200121181818' ];
 	}
 
@@ -190,7 +168,6 @@ class GlobalIdGeneratorTest extends PHPUnit\Framework\TestCase {
 	 * @param string $uuid
 	 * @param string $ts
 	 * @dataProvider provideGetTimestampFromUUIDv1
-	 * @covers \Wikimedia\UUID\GlobalIdGenerator::getTimestampFromUUIDv1
 	 */
 	public function testGetTimestampFromUUIDv1( string $uuid, string $ts ) {
 		$this->assertEquals( $ts, $this->globalIdGenerator->getTimestampFromUUIDv1( $uuid ) );
@@ -200,7 +177,7 @@ class GlobalIdGeneratorTest extends PHPUnit\Framework\TestCase {
 		);
 	}
 
-	public function provideGetTimestampFromUUIDv1InvalidUUIDv1() {
+	public static function provideGetTimestampFromUUIDv1InvalidUUIDv1() {
 		yield [ 'this_is_an_invalid_uuid_v1' ];
 		yield [ 'e5bb7f6b-0f28-4867-a93c-1b33b5c63adf' ]; // This is a UUIDv4
 	}
@@ -208,7 +185,6 @@ class GlobalIdGeneratorTest extends PHPUnit\Framework\TestCase {
 	/**
 	 * @param string $uuid
 	 * @dataProvider provideGetTimestampFromUUIDv1InvalidUUIDv1
-	 * @covers \Wikimedia\UUID\GlobalIdGenerator::getTimestampFromUUIDv1
 	 */
 	public function testGetTimestampFromUUIDv1InvalidUUIDv1( string $uuid ) {
 		$this->expectException( InvalidArgumentException::class );

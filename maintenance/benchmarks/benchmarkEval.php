@@ -21,10 +21,19 @@ class BenchmarkEval extends Benchmarker {
 		$this->addOption( 'code',
 			'The code to run',
 			false, true, 'e' );
-		$this->addArg( 'input-file', 'Input file', false );
+		$this->addOption( 'setup',
+			'Code to run once before the first iteration',
+			false, true );
+		$this->addArg( 'input-file', 'Input file for measured code body', false );
 	}
 
 	public function execute() {
+		if ( $this->hasOption( 'setup' ) ) {
+			$setupCode = $this->getOption( 'setup' ) . ';';
+			// phpcs:ignore MediaWiki.Usage.ForbiddenFunctions.eval
+			eval( $setupCode );
+		}
+
 		if ( $this->hasOption( 'code' ) ) {
 			$code = $this->getOption( 'code' );
 		} elseif ( $this->hasArg( 0 ) ) {
@@ -42,6 +51,7 @@ class BenchmarkEval extends Benchmarker {
 			$code = "for ( \$__i = 0; \$__i < $inner; \$__i++ ) { $code }";
 		}
 		$code = "function wfBenchmarkEvalBody () { $code }";
+		// phpcs:ignore MediaWiki.Usage.ForbiddenFunctions.eval
 		eval( $code );
 		$this->bench( [ 'eval' => [ 'function' => 'wfBenchmarkEvalBody' ] ] );
 	}

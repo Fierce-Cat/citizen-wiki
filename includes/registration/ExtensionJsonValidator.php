@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,10 +30,10 @@ use Seld\JsonLint\ParsingException;
  * validateRegistrationFile.php, and the PHPUnit structure test suite
  * (ExtensionJsonValidationTest).
  *
- * The files are normally read by the ExtensionRegistry
- * and ExtensionProcessor classes.
+ * The files are normally read by the ExtensionRegistry and ExtensionProcessor classes.
  *
  * @since 1.29
+ * @ingroup ExtensionRegistry
  */
 class ExtensionJsonValidator {
 
@@ -139,12 +138,6 @@ class ExtensionJsonValidator {
 			if ( $mwoUrl && $parsed['scheme'] !== 'https' ) {
 				$extraErrors[] = '[url] Should use HTTPS for www.mediawiki.org URLs';
 			}
-		}
-
-		// Deprecated stuff
-		if ( isset( $data->ParserTestFiles ) ) {
-			// phpcs:ignore Generic.Files.LineLength.TooLong
-			$extraErrors[] = '[ParserTestFiles] DEPRECATED: see <https://www.mediawiki.org/wiki/Manual:Extension.json/Schema#ParserTestFiles>';
 		}
 
 		$validator = new Validator;

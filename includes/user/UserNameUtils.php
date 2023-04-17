@@ -136,7 +136,7 @@ class UserNameUtils implements UserRigorOptions {
 	public function isValid( string $name ): bool {
 		if ( $name === ''
 			|| $this->isIP( $name )
-			|| strpos( $name, '/' ) !== false
+			|| str_contains( $name, '/' )
 			|| strlen( $name ) > $this->options->get( MainConfigNames::MaxNameChars )
 			|| $name !== $this->contentLang->ucfirst( $name )
 		) {
@@ -196,7 +196,7 @@ class UserNameUtils implements UserRigorOptions {
 			$reservedUsernames = $this->options->get( MainConfigNames::ReservedUsernames );
 			$this->hookRunner->onUserGetReservedNames( $reservedUsernames );
 			foreach ( $reservedUsernames as &$reserved ) {
-				if ( substr( $reserved, 0, 4 ) === 'msg:' ) {
+				if ( str_starts_with( $reserved, 'msg:' ) ) {
 					$reserved = $this->textFormatter->format(
 						MessageValue::new( substr( $reserved, 4 ) )
 					);
@@ -246,7 +246,7 @@ class UserNameUtils implements UserRigorOptions {
 			return false;
 		}
 
-		if ( $this->isTemp( $name ) ) {
+		if ( $this->isTempReserved( $name ) ) {
 			$this->logger->debug(
 				__METHOD__ . ": '$name' uncreatable due to TempUserConfig"
 			);
@@ -372,13 +372,27 @@ class UserNameUtils implements UserRigorOptions {
 	}
 
 	/**
-	 * Is the user name reserved for temporary auto-created users?
+	 * Does the username indicate a temporary user?
 	 *
 	 * @since 1.39
 	 * @param string $name
 	 * @return bool
 	 */
 	public function isTemp( string $name ) {
+		return $this->tempUserConfig->isTempName( $name );
+	}
+
+	/**
+	 * Is the username uncreatable due to it being reserved by the temp username
+	 * system? Note that unlike isTemp(), this does not imply that a user having
+	 * this name is an actual temp account. This should only be used to deny
+	 * account creation.
+	 *
+	 * @since 1.41
+	 * @param string $name
+	 * @return bool
+	 */
+	public function isTempReserved( string $name ) {
 		return $this->tempUserConfig->isReservedName( $name );
 	}
 

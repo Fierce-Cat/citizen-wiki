@@ -6,6 +6,8 @@ use MediaWiki\HookContainer\HookContainer;
 use MediaWiki\Linker\LinkRenderer;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Revision\RevisionStore;
+use MediaWiki\Title\Title;
+use MediaWiki\User\ActorMigration;
 use MediaWiki\User\UserIdentity;
 use MediaWiki\User\UserIdentityValue;
 use Wikimedia\Rdbms\FakeResultWrapper;
@@ -196,7 +198,7 @@ class ContribsPagerTest extends MediaWikiIntegrationTestCase {
 		);
 	}
 
-	public function provideQueryableRanges() {
+	public static function provideQueryableRanges() {
 		return [
 			[ '116.17.184.5/32' ],
 			[ '0.17.184.5/16' ],
@@ -224,7 +226,7 @@ class ContribsPagerTest extends MediaWikiIntegrationTestCase {
 		);
 	}
 
-	public function provideUnqueryableRanges() {
+	public static function provideUnqueryableRanges() {
 		return [
 			[ '116.17.184.5/33' ],
 			[ '0.17.184.5/15' ],
@@ -348,7 +350,7 @@ class ContribsPagerTest extends MediaWikiIntegrationTestCase {
 		$this->assertStringContainsString( 'FROM_HOOK!', $pager->getBody() );
 	}
 
-	public function provideEmptyResultIntegration() {
+	public static function provideEmptyResultIntegration() {
 		$cases = [
 			[ 'target' => '127.0.0.1' ],
 			[ 'target' => '127.0.0.1/24' ],

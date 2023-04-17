@@ -8,25 +8,23 @@ use LogicException;
 use MediaWiki\ResourceLoader\FileModule;
 use MediaWiki\ResourceLoader\FilePath;
 use MediaWiki\ResourceLoader\ResourceLoader;
-use Psr\Container\ContainerInterface;
+use MediaWiki\Tests\Unit\DummyServicesTrait;
 use ResourceLoaderFileTestModule;
 use ResourceLoaderTestCase;
 use RuntimeException;
 use SkinFactory;
-use Wikimedia\ObjectFactory\ObjectFactory;
 
 /**
  * @group ResourceLoader
  * @covers \MediaWiki\ResourceLoader\FileModule
  */
 class FileModuleTest extends ResourceLoaderTestCase {
+	use DummyServicesTrait;
 
 	protected function setUp(): void {
 		parent::setUp();
 
-		$skinFactory = new SkinFactory(
-			new ObjectFactory( $this->createMock( ContainerInterface::class ) ), []
-		);
+		$skinFactory = new SkinFactory( $this->getDummyObjectFactory(), [] );
 		// The empty spec shouldn't matter since this test should never call it
 		$skinFactory->register(
 			'fakeskin',
@@ -36,7 +34,7 @@ class FileModuleTest extends ResourceLoaderTestCase {
 		$this->setService( 'SkinFactory', $skinFactory );
 
 		// This test is not expected to query any database
-		\MediaWiki\MediaWikiServices::disableStorageBackend();
+		$this->getServiceContainer()->disableStorage();
 	}
 
 	private static function getModules() {
@@ -375,11 +373,11 @@ class FileModuleTest extends ResourceLoaderTestCase {
 	}
 
 	/**
-	 * Test reading files from elsewhere than localBasePath using ResourceLoaderFilePath.
+	 * Test reading files from elsewhere than localBasePath using FilePath.
 	 *
-	 * The use of ResourceLoaderFilePath objects resembles the way that ResourceLoader::getModule()
-	 * injects additional files when 'ResourceModuleSkinStyles' or 'OOUIThemePaths' skin attributes
-	 * apply to a given module.
+	 * The use of FilePath objects resembles the way that ResourceLoader::getModule()
+	 * injects additional files when 'ResourceModuleSkinStyles' or 'OOUIThemePaths'
+	 * skin attributes apply to a given module.
 	 */
 	public function testResourceLoaderFilePath() {
 		$basePath = __DIR__ . '/../../data/blahblah';
@@ -499,7 +497,7 @@ class FileModuleTest extends ResourceLoaderTestCase {
 		$this->assertStringEqualsFile( $basePath . '/styles.css', $styles['all'] );
 	}
 
-	public function provideGetVersionHash() {
+	public static function provideGetVersionHash() {
 		$a = [];
 		$b = [
 			'lessVars' => [ 'key' => 'value' ],
@@ -602,7 +600,7 @@ class FileModuleTest extends ResourceLoaderTestCase {
 		);
 	}
 
-	public function provideGetScriptPackageFiles() {
+	public static function provideGetScriptPackageFiles() {
 		$basePath = __DIR__ . '/../../data/resourceloader';
 		$basePathB = __DIR__ . '/../../data/resourceloader-b';
 		$base = [ 'localBasePath' => $basePath ];
@@ -953,9 +951,9 @@ class FileModuleTest extends ResourceLoaderTestCase {
 
 	public function testRequiresES6() {
 		$module = new FileModule();
-		$this->assertFalse( $module->requiresES6(), 'requiresES6 defaults to false' );
+		$this->assertTrue( $module->requiresES6(), 'requiresES6 defaults to true' );
 		$module = new FileModule( [ 'es6' => false ] );
-		$this->assertFalse( $module->requiresES6(), 'requiresES6 is false when set to false' );
+		$this->assertTrue( $module->requiresES6(), 'requiresES6 is true even when set to false' );
 		$module = new FileModule( [ 'es6' => true ] );
 		$this->assertTrue( $module->requiresES6(), 'requiresES6 is true when set to true' );
 	}

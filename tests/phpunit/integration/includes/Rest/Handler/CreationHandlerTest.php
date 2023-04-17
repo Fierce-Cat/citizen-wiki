@@ -4,7 +4,6 @@ namespace MediaWiki\Tests\Rest\Handler;
 
 use ApiUsageException;
 use HashConfig;
-use MediaWiki\Content\IContentHandlerFactory;
 use MediaWiki\Rest\Handler\CreationHandler;
 use MediaWiki\Rest\LocalizedHttpException;
 use MediaWiki\Rest\RequestData;
@@ -35,16 +34,12 @@ class CreationHandlerTest extends MediaWikiIntegrationTestCase {
 			'RightsText' => 'CC-BY-SA 4.0'
 		] );
 
-		/** @var IContentHandlerFactory|MockObject $contentHandlerFactory */
-		$contentHandlerFactory =
-			$this->createNoOpMock( IContentHandlerFactory::class, [ 'isDefinedModel' ] );
-
-		$contentHandlerFactory
-			->method( 'isDefinedModel' )
-			->willReturnMap( [
-				[ CONTENT_MODEL_WIKITEXT, true ],
-				[ CONTENT_MODEL_TEXT, true ],
-			] );
+		// Claims that wikitext and plaintext are defined, but trying to get the actual
+		// content handlers would break
+		$contentHandlerFactory = $this->getDummyContentHandlerFactory( [
+			CONTENT_MODEL_WIKITEXT => true,
+			CONTENT_MODEL_TEXT => true,
+		] );
 
 		// DummyServicesTrait::getDummyMediaWikiTitleCodec
 		$titleCodec = $this->getDummyMediaWikiTitleCodec();
@@ -81,7 +76,7 @@ class CreationHandlerTest extends MediaWikiIntegrationTestCase {
 		return $handler;
 	}
 
-	public function provideExecute() {
+	public static function provideExecute() {
 		// NOTE: Prefix hard coded in a fake for Router::getRouteUrl() in HandlerTestTrait
 		$baseUrl = 'https://wiki.example.com/rest/v1/page/';
 
@@ -305,7 +300,7 @@ class CreationHandlerTest extends MediaWikiIntegrationTestCase {
 
 		$handler = $this->newHandler( $actionResult, null, $csrfSafe );
 
-		$response = $this->executeHandler( $handler, $request, [], [], [], [], null, $csrfSafe );
+		$response = $this->executeHandler( $handler, $request, [], [], [], [], null, $this->getSession( $csrfSafe ) );
 
 		$this->assertSame( 201, $response->getStatusCode() );
 		$this->assertSame(
@@ -337,7 +332,7 @@ class CreationHandlerTest extends MediaWikiIntegrationTestCase {
 		}
 	}
 
-	public function provideBodyValidation() {
+	public static function provideBodyValidation() {
 		yield "missing source field" => [
 			[ // Request data received by CreationHandler
 				'method' => 'POST',
@@ -402,7 +397,7 @@ class CreationHandlerTest extends MediaWikiIntegrationTestCase {
 		$this->assertEquals( $expectedMessage, $exception->getMessageValue() );
 	}
 
-	public function provideHeaderValidation() {
+	public static function provideHeaderValidation() {
 		yield "bad content type" => [
 			[ // Request data received by CreationHandler
 				'method' => 'POST',
@@ -436,7 +431,7 @@ class CreationHandlerTest extends MediaWikiIntegrationTestCase {
 	/*
 	 * FIXME: Status::newFatal invokes MediaWikiServices, which is not allowed in a dataProvider.
 	 */
-	public function provideErrorMapping() {
+	public static function provideErrorMapping() {
 		yield "missingtitle" => [
 			new ApiUsageException( null, Status::newFatal( 'apierror-missingtitle' ) ),
 			new LocalizedHttpException( new MessageValue( 'apierror-missingtitle' ), 404 ),

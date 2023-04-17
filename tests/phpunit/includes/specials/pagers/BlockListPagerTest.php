@@ -89,7 +89,7 @@ class BlockListPagerTest extends MediaWikiIntegrationTestCase {
 		MWTimestamp::setFakeTime( MWTimestamp::time() );
 
 		$value = $name === 'ipb_timestamp' ? MWTimestamp::time() : '';
-		$expected = $expected ?? MWTimestamp::getInstance()->format( 'H:i, j F Y' );
+		$expected ??= MWTimestamp::getInstance()->format( 'H:i, j F Y' );
 
 		$row = $row ?: (object)[];
 		$pager = $this->getBlockListPager();
@@ -127,7 +127,6 @@ class BlockListPagerTest extends MediaWikiIntegrationTestCase {
 			'ipb_user' => 0,
 			'ipb_address' => '127.0.0.1',
 			'ipb_by_text' => 'Admin',
-			'ipb_create_account' => 1,
 			'ipb_auto' => 0,
 			'ipb_anon_only' => 0,
 			'ipb_create_account' => 1,
@@ -257,7 +256,7 @@ class BlockListPagerTest extends MediaWikiIntegrationTestCase {
 		];
 
 		foreach ( $links as $link ) {
-			$this->assertNull( $wrappedlinkCache->badLinks->get( $link ) );
+			$this->assertNull( $wrappedlinkCache->entries->get( $link ) );
 		}
 
 		$row = (object)[
@@ -273,7 +272,7 @@ class BlockListPagerTest extends MediaWikiIntegrationTestCase {
 		$pager->preprocessResults( new FakeResultWrapper( [ $row ] ) );
 
 		foreach ( $links as $link ) {
-			$this->assertSame( 1, $wrappedlinkCache->badLinks->get( $link ), "Bad link [[$link]]" );
+			$this->assertTrue( $wrappedlinkCache->isBadLink( $link ), "Bad link [[$link]]" );
 		}
 
 		// Test sitewide blocks.
@@ -290,7 +289,6 @@ class BlockListPagerTest extends MediaWikiIntegrationTestCase {
 
 		$this->assertObjectNotHasAttribute( 'ipb_restrictions', $row );
 
-		$pageName = 'Victor Frankenstein';
 		$page = $this->getExistingTestPage( 'Victor Frankenstein' );
 		$title = $page->getTitle();
 

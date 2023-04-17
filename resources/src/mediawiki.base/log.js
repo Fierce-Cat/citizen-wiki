@@ -22,7 +22,6 @@ function stackSet() {
 
 	return function isFirst() {
 		if ( !stacks ) {
-			/* global Set */
 			stacks = new Set();
 		}
 		var stack = new Error().stack;
@@ -39,14 +38,10 @@ function stackSet() {
  * Most browsers also print a stacktrace when calling this method if the
  * argument is an Error object.
  *
- * This method is a no-op in browsers that don't implement the Console API.
- *
  * @since 1.26
  * @param {...Mixed} msg Messages to output to console
  */
-mw.log.error = console.error ?
-	Function.prototype.bind.call( console.error, console ) :
-	function () {};
+mw.log.error = Function.prototype.bind.call( console.error, console );
 
 /**
  * Create a function that logs a deprecation warning when called.
@@ -73,9 +68,7 @@ mw.log.error = console.error ?
  * @return {Function}
  */
 mw.log.makeDeprecated = function ( key, msg ) {
-	// Support IE 11, Safari 5: Use ES6 Set conditionally. Fallback to not logging.
-	var isFirst = window.Set ? stackSet() : function () {};
-
+	var isFirst = stackSet();
 	return function maybeLog() {
 		if ( isFirst() ) {
 			if ( key ) {
@@ -105,16 +98,6 @@ mw.log.makeDeprecated = function ( key, msg ) {
  *  Tracking is disabled by default, except for global variables on `window`.
  */
 mw.log.deprecate = function ( obj, key, val, msg, logName ) {
-	// Support IE 11, ES5: Use ES6 Set conditionally. Fallback to not logging.
-	//
-	// Support Safari 5.0: Object.defineProperty throws  "not supported on DOM Objects" for
-	// Node or Element objects (incl. document)
-	// Safari 4.0 doesn't have this method, and it was fixed in Safari 5.1.
-	if ( !window.Set ) {
-		obj[ key ] = val;
-		return;
-	}
-
 	var maybeLog = mw.log.makeDeprecated(
 		logName || ( obj === window ? key : null ),
 		'Use of "' + ( logName || key ) + '" is deprecated.' + ( msg ? ' ' + msg : '' )

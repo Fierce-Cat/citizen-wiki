@@ -21,7 +21,7 @@ class ContentHandlerFactoryTest extends MediaWikiUnitTestCase {
 		} );
 	}
 
-	public function provideHandlerSpecs() {
+	public static function provideHandlerSpecs() {
 		return [
 			'typical list' => [
 				[
@@ -57,20 +57,23 @@ class ContentHandlerFactoryTest extends MediaWikiUnitTestCase {
 			$hookContainer,
 			$this->logger
 		);
-		$i = 0;
+
+		$expectedParams = [];
 		foreach ( $handlerSpecs as $modelID => $handlerSpec ) {
-			$objectFactory
-				->expects( $this->at( $i++ ) )
-				->method( 'createObject' )
-				->with( $handlerSpec,
-					[
-						'assertClass' => ContentHandler::class,
-						'allowCallable' => true,
-						'allowClassName' => true,
-						'extraArgs' => [ $modelID ],
-					] )
-				->willReturn( $contentHandlerExpected );
+			$expectedParams[] = [
+				$handlerSpec,
+				[
+					'assertClass' => ContentHandler::class,
+					'allowCallable' => true,
+					'allowClassName' => true,
+					'extraArgs' => [ $modelID ],
+				]
+			];
 		}
+		$objectFactory
+			->method( 'createObject' )
+			->withConsecutive( ...$expectedParams )
+			->willReturn( $contentHandlerExpected );
 
 		foreach ( $handlerSpecs as $modelID => $handlerSpec ) {
 			$this->assertSame( $contentHandlerExpected, $factory->getContentHandler( $modelID ) );
@@ -116,7 +119,7 @@ class ContentHandlerFactoryTest extends MediaWikiUnitTestCase {
 		}
 	}
 
-	public function provideHandlerSpecsWithMWException(): array {
+	public static function provideHandlerSpecsWithMWException(): array {
 		return [
 			'MWException expected' => [
 				[
@@ -322,7 +325,7 @@ class ContentHandlerFactoryTest extends MediaWikiUnitTestCase {
 		$this->assertFalse( $factory->isDefinedModel( 'not exist name' ) );
 	}
 
-	public function provideValidDummySpecList() {
+	public static function provideValidDummySpecList() {
 		return [
 			'1-0-3' => [
 				'mock name 1',
@@ -362,15 +365,9 @@ class ContentHandlerFactoryTest extends MediaWikiUnitTestCase {
 		$contentHandler3->method( 'getSupportedFormats' )->willReturn( [ 'format 3' ] );
 
 		$objectFactory = $this->createMock( ObjectFactory::class );
-		$objectFactory->expects( $this->at( 0 ) )
+		$objectFactory
 			->method( 'createObject' )
-			->willReturn( $contentHandler1 );
-		$objectFactory->expects( $this->at( 1 ) )
-			->method( 'createObject' )
-			->willReturn( $contentHandler2 );
-		$objectFactory->expects( $this->at( 2 ) )
-			->method( 'createObject' )
-			->willReturn( $contentHandler3 );
+			->willReturnOnConsecutiveCalls( $contentHandler1, $contentHandler2, $contentHandler3 );
 
 		$factory = new ContentHandlerFactory(
 			[

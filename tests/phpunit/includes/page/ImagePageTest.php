@@ -1,6 +1,8 @@
 <?php
 
 use MediaWiki\MainConfigNames;
+use MediaWiki\Request\FauxRequest;
+use MediaWiki\Title\Title;
 use Wikimedia\TestingAccessWrapper;
 
 class ImagePageTest extends MediaWikiMediaTestCase {
@@ -43,7 +45,7 @@ class ImagePageTest extends MediaWikiMediaTestCase {
 		$this->assertCount( $expectedNumberThumbs, $actual );
 	}
 
-	public function providerGetThumbSizes() {
+	public static function providerGetThumbSizes() {
 		return [
 			[ 'animated.gif', 2 ],
 			[ 'Toll_Texas_1.svg', 1 ],
@@ -80,7 +82,7 @@ class ImagePageTest extends MediaWikiMediaTestCase {
 		$this->assertEquals( $expected, $result );
 	}
 
-	public function provideGetLanguageForRendering() {
+	public static function provideGetLanguageForRendering() {
 		return [
 			[ 'ru', 'ru' ],
 			[ 'ru', 'ru', null, 'ru' ],

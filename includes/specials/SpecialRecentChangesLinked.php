@@ -21,7 +21,10 @@
  * @ingroup SpecialPage
  */
 
+use MediaWiki\Html\FormOptions;
+use MediaWiki\Html\Html;
 use MediaWiki\MainConfigNames;
+use MediaWiki\Title\Title;
 use MediaWiki\User\UserOptionsLookup;
 use Wikimedia\Rdbms\ILoadBalancer;
 use Wikimedia\Rdbms\SelectQueryBuilder;
@@ -111,8 +114,7 @@ class SpecialRecentChangesLinked extends SpecialRecentChanges {
 		 * merging the results, but the code we inherit from our parent class
 		 * expects only one result set so we use UNION instead.
 		 */
-
-		$dbr = $this->loadBalancer->getConnectionRef( ILoadBalancer::DB_REPLICA, 'recentchangeslinked' );
+		$dbr = $this->loadBalancer->getConnectionRef( ILoadBalancer::DB_REPLICA );
 		$id = $title->getArticleID();
 		$ns = $title->getNamespace();
 		$dbkey = $title->getDBkey();
@@ -237,7 +239,7 @@ class SpecialRecentChangesLinked extends SpecialRecentChanges {
 					// TODO: Move this to LinksMigration
 					if ( isset( $linksMigration::$mapping[$link_table] ) ) {
 						$queryInfo = $linksMigration->getQueryInfo( $link_table, $link_table );
-						list( $nsField, $titleField ) = $linksMigration->getTitleFields( $link_table );
+						[ $nsField, $titleField ] = $linksMigration->getTitleFields( $link_table );
 						if ( in_array( 'linktarget', $queryInfo['tables'] ) ) {
 							$joinTable = 'linktarget';
 						} else {
@@ -273,25 +275,24 @@ class SpecialRecentChangesLinked extends SpecialRecentChanges {
 			return false; // should never happen
 		}
 		if ( count( $subsql ) == 1 && $dbr->unionSupportsOrderAndLimit() ) {
-			$sql = $subsql[0]
+			return $subsql[0]
 				->setMaxExecutionTime( $this->getConfig()->get( MainConfigNames::MaxExecutionTimeForExpensiveQueries ) )
-				->getSQL();
+				->caller( __METHOD__ )->fetchResultSet();
 		} else {
 			$sqls = array_map( static function ( $queryBuilder ) {
 				return $queryBuilder->getSQL();
 			}, $subsql );
-			$queryBuilder = $dbr->newSelectQueryBuilder()
+			return $dbr->newSelectQueryBuilder()
 				->select( '*' )
 				->from(
-					(string)( new Subquery( $dbr->unionQueries( $sqls, $dbr::UNION_DISTINCT ) ) ),
+					new Subquery( $dbr->unionQueries( $sqls, $dbr::UNION_DISTINCT ) ),
 					'main'
 				)
 				->orderBy( 'rc_timestamp', SelectQueryBuilder::SORT_DESC )
 				->setMaxExecutionTime( $this->getConfig()->get( MainConfigNames::MaxExecutionTimeForExpensiveQueries ) )
-				->limit( $limit );
-			$sql = $queryBuilder->getSQL();
+				->limit( $limit )
+				->caller( __METHOD__ )->fetchResultSet();
 		}
-		return $dbr->query( $sql, __METHOD__ );
 	}
 
 	public function setTopText( FormOptions $opts ) {

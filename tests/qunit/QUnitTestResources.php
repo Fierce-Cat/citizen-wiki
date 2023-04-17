@@ -44,7 +44,6 @@ return [
 
 	'test.MediaWiki' => [
 		'scripts' => [
-			'tests/qunit/resources/startup/startup.test.js',
 			'tests/qunit/resources/startup/mediawiki.test.js',
 			'tests/qunit/resources/startup/mw.Map.test.js',
 			'tests/qunit/resources/startup/mw.loader.test.js',
@@ -56,7 +55,6 @@ return [
 			'tests/qunit/resources/jquery.lengthLimit.test.js',
 			'tests/qunit/resources/jquery.makeCollapsible.test.js',
 			'tests/qunit/resources/jquery.tablesorter.test.js',
-			'tests/qunit/resources/jquery.tablesorter.parsers.test.js',
 			'tests/qunit/resources/jquery.textSelection.test.js',
 			'tests/qunit/resources/mediawiki.base/errorLogger.test.js',
 			'tests/qunit/resources/mediawiki.base/mediawiki.base.test.js',
@@ -73,6 +71,7 @@ return [
 			'tests/qunit/resources/mediawiki.template.test.js',
 			'tests/qunit/resources/mediawiki.template.mustache.test.js',
 			'tests/qunit/resources/mediawiki.inspect.test.js',
+			'tests/qunit/resources/mediawiki.router.test.js',
 			'tests/qunit/resources/mediawiki.Title.test.js',
 			'tests/qunit/resources/mediawiki.toc.test.js',
 			'tests/qunit/resources/mediawiki.Uri.test.js',
@@ -132,6 +131,7 @@ return [
 			'mediawiki.deflate',
 			'mediawiki.experiments',
 			'mediawiki.inspect',
+			'mediawiki.router',
 			'mediawiki.visibleTimeout',
 			'mediawiki.widgets.MediaSearch',
 			'mediawiki.widgets.Table',

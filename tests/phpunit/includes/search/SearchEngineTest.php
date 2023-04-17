@@ -200,7 +200,7 @@ class SearchEngineTest extends MediaWikiLangTestCase {
 		$phrase = "smithee is one who smiths";
 		$res = $this->search->searchText( "\"$phrase\"" );
 		$match = $res->getIterator()->current();
-		$snippet = "A <span class='searchmatch'>" . $phrase . "</span>";
+		$snippet = 'A <span class="searchmatch">' . $phrase . '</span>';
 		$this->assertStringStartsWith( $snippet,
 			$match->getTextSnippet(),
 			"Highlight a phrase search" );
@@ -245,7 +245,7 @@ class SearchEngineTest extends MediaWikiLangTestCase {
 			"Title power search" );
 	}
 
-	public function provideCompletionSearchMustRespectCapitalLinkOverrides() {
+	public static function provideCompletionSearchMustRespectCapitalLinkOverrides() {
 		return [
 			'Searching for "smithee" finds Smithee on NS_MAIN' => [
 				'smithee',
@@ -352,11 +352,13 @@ class SearchEngineTest extends MediaWikiLangTestCase {
 	public function testAugmentorSearch() {
 		// T303046
 		$this->markTestSkippedIfDbType( 'sqlite' );
+
+		$this->search->setHookContainer(
+			$this->createHookContainer( [ 'SearchResultsAugment' => [ [ $this, 'addAugmentors' ] ] ] )
+		);
+
 		$this->search->setNamespaces( [ 0, 1, 4 ] );
 		$resultSet = $this->search->searchText( 'smithee' );
-		// Not using mock since PHPUnit mocks do not work properly with references in params
-		$this->mergeMwGlobalArrayValue( 'wgHooks',
-			[ 'SearchResultsAugment' => [ [ $this, 'addAugmentors' ] ] ] );
 		$this->search->augmentSearchResults( $resultSet );
 		foreach ( $resultSet as $result ) {
 			$id = $result->getTitle()->getArticleID();
@@ -394,12 +396,19 @@ class SearchEngineTest extends MediaWikiLangTestCase {
 
 	public function testFiltersMissing() {
 		$availableResults = [];
+		$user = $this->getTestSysop()->getAuthority();
 		foreach ( range( 0, 11 ) as $i ) {
 			$title = "Search_Result_$i";
 			$availableResults[] = $title;
 			// pages not created must be filtered
 			if ( $i % 2 == 0 ) {
-				$this->editSearchResultPage( $title );
+				$this->editPage(
+					$title,
+					new WikitextContent( 'UTContent' ),
+					'UTPageSummary',
+					NS_MAIN,
+					$user
+				);
 			}
 		}
 		MockCompletionSearchEngine::addMockResults( 'foo', $availableResults );
@@ -417,17 +426,7 @@ class SearchEngineTest extends MediaWikiLangTestCase {
 		$this->assertFalse( $results->hasMoreResults() );
 	}
 
-	private function editSearchResultPage( $title ) {
-		$page = WikiPage::factory( Title::newFromText( $title ) );
-		$page->doUserEditContent(
-			new WikitextContent( 'UTContent' ),
-			$this->getTestSysop()->getUser(),
-			'UTPageSummary',
-			EDIT_NEW | EDIT_SUPPRESS_RC
-		);
-	}
-
-	public function provideDataForParseNamespacePrefix() {
+	public static function provideDataForParseNamespacePrefix() {
 		return [
 			'noop' => [
 				[

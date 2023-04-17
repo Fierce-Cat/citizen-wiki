@@ -161,8 +161,8 @@ class DatabaseBlockTest extends MediaWikiLangTestCase {
 		// Should find the block with the narrowest range
 		$block = DatabaseBlock::newFromTarget( $this->getTestUser()->getUserIdentity(), $ip );
 		$this->assertSame(
-			$block->getTargetName(),
-			$expectedTarget
+			$expectedTarget,
+			$block->getTargetName()
 		);
 
 		foreach ( $targets as $target ) {
@@ -171,7 +171,7 @@ class DatabaseBlockTest extends MediaWikiLangTestCase {
 		}
 	}
 
-	public function provideNewFromTargetRangeBlocks() {
+	public static function provideNewFromTargetRangeBlocks() {
 		return [
 			'Blocks to IPv4 ranges' => [
 				[ '0.0.0.0/20', '0.0.0.0/30', '0.0.0.0/25' ],

@@ -3,7 +3,7 @@
 namespace MediaWiki\Tests\ResourceLoader;
 
 use EmptyResourceLoader;
-use FauxRequest;
+use MediaWiki\Request\FauxRequest;
 use MediaWiki\ResourceLoader\Context;
 use MediaWiki\ResourceLoader\FilePath;
 use MediaWiki\ResourceLoader\Image;
@@ -155,7 +155,7 @@ class ImageModuleTest extends ResourceLoaderTestCase {
 	}
 
 	/**
-	 * Test reading files from elsewhere than localBasePath using ResourceLoaderFilePath.
+	 * Test reading files from elsewhere than localBasePath using FilePath.
 	 *
 	 * This mimics modules modified by skins using 'ResourceModuleSkinStyles' and 'OOUIThemePaths'
 	 * skin attributes.
@@ -258,19 +258,12 @@ class ImageModuleTest extends ResourceLoaderTestCase {
 		return [
 			[
 				false,
-<<<TEXT
-background-image: url(rasterized.png);
-	background-image: linear-gradient(transparent, transparent), url(original.svg);
-TEXT
+				'background-image: url(original.svg);',
 			],
 			[
 				'data:image/svg+xml',
-<<<TEXT
-background-image: url(rasterized.png);
-	background-image: linear-gradient(transparent, transparent), url(data:image/svg+xml);
-TEXT
+				'background-image: url(data:image/svg+xml);',
 			],
-
 		];
 	}
 

@@ -33,10 +33,6 @@ use Wikimedia\Minify\CSSMin;
  * @internal
  */
 class SkinModule extends LessVarFileModule {
-	/**
-	 * All skins are assumed to be compatible with mobile
-	 */
-	public $targets = [ 'desktop', 'mobile' ];
 
 	/**
 	 * Every skin should define which features it would like to reuse for core inside a
@@ -269,7 +265,7 @@ class SkinModule extends LessVarFileModule {
 	 *   after an upgrade until you enable them or implement them by other means.
 	 *
 	 * - lessMessages: Interface message keys to export as LESS variables.
-	 *   See also ResourceLoaderLessVarFileModule.
+	 *   See also LessVarFileModule.
 	 *
 	 * @param string|null $localBasePath
 	 * @param string|null $remoteBasePath
@@ -331,14 +327,14 @@ class SkinModule extends LessVarFileModule {
 		if ( isset( $features[ 'content' ] ) ) {
 			$features[ 'content-media' ] = $features[ 'content' ];
 			unset( $features[ 'content' ] );
-			$messages .= '[1.37] The use of the `content` feature with ResourceLoaderSkinModule'
+			$messages .= '[1.37] The use of the `content` feature with SkinModule'
 				. ' is deprecated. Use `content-media` instead. ';
 		}
 
 		// The `content-thumbnails` feature is mapped to `content-media`.
 		if ( isset( $features[ 'content-thumbnails' ] ) ) {
 			$features[ 'content-media' ] = $features[ 'content-thumbnails' ];
-			$messages .= '[1.37] The use of the `content-thumbnails` feature with ResourceLoaderSkinModule'
+			$messages .= '[1.37] The use of the `content-thumbnails` feature with SkinModule'
 				. ' is deprecated. Use `content-media` instead. ';
 			unset( $features[ 'content-thumbnails' ] );
 		}
@@ -353,7 +349,7 @@ class SkinModule extends LessVarFileModule {
 
 		// The legacy feature no longer exists (T89981) but to avoid fatals in skins is retained.
 		if ( isset( $features['legacy'] ) && $features['legacy'] ) {
-			$messages .= '[1.37] The use of the `legacy` feature with ResourceLoaderSkinModule is deprecated'
+			$messages .= '[1.37] The use of the `legacy` feature with SkinModule is deprecated'
 				. '(T89981) and is a NOOP since 1.39 (T304325). This should be urgently omited to retain compatibility '
 				. 'with future MediaWiki versions';
 		}
@@ -397,7 +393,7 @@ class SkinModule extends LessVarFileModule {
 
 		// Bypass the current module paths so that these files are served from core,
 		// instead of the individual skin's module directory.
-		list( $defaultLocalBasePath, $defaultRemoteBasePath ) =
+		[ $defaultLocalBasePath, $defaultRemoteBasePath ] =
 			FileModule::extractBasePaths(
 				[],
 				null,
@@ -462,7 +458,7 @@ class SkinModule extends LessVarFileModule {
 
 		$isLogoFeatureEnabled = in_array( 'logo', $this->features );
 		if ( $isLogoFeatureEnabled ) {
-			$default = !is_array( $logo ) ? $logo : ( $logo['1x'] ?? null );
+			$default = !is_array( $logo ) ? $logo : ( $logo['svg'] ?? $logo['1x'] ?? null );
 			// Can't add logo CSS if no logo defined.
 			if ( !$default ) {
 				return $styles;
@@ -474,8 +470,6 @@ class SkinModule extends LessVarFileModule {
 			if ( is_array( $logo ) ) {
 				if ( isset( $logo['svg'] ) ) {
 					$styles['all'][] = '.mw-wiki-logo { ' .
-						'background-image: linear-gradient(transparent, transparent), ' .
-							CSSMin::buildUrlValue( $logo['svg'] ) . ';' .
 						'background-size: 135px auto; }';
 				} else {
 					if ( isset( $logo['1.5x'] ) ) {

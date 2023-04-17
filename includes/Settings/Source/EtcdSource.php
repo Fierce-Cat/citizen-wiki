@@ -160,7 +160,7 @@ class EtcdSource implements CacheableSource {
 		$lastException = false;
 
 		foreach ( ( $this->resolver )() as $server ) {
-			list( $host, $port ) = $server;
+			[ $host, $port ] = $server;
 
 			try {
 				return $this->loadFromEtcdServer( $host, $port );
@@ -240,7 +240,7 @@ class EtcdSource implements CacheableSource {
 		$settings = [];
 
 		try {
-			$resp = $this->format->decode( $response->getBody() );
+			$resp = $this->format->decode( $response->getBody()->getContents() );
 
 			if (
 				!isset( $resp['node'] ) || !is_array( $resp['node'] )

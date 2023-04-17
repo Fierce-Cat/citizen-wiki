@@ -1,5 +1,6 @@
 <?php
 
+use MediaWiki\Language\RawMessage;
 use MediaWiki\Page\PageReferenceValue;
 use Wikimedia\TestingAccessWrapper;
 
@@ -34,7 +35,7 @@ class ApiMessageTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $expectedCode, $apiMessage->getApiCode() );
 	}
 
-	public function provideCodeDefaults() {
+	public static function provideCodeDefaults() {
 		// $msg, $expectedCode
 		yield 'foo' => [ 'foo', 'foo' ];
 		yield 'apierror prefix' => [ 'apierror-bar', 'bar' ];

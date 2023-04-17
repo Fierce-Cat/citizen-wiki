@@ -301,7 +301,7 @@ final class SessionBackend {
 			$this->store->delete( $this->store->makeKey( 'MWSession', $oldId ) );
 		}
 
-		return $this->id;
+		return (string)$this->id;
 	}
 
 	/**
@@ -417,7 +417,7 @@ final class SessionBackend {
 	 * Returns the authenticated user for this session
 	 * @return User
 	 */
-	public function getUser() {
+	public function getUser(): User {
 		return $this->user;
 	}
 

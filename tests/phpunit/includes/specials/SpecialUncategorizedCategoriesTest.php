@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\Language\RawMessage;
+
 /**
  * Tests for Special:UncategorizedCategories
  */
@@ -43,7 +45,7 @@ class SpecialUncategorizedCategoriesTest extends MediaWikiIntegrationTestCase {
 		], $special->getQueryInfo() );
 	}
 
-	public function provideTestGetQueryInfoData() {
+	public static function provideTestGetQueryInfoData() {
 		return [
 			[
 				"* Stubs\n* Test\n* *\n* * test123",

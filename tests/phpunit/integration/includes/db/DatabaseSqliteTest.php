@@ -54,9 +54,6 @@ class DatabaseSqliteTest extends \MediaWikiIntegrationTestCase {
 				'profiler' => null,
 				'topologyRole' => Database::ROLE_STREAMING_MASTER,
 				'trxProfiler' => new TransactionProfiler(),
-				'connLogger' => new NullLogger(),
-				'queryLogger' => new NullLogger(),
-				'replLogger' => new NullLogger(),
 				'errorLogger' => null,
 				'deprecationLogger' => new NullLogger(),
 				'srvCache' => new HashBagOStuff(),
@@ -315,8 +312,8 @@ class DatabaseSqliteTest extends \MediaWikiIntegrationTestCase {
 	 * @covers \Wikimedia\Rdbms\DatabaseSqlite::getAttributes()
 	 */
 	public function testsAttributes() {
-		$attributes = Database::attributesFromType( 'sqlite' );
-		$this->assertTrue( $attributes[Database::ATTR_DB_LEVEL_LOCKING] );
+		$dbFactory = $this->getServiceContainer()->getDatabaseFactory();
+		$this->assertTrue( $dbFactory->attributesFromType( 'sqlite' )[Database::ATTR_DB_LEVEL_LOCKING] );
 	}
 
 	/**
@@ -337,7 +334,7 @@ class DatabaseSqliteTest extends \MediaWikiIntegrationTestCase {
 		$this->assertEquals( $expectedSql, $sqlDump );
 	}
 
-	public function provideNativeInserts() {
+	public static function provideNativeInserts() {
 		return [
 			[
 				'3.8.0',
@@ -376,7 +373,7 @@ class DatabaseSqliteTest extends \MediaWikiIntegrationTestCase {
 		$this->assertEquals( $expectedSql, $sqlDump );
 	}
 
-	public function provideNativeReplaces() {
+	public static function provideNativeReplaces() {
 		return [
 			[
 				'3.8.0',

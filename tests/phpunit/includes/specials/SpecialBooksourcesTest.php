@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\Specials\SpecialBookSources;
+
 class SpecialBooksourcesTest extends SpecialPageTestBase {
 	public static function provideISBNs() {
 		return [
@@ -47,9 +49,9 @@ class SpecialBooksourcesTest extends SpecialPageTestBase {
 	 * @covers SpecialBookSources::execute
 	 */
 	public function testExecute() {
-		list( $html, ) = $this->executeSpecialPage( 'Invalid', null, 'qqx' );
+		[ $html, ] = $this->executeSpecialPage( 'Invalid', null, 'qqx' );
 		$this->assertStringContainsString( '(booksources-invalid-isbn)', $html );
-		list( $html, ) = $this->executeSpecialPage( '0-7475-3269-9', null, 'qqx' );
+		[ $html, ] = $this->executeSpecialPage( '0-7475-3269-9', null, 'qqx' );
 		$this->assertStringNotContainsString( '(booksources-invalid-isbn)', $html );
 		$this->assertStringContainsString( '(booksources-text)', $html );
 	}
