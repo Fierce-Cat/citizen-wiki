@@ -227,5 +227,5 @@ $wgDefaultUserOptions['watchdefault'] = 0;
 
 #Debugging
 $wgShowExceptionDetails = true;
-$wgDebugToolbar = true;
-$wgShowDebug = true;
+// $wgDebugToolbar = true;
+// $wgShowDebug = true;
