@@ -176,8 +176,8 @@
 	"extra": {
 		"merge-plugin": {
 			"include": [
-				"extensions/*/composer.json",
-				"skins/*/composer.json"
+				"extensions/TemplateStyles/composer.json",
+				"extensions/Scribunto/composer.json"
 			]
 		}
 	}
