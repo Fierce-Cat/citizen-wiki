@@ -252,6 +252,8 @@ $wgAWSRegion = $_ENV["S3Region"]; # Northern Virginia
 
 // Replace <something> with the name of your S3 bucket, e.g. wonderfulbali234.
 $wgAWSBucketName = $_ENV["S3BucketName"];
+$wgAWSBucketDomain = $_ENV["S3BucketDomain"];
+$wgFileBackends['s3']['endpoint'] = $_ENV["S3Endpoint"];
 
 // If you anticipate using several hundred buckets, one per wiki, then it's probably better to use one bucket
 // with the top level subdirectory as the wiki's name, and permissions properly configured of course.
