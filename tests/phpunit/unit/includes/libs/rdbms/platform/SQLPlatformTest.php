@@ -152,6 +152,18 @@ class SQLPlatformTest extends PHPUnit\Framework\TestCase {
 		];
 	}
 
+	/** @dataProvider provideBuildComparisonInvalid */
+	public function testBuildComparisonInvalid( string $op, array $conds ): void {
+		$this->expectException( InvalidArgumentException::class );
+		$this->platform->buildComparison( $op, $conds );
+	}
+
+	public static function provideBuildComparisonInvalid(): iterable {
+		yield 'unknown op' => [ '<=>', [ 'a' => 1 ] ];
+		yield 'empty conds' => [ '<', [] ];
+		yield 'non-associative conds' => [ '<', [ 'a', 1 ] ]; // instead of 'a' => 1
+	}
+
 	/**
 	 * @dataProvider provideBuildLike
 	 */
@@ -373,7 +385,7 @@ class SQLPlatformTest extends PHPUnit\Framework\TestCase {
 	/**
 	 * @return array
 	 */
-	public function provideIsWriteQuery(): array {
+	public static function provideIsWriteQuery(): array {
 		return [
 			[ 'SELECT foo', false ],
 			[ '  SELECT foo FROM bar', false ],

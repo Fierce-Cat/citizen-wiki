@@ -14,6 +14,7 @@
 			"Kwisha",
 			"Lloffiwr",
 			"Macofe",
+			"Magotech",
 			"Malangali",
 			"Marcos",
 			"MaryMunyoki",
@@ -30,8 +31,7 @@
 			"Wangombe",
 			"Yasen igra",
 			"לערי ריינהארט",
-			"아라",
-			"Magotech"
+			"아라"
 		]
 	},
 	"tog-underline": "Wekea mstari viungo:",
@@ -2458,7 +2458,7 @@
 	"blockedtext-expiration-time": "Muda wa mwisho wa kizuizi: $1",
 	"blockedtext-intended-blockee": "Mzuiaji anayetarajiwa: $1",
 	"blockedtext-contact-blocker-admin": "Unaweza kuwasiliana na $1 au mwingine [[{{MediaWiki:Grouppage-sysop}}|msimamizi]] ili kujadili kizuizi.",
-	"blockedtext-block-ip": "Anwani yako ya sasa ya IP ni $1",
+	"blockedtext-block-ip": "Anwani yako ya sasa ya IP ni $1.",
 	"blockedtext-include-details-queries": "Tafadhali jumuisha maelezo yote hapo juu katika maswali yoyote unayouliza.",
 	"renameuser": "Badili jina la mtumiaji",
 	"renameuser-linkoncontribs": "badili jina la mtumiaji",

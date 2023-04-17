@@ -1,6 +1,6 @@
 <?php
 /**
- * Service implemenations for %MediaWiki core.
+ * Service implementations for %MediaWiki core.
  *
  * This file returns the array loaded by the MediaWikiServices class
  * for use through `MediaWiki\MediaWikiServices::getInstance()`
@@ -128,6 +128,7 @@ use MediaWiki\Parser\Parsoid\Config\PageConfigFactory as MWPageConfigFactory;
 use MediaWiki\Parser\Parsoid\Config\SiteConfig as MWSiteConfig;
 use MediaWiki\Parser\Parsoid\HtmlTransformFactory;
 use MediaWiki\Parser\Parsoid\ParsoidOutputAccess;
+use MediaWiki\Parser\Parsoid\ParsoidParserFactory;
 use MediaWiki\Permissions\GrantsInfo;
 use MediaWiki\Permissions\GrantsLocalization;
 use MediaWiki\Permissions\GroupPermissionsLookup;
@@ -624,8 +625,7 @@ return [
 			$srvCache,
 			$wanCache,
 			$services->getCriticalSectionProvider(),
-			$services->getStatsdDataFactory(),
-			$services->getDatabaseFactory()
+			$services->getStatsdDataFactory()
 		);
 	},
 
@@ -1354,8 +1354,7 @@ return [
 
 	'ParserOutputAccess' => static function ( MediaWikiServices $services ): ParserOutputAccess {
 		return new ParserOutputAccess(
-			$services->getParserCache(),
-			$services->getParserCacheFactory()->getRevisionOutputCache( 'rcache' ),
+			$services->getParserCacheFactory(),
 			$services->getRevisionLookup(),
 			$services->getRevisionRenderer(),
 			$services->getStatsdDataFactory(),
@@ -1423,6 +1422,16 @@ return [
 			$services->getRevisionStore(),
 			$services->getSlotRoleRegistry(),
 			$services->getLanguageFactory()
+		);
+	},
+
+	'ParsoidParserFactory' => static function ( MediaWikiServices $services ): ParsoidParserFactory {
+		return new ParsoidParserFactory(
+			$services->getParsoidSiteConfig(),
+			$services->getParsoidDataAccess(),
+			$services->getParsoidPageConfigFactory(),
+			$services->getLanguageConverterFactory(),
+			$services->getParserFactory()
 		);
 	},
 

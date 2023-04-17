@@ -161,7 +161,7 @@ class ImportExportTest extends MediaWikiLangTestCase {
 
 			$n = 1;
 			$revisions = $this->getRevisions( $title );
-			foreach ( $revisions as $i => $rev ) {
+			foreach ( $revisions as $rev ) {
 				$revkey = "{$name}_rev" . $n++;
 
 				$vars[ $revkey . '_id' ] = $rev->getId();
@@ -197,7 +197,7 @@ class ImportExportTest extends MediaWikiLangTestCase {
 		return $vars;
 	}
 
-	public function provideImportExport() {
+	public static function provideImportExport() {
 		foreach ( XmlDumpWriter::$supportedSchemas as $schemaVersion ) {
 			yield [ 'Basic', $schemaVersion ];
 			yield [ 'Dupes', $schemaVersion ];

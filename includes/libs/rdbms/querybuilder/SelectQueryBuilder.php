@@ -425,7 +425,7 @@ class SelectQueryBuilder extends JoinGroupBase {
 	}
 
 	/**
-	 * Add a HAVING clause. May be either an string containing a HAVING clause
+	 * Add a HAVING clause. May be either a string containing a HAVING clause
 	 * or an array of conditions building the HAVING clause. If an array is
 	 * given, the conditions constructed from each element are combined with
 	 * AND.
@@ -701,6 +701,13 @@ class SelectQueryBuilder extends JoinGroupBase {
 	 * Run the SELECT query, and return the number of results. This typically
 	 * uses a subquery to discard the actual results on the server side, and
 	 * is useful when counting rows with a limit.
+	 *
+	 * The DISTINCT option will not work and should not be used. (T333065)
+	 *
+	 * To count rows without a limit, it's more efficient to use a normal
+	 * COUNT() expression, for example:
+	 *
+	 *   $queryBuilder->select( 'COUNT(*)' )->from( 'page' )->fetchField()
 	 *
 	 * @return int
 	 */

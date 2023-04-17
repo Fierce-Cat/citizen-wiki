@@ -75,11 +75,6 @@ interface IDatabase extends IReadableDatabase {
 	/** Flag to return the lock acquisition timestamp (null if not acquired) */
 	public const LOCK_TIMESTAMP = 1;
 
-	/** @var bool Parameter to unionQueries() for UNION ALL */
-	public const UNION_ALL = true;
-	/** @var bool Parameter to unionQueries() for UNION DISTINCT */
-	public const UNION_DISTINCT = false;
-
 	/** @var string Field for getLBInfo()/setLBInfo() */
 	public const LB_TRX_ROUND_ID = 'trxRoundId';
 	/** @var string Field for getLBInfo()/setLBInfo() */
@@ -1016,11 +1011,17 @@ interface IDatabase extends IReadableDatabase {
 	public function flushSnapshot( $fname = __METHOD__, $flush = self::FLUSHING_ONE );
 
 	/**
-	 * Override database's default behavior. $options include:
-	 *     'connTimeout' : Set the connection timeout value in seconds.
-	 *                     May be useful for very long batch queries such as
-	 *                     full-wiki dumps, where a single query reads out over
-	 *                     hours or days.
+	 * Override database's default behavior.
+	 * Not all options are supported on all database backends;
+	 * unsupported options are silently ignored.
+	 *
+	 * $options include:
+	 * - 'connTimeout': Set the connection timeout value in seconds.
+	 *   May be useful for very long batch queries such as full-wiki dumps,
+	 *   where a single query reads out over hours or days.
+	 *   Only supported on MySQL and MariaDB.
+	 * - 'groupConcatMaxLen': Maximum length of a GROUP_CONCAT() result.
+	 *   Only supported on MySQL and MariaDB.
 	 *
 	 * @param array $options
 	 * @return void

@@ -108,10 +108,10 @@ CLDRPluralRuleParser:
 codex:
   license: GPL-2.0+
   homepage: https://doc.wikimedia.org/codex/
-  version: 0.6.2
+  version: 0.9.0
   type: tar
-  src: https://registry.npmjs.org/@wikimedia/codex/-/codex-0.6.2.tgz
-  integrity: sha512-m7Nlh3xdtNJxsS+0dmVG9KMw1BaPnwpZB2xEWML4wX1MCs/fKYOUIQSxxARFfdRbWCfvrxuNLva5sMxXta9BBQ==
+  src: https://registry.npmjs.org/@wikimedia/codex/-/codex-0.9.0.tgz
+  integrity: sha512-gzv5nsk1eyvkMkEy/S5wXlYgpCSngoqEBNblSJusVk424/eU6gQEYI8oqnO8SYhS33mW6TtzKT2YUMIuAuB1vA==
   dest:
     package/dist/codex.mjs:
     package/dist/codex.umd.js:
@@ -119,16 +119,17 @@ codex:
     package/dist/codex.style-rtl.css:
     package/dist/codex.style-legacy.css:
     package/dist/codex.style-legacy-rtl.css:
+    package/dist/mixins/*: mixins
     package/LICENSE:
     package/README.md:
 
 codex-design-tokens:
   license: GPL-2.0+
   homepage: https://doc.wikimedia.org/codex/
-  version: 0.6.2
+  version: 0.9.0
   type: tar
-  src: https://registry.npmjs.org/@wikimedia/codex-design-tokens/-/codex-design-tokens-0.6.2.tgz
-  integrity: sha384-NIpnbaaGXKh2xwZBVgQ+tDDHr7rkwLr/f/ZofhqDNyKf9UPZAQKDsGlpGhKkvQxz
+  src: https://registry.npmjs.org/@wikimedia/codex-design-tokens/-/codex-design-tokens-0.9.0.tgz
+  integrity: sha384-ZK/N1fF/QbHzNmGUkexPAZ3yaigG/7StjqOVRTLHhQEHiuWwczCpWleLB5UhHrqR
   dest:
     package/dist/theme-wikimedia-ui.less:
     package/dist/theme-wikimedia-ui-legacy.less:
@@ -138,22 +139,23 @@ codex-design-tokens:
 codex-icons:
   license: MIT
   homepage: https://doc.wikimedia.org/codex/
-  version: 0.6.2
+  version: 0.9.0
   type: tar
-  src: https://registry.npmjs.org/@wikimedia/codex-icons/-/codex-icons-0.6.2.tgz
-  integrity: sha384-rSutJxRJni4aYFdKsj2xmdf4yTKjGl8unWYYgbwff7nGeoPhQH1s0BaFsugLf3lX
+  src: https://registry.npmjs.org/@wikimedia/codex-icons/-/codex-icons-0.9.0.tgz
+  integrity: sha384-ZmDF2WSNFqYdRcks8q/0oW/ECia8KNM+plf7t7NVLaSyFRcdC0FDaJ+0rpONzs6F
   dest:
     package/dist/codex-icons.json:
+    package/dist/codex-icon-paths.less:
     package/LICENSE:
     package/README.md:
 
 codex-search:
   license: GPL-2.0+
   homepage: https://doc.wikimedia.org/codex/
-  version: 0.6.2
+  version: 0.9.0
   type: tar
-  src: https://registry.npmjs.org/@wikimedia/codex-search/-/codex-search-0.6.2.tgz
-  integrity: sha384-cUhX7Ww7YSqN5+XaXI4kzFmWjdFT5AgUutMu9moHFtGWMwIVbc7ey/TqYGWvRQnx
+  src: https://registry.npmjs.org/@wikimedia/codex-search/-/codex-search-0.9.0.tgz
+  integrity: sha384-j8MkIgaIeUZDjYtoj364C21+uqJuxp0WsMixqUuUo82fJAx+8crEgbIAJdxZPxdb
   dest:
     package/dist/codex-search.mjs:
     package/dist/codex-search.umd.js:
@@ -288,14 +290,6 @@ jquery.fullscreen:
   src: https://raw.githubusercontent.com/theopolisme/jquery-fullscreen/v2.1.0/jquery.fullscreen.js
   integrity: sha384-G4KPs2d99tgcsyUnJ3eeZ1r2hEKDwZfc4+/xowL/LIemq2VVwEE8HpVAWt4WYNLR
 
-jquery.hoverIntent:
-  license: MIT
-  homepage: https://github.com/briancherne/jquery-hoverIntent
-  version: 823603fdac
-  type: file
-  src: https://raw.githubusercontent.com/briancherne/jquery-hoverIntent/823603fdac/jquery.hoverIntent.js
-  integrity: sha384-lca0haN0hqFGGh2aYUhtAgX9dhVHfQnTADH4svDeM6gcXnL7aFGeAi1NYwipDMyS
-
 jquery.i18n:
   license: MIT OR GPL-2.0-or-later
   homepage: https://github.com/wikimedia/jquery.i18n
@@ -416,20 +410,6 @@ pako:
     LICENSE:
       src: https://raw.githubusercontent.com/nodeca/pako/2.0.4/LICENSE
       integrity: sha384-9tg5LwdfxM6Fpdp6Sep9VI0qXS7Eg5gQRPvNrfV3DKIkVVL3EwSK2atu+zRoEwJg
-
-promise-polyfill:
-  license: MIT
-  homepage: https://github.com/taylorhakes/promise-polyfill
-  version: 8.1.3-65ed35b292
-  type: multi-file
-  files:
-    promise-polyfill.js:
-      # 65ed35b292 (Apr 18, 2020) between 8.1.3 (Jun 16, 2019) and 8.2.0 (Nov 3, 2020)
-      src: https://raw.githubusercontent.com/taylorhakes/promise-polyfill/65ed35b2927e97b262538054e5951d63893db05f/dist/polyfill.js
-      integrity: sha384-nQUslfDX7uz5YSWudfV8dG5d8whQpNMrLcbJPLjvq+McUl2VK7v0UOVnbfs/FrMl
-    LICENSE:
-      src: https://raw.githubusercontent.com/taylorhakes/promise-polyfill/65ed35b2927e97b262538054e5951d63893db05f/LICENSE
-      integrity: sha384-IiroT08PAyKPUM4VsNJI7G1o3SM1y+YBBj1lwdJURXYnjtx1OzYKJTNEWs2pE684
 
 qunitjs:
   license: MIT

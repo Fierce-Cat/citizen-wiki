@@ -822,6 +822,7 @@ function wfLogWarning( $msg, $callerOffset = 1, $level = E_USER_WARNING ) {
 /**
  * Return a Language object from $langcode
  *
+ * @deprecated since 1.41, use MediaWiki\Languages\LanguageFactory::getLanguage instead.
  * @param Language|string|bool $langcode Either:
  *                  - a Language object
  *                  - code of the language to get the message for, if it is
@@ -835,6 +836,7 @@ function wfLogWarning( $msg, $callerOffset = 1, $level = E_USER_WARNING ) {
  * @return Language|StubUserLang
  */
 function wfGetLangObj( $langcode = false ) {
+	wfDeprecated( __FUNCTION__, '1.41' );
 	# Identify which language to get or create a language object for.
 	# Using is_object here due to Stub objects.
 	if ( is_object( $langcode ) ) {
@@ -1391,8 +1393,8 @@ function wfTimestamp( $outputtype = TS_UNIX, $ts = 0 ) {
  * Return a formatted timestamp, or null if input is null.
  * For dealing with nullable timestamp columns in the database.
  *
- * @param int $outputtype
- * @param string|null $ts
+ * @param mixed $outputtype
+ * @param mixed|null $ts
  * @return string|false|null Null if called with null, otherwise the result of wfTimestamp()
  */
 function wfTimestampOrNull( $outputtype = TS_UNIX, $ts = null ) {
@@ -1498,7 +1500,6 @@ function wfRecursiveRemoveDir( $dir ) {
 				}
 			}
 		}
-		reset( $objects );
 		rmdir( $dir );
 	}
 }

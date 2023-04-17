@@ -5,6 +5,7 @@ use MediaWiki\MainConfigSchema;
 use MediaWiki\Page\PageReferenceValue;
 use MediaWiki\Request\FauxRequest;
 use MediaWiki\SpecialPage\SpecialPageFactory;
+use MediaWiki\Specials\SpecialAllPages;
 use MediaWiki\Title\Title;
 use Wikimedia\ScopedCallback;
 use Wikimedia\TestingAccessWrapper;
@@ -143,7 +144,7 @@ class SpecialPageFactoryTest extends MediaWikiIntegrationTestCase {
 		$this->assertEquals( NS_SPECIAL, $title->getNamespace() );
 	}
 
-	public function provideExecutePath() {
+	public static function provideExecutePath() {
 		yield [ 'BlankPage', 'intentionallyblankpage' ];
 
 		$path = new PageReferenceValue( NS_SPECIAL, 'BlankPage', PageReferenceValue::LOCAL );
@@ -217,12 +218,12 @@ class SpecialPageFactoryTest extends MediaWikiIntegrationTestCase {
 	) {
 		// Make sure order doesn't matter by reversing the list
 		$aliasesList = array_reverse( $aliasesList );
-		return $this->testConflictResolution(
+		$this->testConflictResolution(
 			$test, $aliasesList, $alias, $expectedName, $expectedAlias, $expectWarnings
 		);
 	}
 
-	public function provideTestConflictResolution() {
+	public static function provideTestConflictResolution() {
 		return [
 			[
 				'Canonical name wins',

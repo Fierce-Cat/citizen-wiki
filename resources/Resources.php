@@ -116,28 +116,20 @@ return [
 		],
 	],
 	'es6-polyfills' => [
-		'scripts' => [
-			'resources/lib/promise-polyfill/promise-polyfill.js',
-			'resources/src/es6-polyfills/array-find-polyfill.js',
-			'resources/src/es6-polyfills/array-findIndex-polyfill.js',
-			'resources/src/es6-polyfills/array-from-polyfill.js',
-			'resources/src/es6-polyfills/array-includes-polyfill.js',
-		],
-		'skipFunction' => 'resources/src/skip-es6-polyfills.js',
+		'deprecated' => 'No longer needed, MediaWiki requires ES6 now, see T178356',
 	],
 	'web2017-polyfills' => [
 		'scripts' => [
 			'resources/lib/intersection-observer/intersection-observer.js',
 			'resources/lib/fetch-polyfill/fetch.umd.js',
-			// The URL polyfill depends on the following in addition to the ES5 baseline
+			// The URL polyfill depends on the following in addition to the ES6 baseline
 			// https://github.com/Financial-Times/polyfill-library/blob/v3.110.1/polyfills/URL/config.toml#L10
-			// - ES6 Array.from (via es6-polyfills)
 			// - ES6 Symbol.iterator (no fill needed, used conditionally)
 			'resources/lib/url/URL.js',
 			'resources/lib/url/URL-toJSON.js',
 		],
 		'skipFunction' => 'resources/src/skip-web2017-polyfills.js',
-		'dependencies' => [ 'es6-polyfills' ]
+		'dependencies' => []
 	],
 	'mediawiki.base' => [
 		'localBasePath' => "$wgBaseDirectory/resources/src/mediawiki.base",
@@ -209,10 +201,6 @@ return [
 			'mediawiki.util',
 		],
 	],
-	'jquery.hoverIntent' => [
-		'deprecated' => 'Will be removed soon, see T311194',
-		'scripts' => 'resources/lib/jquery.hoverIntent/jquery.hoverIntent.js',
-	],
 	'jquery.i18n' => [
 		'scripts' => [
 			'resources/lib/jquery.i18n/src/jquery.i18n.js',
@@ -251,7 +239,7 @@ return [
 			'mediawiki.util',
 		],
 		'scripts' => 'resources/src/jquery/jquery.makeCollapsible.js',
-		'styles' => 'resources/src/jquery/jquery.makeCollapsible.css',
+		'styles' => 'resources/src/jquery/jquery.makeCollapsible.less',
 		'messages' => [ 'collapsible-expand', 'collapsible-collapse' ],
 	],
 	'jquery.spinner' => [
@@ -574,7 +562,6 @@ return [
 			],
 
 		],
-		'es6' => true,
 	],
 
 	// Alias for 'vue', for backwards compatibility
@@ -585,7 +572,6 @@ return [
 		'dependencies' => [
 			'vue'
 		],
-		'es6' => true,
 	],
 
 	'vuex' => [
@@ -615,7 +601,6 @@ return [
 		'dependencies' => [
 			'vue',
 		],
-		'es6' => true,
 	],
 
 	'wvui' => [
@@ -631,7 +616,6 @@ return [
 			'vue',
 			'@vue/composition-api',
 		],
-		'es6' => true,
 	],
 
 	'wvui-search' => [
@@ -646,15 +630,21 @@ return [
 		'dependencies' => [
 			'vue'
 		],
-		'es6' => true,
 	],
 
 	'@wikimedia/codex' => [
-		'class' => CodexModule::class,
 		'packageFiles' => [
 			'resources/src/codex/codex.js',
 			'resources/lib/codex/codex.umd.js',
 		],
+		'dependencies' => [
+			'vue',
+			'codex-styles'
+		]
+	],
+
+	'codex-styles' => [
+		'class' => CodexModule::class,
 		'themeStyles' => [
 			// Special syntax supported by CodexModule
 			'wikimedia-ui' => [
@@ -667,19 +657,22 @@ return [
 			]
 		],
 		// Do not flip styles in RTL contexts, because we're already providing RTL-specific styles
-		'noflip' => true,
-		'dependencies' => [
-			'vue'
-		],
-		'es6' => true
+		'noflip' => true
 	],
 
 	'@wikimedia/codex-search' => [
-		'class' => CodexModule::class,
 		'packageFiles' => [
 			'resources/src/codex-search/codex-search.js',
 			'resources/lib/codex-search/codex-search.umd.js',
 		],
+		'dependencies' => [
+			'vue',
+			'codex-search-styles'
+		]
+	],
+
+	'codex-search-styles' => [
+		'class' => CodexModule::class,
 		'themeStyles' => [
 			// Special syntax supported by CodexModule
 			'wikimedia-ui' => [
@@ -692,11 +685,7 @@ return [
 			]
 		],
 		// Do not flip styles in RTL contexts, because we're already providing RTL-specific styles
-		'noflip' => true,
-		'dependencies' => [
-			'vue'
-		],
-		'es6' => true
+		'noflip' => true
 	],
 
 	/* MediaWiki */
@@ -1560,7 +1549,6 @@ return [
 			'mediawiki.page.gallery.styles',
 			'mediawiki.util'
 		],
-		'targets' => [ 'desktop' ],
 	],
 	'mediawiki.page.gallery.styles' => [
 		'styles' => [
@@ -2041,7 +2029,7 @@ return [
 			'mediawiki.widgets.SelectWithInputWidget',
 			'mediawiki.widgets.NamespacesMultiselectWidget',
 			'mediawiki.widgets.TitlesMultiselectWidget',
-			'mediawiki.widgets.UserInputWidget',
+			'mediawiki.widgets.UsersMultiselectWidget',
 			'mediawiki.util',
 			'mediawiki.htmlform',
 			'moment',
@@ -2063,18 +2051,20 @@ return [
 			'special.movePage.js',
 			'special.mute.js',
 			'special.pageLanguage.js',
+			'special.revisionDelete.js',
 			'special.undelete.js',
 		],
 		'dependencies' => [
 			'mediawiki.api', // special.changecredentials.js
 			'mediawiki.htmlform.ooui', // special.changecredentials.js
-			'mediawiki.widgets.visibleLengthLimit', // special.movePage.js, special.undelete.js, action.delete.js
+			// used by special.movePage.js, special.undelete.js, action.delete.js, special.revisionDelete.js
+			'mediawiki.widgets.visibleLengthLimit',
 			'mediawiki.widgets', // special.movePage.js, special.undelete.js, special.import.js
 			'oojs-ui-core', // special.pageLanguage.js
 		],
 		'messages' => [
 			// @todo Load this message in content language
-			'colon-separator', // action.delete.js
+			'colon-separator', // action.delete.js, special.revisionDelete.js
 		],
 	],
 	// This bundles various small (under 2 KB?) JavaScript files that:
@@ -2229,17 +2219,6 @@ return [
 	'mediawiki.special.preferences.styles.ooui' => [
 		'styles' => 'resources/src/mediawiki.special.preferences.styles.ooui.less',
 	],
-	'mediawiki.special.revisionDelete' => [
-		'scripts' => 'resources/src/mediawiki.special.revisionDelete.js',
-		'messages' => [
-			// @todo Load this message in content language
-			'colon-separator',
-		],
-		'dependencies' => [
-			'mediawiki.widgets.visibleLengthLimit',
-			'oojs-ui-core',
-		],
-	],
 	'mediawiki.special.search' => [
 		'scripts' => 'resources/src/mediawiki.special.search/search.js',
 		'dependencies' => 'mediawiki.widgets.SearchInputWidget',
@@ -2349,6 +2328,7 @@ return [
 		'scripts' => [
 			'resources/src/mediawiki.special.watchlist/watchlist.js',
 			'resources/src/mediawiki.special.watchlist/visitedstatus.js',
+			'resources/src/mediawiki.special.watchlist/editwatchlist.js'
 		],
 		'messages' => [
 			'addedwatchtext',
@@ -2361,6 +2341,7 @@ return [
 			'tooltip-ca-unwatch-expiring-hours',
 			'watchlist-unwatch',
 			'watchlist-unwatch-undo',
+			'watchlistedit-normal-check-all'
 		],
 		'dependencies' => [
 			'mediawiki.api',

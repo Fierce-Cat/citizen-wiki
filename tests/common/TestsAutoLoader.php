@@ -216,6 +216,8 @@ $wgAutoloadClasses += [
 		=> "$testDir/phpunit/mocks/MockServiceDependenciesTrait.php",
 	'MediaWiki\\Tests\\Unit\\DummyServicesTrait'
 		=> "$testDir/phpunit/mocks/DummyServicesTrait.php",
+	'MediaWiki\\Tests\\Unit\\FakeQqxMessageLocalizer'
+		=> "$testDir/phpunit/mocks/FakeQqxMessageLocalizer.php",
 	'MediaWiki\\Session\\DummySessionBackend'
 		=> "$testDir/phpunit/mocks/session/DummySessionBackend.php",
 	'DummySessionProvider' => "$testDir/phpunit/mocks/session/DummySessionProvider.php",
@@ -265,6 +267,10 @@ $wgAutoloadClasses += [
 	# tests/phpunit/unit/includes/password
 	'PasswordTestCase' => "$testDir/phpunit/unit/includes/password/PasswordTestCase.php",
 	'Pbkdf2PasswordTestCase' => "$testDir/phpunit/unit/includes/password/Pbkdf2PasswordTestCase.php",
+
+	# tests/phpunit/integration/includes
+	'MediaWiki\Tests\ExtensionJsonTestBase' => "$testDir/phpunit/integration/includes/ExtensionJsonTestBase.php",
+	'MediaWiki\Tests\ExtensionServicesTestBase' => "$testDir/phpunit/integration/includes/ExtensionServicesTestBase.php",
 
 	# tests/phpunit/integration/includes/user
 	'MediaWiki\Tests\User\ActorStoreTestBase' => "$testDir/phpunit/integration/includes/user/ActorStoreTestBase.php",

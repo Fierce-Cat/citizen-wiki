@@ -31,17 +31,18 @@ use HashBagOStuff;
 use Hooks;
 use HttpStatus;
 use InvalidArgumentException;
+use Less_Environment;
 use Less_Parser;
 use MediaWiki\CommentStore\CommentStore;
 use MediaWiki\HookContainer\HookContainer;
 use MediaWiki\Html\Html;
 use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Profiler\ProfilingContext;
 use MediaWiki\Request\HeaderCallback;
 use MediaWiki\Title\Title;
 use MediaWiki\User\UserOptionsLookup;
 use MediaWiki\WikiMap\WikiMap;
-use MWException;
 use MWExceptionHandler;
 use MWExceptionRenderer;
 use Net_URL2;
@@ -125,7 +126,7 @@ class ResourceLoader implements LoggerAwareInterface {
 	/** @var bool */
 	private $useFileCache;
 
-	/** @var Module[] Map of (module name => ResourceLoaderModule) */
+	/** @var Module[] Map of (module name => Module) */
 	private $modules = [];
 	/** @var array[] Map of (module name => associative info array) */
 	private $moduleInfos = [];
@@ -749,7 +750,9 @@ class ResourceLoader implements LoggerAwareInterface {
 		// See https://bugs.php.net/bug.php?id=36514
 		ob_start();
 
+		$this->errors = [];
 		$responseTime = $this->measureResponseTime();
+		ProfilingContext::singleton()->init( MW_ENTRY_POINT, 'respond' );
 
 		// Find out which modules are missing and instantiate the others
 		$modules = [];
@@ -846,7 +849,6 @@ class ResourceLoader implements LoggerAwareInterface {
 			$response = $errorResponse . $response;
 		}
 
-		$this->errors = [];
 		// @phan-suppress-next-line SecurityCheck-XSS
 		echo $response;
 	}
@@ -897,7 +899,7 @@ class ResourceLoader implements LoggerAwareInterface {
 			$maxage = $this->maxageUnversioned;
 		} else {
 			// When a version is set, use a long expiry because changes
-			// will naturally miss the cache by using a differente URL.
+			// will naturally miss the cache by using a different URL.
 			$maxage = $this->maxageVersioned;
 		}
 		if ( $context->getImageObj() ) {
@@ -1128,7 +1130,7 @@ MESSAGE;
 								$implementKey,
 								$scripts,
 								[],
-								[],
+								null,
 								[]
 							);
 						}
@@ -1159,7 +1161,7 @@ MESSAGE;
 							$implementKey,
 							$scripts,
 							$content['styles'] ?? [],
-							isset( $content['messagesBlob'] ) ? new XmlJsCode( $content['messagesBlob'] ) : [],
+							isset( $content['messagesBlob'] ) ? new XmlJsCode( $content['messagesBlob'] ) : null,
 							$content['templates'] ?? []
 						);
 						break;
@@ -1216,9 +1218,8 @@ MESSAGE;
 			}
 		} elseif ( $states ) {
 			$this->errors[] = 'Problematic modules: '
-				// Don't issue a server-side warning for client errors. (T331641)
-				// Modules with invalid encoded names can't be registered, but can be requested
-				// by forming a bad URL.
+				// Silently ignore invalid UTF-8 injected via 'modules' query
+				// Don't issue server-side warnings for client errors. (T331641)
 				// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 				. @$context->encodeJson( $states );
 		}
@@ -1260,17 +1261,20 @@ MESSAGE;
 	/**
 	 * Return JS code that calls mw.loader.implement with given module properties.
 	 *
-	 * @param string $name Module name or implement key (format "`[name]@[version]`")
-	 * @param XmlJsCode|array|string $scripts Code as XmlJsCode (to be wrapped in a closure),
-	 *  list of URLs to JavaScript files, string of JavaScript for eval, or array with
-	 *  'files' and 'main' properties (see ResourceLoaderModule::getScript())
-	 * @param mixed $styles Array of CSS strings keyed by media type, or an array of lists of URLs
-	 *   to CSS files keyed by media type
-	 * @param mixed $messages List of messages associated with this module. May either be an
-	 *   associative array mapping message key to value, or a JSON-encoded message blob containing
-	 *   the same data, wrapped in an XmlJsCode object.
-	 * @param array $templates Keys are name of templates and values are the source of
-	 *   the template.
+	 * @param string $name Module name used as implement key (format "`[name]@[version]`")
+	 * @param XmlJsCode|array|string|string[] $scripts
+	 *  - XmlJsCode: Concatenated scripts to be wrapped in a closure
+	 *  - array: Package files array containing XmlJsCode for individual JS files,
+	 *    as produced by Module::getScript().
+	 *  - string: Script contents to eval in global scope (for site/user scripts).
+	 *  - string[]: List of URLs (for debug mode).
+	 * @param array<string,string|array<string,string[]>> $styles
+	 *   Under optional key "css", there is a concatenated CSS string.
+	 *   Under optional key "url", there is an array by media type withs URLs to stylesheets (for debug mode).
+	 *   These come from Module::getStyles(), formatted by Module:buildContent().
+	 * @param XmlJsCode|null $messages An already JSON-encoded map from message keys to values,
+	 *   wrapped in an XmlJsCode object.
+	 * @param array<string,string> $templates Map from template name to template source.
 	 * @return string JavaScript code
 	 */
 	private static function makeLoaderImplementScript(
@@ -1314,7 +1318,7 @@ MESSAGE;
 			$name,
 			$scripts,
 			(object)$styles,
-			(object)$messages,
+			$messages ?? (object)[],
 			(object)$templates
 		];
 		self::trimArray( $module );
@@ -1386,11 +1390,7 @@ MESSAGE;
 	}
 
 	/**
-	 * Returns a JS call to mw.loader.state, which sets the state of modules
-	 * to a given value:
-	 *
-	 *    - ResourceLoader::makeLoaderStateScript( $context, [ $name => $state, ... ] ):
-	 *         Set the state of modules with the given names to the given states
+	 * Format a JS call to mw.loader.state()
 	 *
 	 * @internal For use by StartUpModule
 	 * @param Context $context
@@ -1401,12 +1401,15 @@ MESSAGE;
 		Context $context, array $states
 	) {
 		return 'mw.loader.state('
-			. $context->encodeJson( $states )
+			// Silently ignore invalid UTF-8 injected via 'modules' query
+			// Don't issue server-side warnings for client errors. (T331641)
+			// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+			. @$context->encodeJson( $states )
 			. ');';
 	}
 
 	private static function isEmptyObject( stdClass $obj ) {
-		foreach ( $obj as $key => $value ) {
+		foreach ( $obj as $value ) {
 			return false;
 		}
 		return true;
@@ -1820,7 +1823,6 @@ MESSAGE;
 	 *  for compilation. Since 1.32, this method no longer automatically includes
 	 *  global LESS vars from ResourceLoader::getLessVars (T191937).
 	 * @param array $importDirs Additional directories to look in for @import (since 1.36)
-	 * @throws MWException
 	 * @return Less_Parser
 	 */
 	public function getLessCompiler( array $vars = [], array $importDirs = [] ) {
@@ -1829,16 +1831,59 @@ MESSAGE;
 		// is missing (at least for now; see T49564). If this is the case, throw an
 		// exception (caught by the installer) to prevent a fatal error later on.
 		if ( !class_exists( Less_Parser::class ) ) {
-			throw new MWException( 'MediaWiki requires the less.php parser' );
+			throw new RuntimeException( 'MediaWiki requires the less.php parser' );
 		}
 
 		$importDirs[] = "$IP/resources/src/mediawiki.less";
 
 		$parser = new Less_Parser;
 		$parser->ModifyVars( $vars );
-		// SetImportDirs expects an array like [ 'path1' => '', 'path2' => '' ]
-		$parser->SetImportDirs( array_fill_keys( $importDirs, '' ) );
 		$parser->SetOption( 'relativeUrls', false );
+
+		// SetImportDirs expects an array like [ 'path1' => '', 'path2' => '' ]
+		$formattedImportDirs = array_fill_keys( $importDirs, '' );
+		// Add a callback to the import dirs array for path remapping
+		$formattedImportDirs[] = static function ( $path ) {
+			global $IP;
+			$importMap = [
+				'@wikimedia/codex-icons/' => "$IP/resources/lib/codex-icons/",
+				'mediawiki.skin.codex-design-tokens/' => "$IP/resources/lib/codex-design-tokens/",
+				'@wikimedia/codex-design-tokens/' => /** @return never */ static function ( $unused_path ) {
+					throw new RuntimeException(
+						'Importing from @wikimedia/codex-design-tokens is not supported. ' .
+						"To use the Codex tokens, use `@import 'mediawiki.skin.variables.less';` instead."
+					);
+				}
+			];
+			foreach ( $importMap as $importPath => $substPath ) {
+				if ( str_starts_with( $path, $importPath ) ) {
+					$restOfPath = substr( $path, strlen( $importPath ) );
+					if ( is_callable( $substPath ) ) {
+						$resolvedPath = call_user_func( $substPath, $restOfPath );
+					} else {
+						$filePath = $substPath . $restOfPath;
+
+						$resolvedPath = null;
+						if ( file_exists( $filePath ) ) {
+							$resolvedPath = $filePath;
+						} elseif ( file_exists( "$filePath.less" ) ) {
+							$resolvedPath = "$filePath.less";
+						}
+					}
+
+					if ( $resolvedPath !== null ) {
+						return [
+							Less_Environment::normalizePath( $resolvedPath ),
+							Less_Environment::normalizePath( dirname( $path ) )
+						];
+					} else {
+						break;
+					}
+				}
+			}
+			return [ null, null ];
+		};
+		$parser->SetImportDirs( $formattedImportDirs );
 
 		return $parser;
 	}
@@ -2046,6 +2091,14 @@ MESSAGE;
 		Hooks::runner()->onResourceLoaderGetConfigVars( $vars, $skin, $conf );
 
 		return $vars;
+	}
+
+	/**
+	 * @internal For testing
+	 * @return array
+	 */
+	public function getErrors() {
+		return $this->errors;
 	}
 }
 

@@ -910,7 +910,7 @@ class FileBackendIntegrationTest extends MediaWikiIntegrationTestCase {
 		}
 	}
 
-	public function provider_quickOperations() {
+	public static function provider_quickOperations() {
 		$base = self::baseStorePath();
 		$files = [
 			"$base/unittest-cont1/e/fileA.a",
@@ -2130,7 +2130,7 @@ class FileBackendIntegrationTest extends MediaWikiIntegrationTestCase {
 
 		$iter = $this->backend->getFileList( [ 'dir' => "$base/unittest-cont1/not/exists" ] );
 		$this->assertNotNull( $iter );
-		foreach ( $iter as $iter ) {
+		foreach ( $iter as $item ) {
 			// no errors
 		}
 	}

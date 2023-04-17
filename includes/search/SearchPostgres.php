@@ -44,6 +44,7 @@ class SearchPostgres extends SearchDatabase {
 		$q = $this->searchQuery( $term, 'titlevector' );
 		$olderror = error_reporting( E_ERROR );
 		$dbr = $this->lb->getConnectionRef( DB_REPLICA );
+		// phpcs:ignore MediaWiki.Usage.DbrQueryUsage.DbrQueryFound
 		$resultSet = $dbr->query( $q, 'SearchPostgres', IDatabase::QUERY_SILENCE_ERRORS );
 		error_reporting( $olderror );
 		return new SqlSearchResultSet( $resultSet, $this->searchTerms );
@@ -53,6 +54,7 @@ class SearchPostgres extends SearchDatabase {
 		$q = $this->searchQuery( $term, 'textvector' );
 		$olderror = error_reporting( E_ERROR );
 		$dbr = $this->lb->getConnectionRef( DB_REPLICA );
+		// phpcs:ignore MediaWiki.Usage.DbrQueryUsage.DbrQueryFound
 		$resultSet = $dbr->query( $q, 'SearchPostgres', IDatabase::QUERY_SILENCE_ERRORS );
 		error_reporting( $olderror );
 		return new SqlSearchResultSet( $resultSet, $this->searchTerms );
@@ -70,7 +72,7 @@ class SearchPostgres extends SearchDatabase {
 		wfDebug( "parseQuery received: $term" );
 
 		// No backslashes allowed
-		$term = preg_replace( '/\\\/', '', $term );
+		$term = preg_replace( '/\\\\/', '', $term );
 
 		// Collapse parens into nearby words:
 		$term = preg_replace( '/\s*\(\s*/', ' (', $term );
@@ -135,6 +137,7 @@ class SearchPostgres extends SearchDatabase {
 		// We need a separate query here so gin does not complain about empty searches
 		$sql = "SELECT to_tsquery($searchstring)";
 		$dbr = $this->lb->getConnectionRef( DB_REPLICA );
+		// phpcs:ignore MediaWiki.Usage.DbrQueryUsage.DbrQueryFound
 		$res = $dbr->query( $sql, __METHOD__ );
 		if ( !$res ) {
 			// TODO: Better output (example to catch: one 'two)

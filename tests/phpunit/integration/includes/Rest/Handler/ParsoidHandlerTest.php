@@ -1416,7 +1416,7 @@ class ParsoidHandlerTest extends MediaWikiIntegrationTestCase {
 		}
 	}
 
-	public function provideDom2wikitextException() {
+	public static function provideDom2wikitextException() {
 		yield 'ClientError' => [
 			new ClientError( 'test' ),
 			new HttpException( 'test', 400 )
@@ -1599,13 +1599,13 @@ class ParsoidHandlerTest extends MediaWikiIntegrationTestCase {
 		$this->newParsoidHandler()->tryToCreatePageConfig( $attribs, $wikitext, $html2WtMode );
 	}
 
-	public function provideRoundTripNoSelser() {
+	public static function provideRoundTripNoSelser() {
 		yield 'space in heading' => [
 			"==foo==\nsomething\n"
 		];
 	}
 
-	public function provideRoundTripNeedingSelser() {
+	public static function provideRoundTripNeedingSelser() {
 		yield 'uppercase tags' => [
 			"<DIV>foo</div>"
 		];
@@ -1701,6 +1701,11 @@ class ParsoidHandlerTest extends MediaWikiIntegrationTestCase {
 
 		$pageConfig = $handler->tryToCreatePageConfig( $attribs, $wikitext );
 		$response = $handler->wt2html( $pageConfig, $attribs, $wikitext );
+
+		// NOTE: Make sure there is no ETag if no stashing was requested (T331629)
+		$etag = $response->getHeaderLine( 'etag' );
+		$this->assertSame( '', $etag, 'ETag' );
+
 		$body = $response->getBody();
 		$body->rewind();
 		$pbJson = $body->getContents();
@@ -1857,7 +1862,7 @@ class ParsoidHandlerTest extends MediaWikiIntegrationTestCase {
 		}
 	}
 
-	public function provideWt2html() {
+	public static function provideWt2html() {
 		$profileVersion = '2.6.0';
 		$htmlProfileUri = 'https://www.mediawiki.org/wiki/Specs/HTML/' . $profileVersion;
 		$pbProfileUri = 'https://www.mediawiki.org/wiki/Specs/pagebundle/' . $profileVersion;
@@ -2028,7 +2033,7 @@ class ParsoidHandlerTest extends MediaWikiIntegrationTestCase {
 	 *
 	 * @param array $attribs
 	 * @param string|null $text
-	 * @param string[] $expectedData
+	 * @param array $expectedData
 	 * @param string[] $unexpectedHtml
 	 * @param string[] $expectedHeaders
 	 */

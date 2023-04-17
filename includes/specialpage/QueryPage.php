@@ -25,6 +25,8 @@ use MediaWiki\Cache\LinkBatchFactory;
 use MediaWiki\Linker\LinkTarget;
 use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Specials\SpecialAncientPages;
+use MediaWiki\Specials\SpecialBrokenRedirects;
 use MediaWiki\Specials\SpecialMostImages;
 use MediaWiki\Specials\SpecialWantedFiles;
 use MediaWiki\Specials\SpecialWantedPages;
@@ -554,6 +556,7 @@ abstract class QueryPage extends SpecialPage {
 			$sql = $this->getSQL();
 			$sql .= ' ORDER BY ' . implode( ', ', $order );
 			$sql = $dbr->limitResult( $sql, $limit, $offset );
+			// phpcs:ignore MediaWiki.Usage.DbrQueryUsage.DbrQueryFound
 			$res = $dbr->query( $sql, $fname );
 		}
 

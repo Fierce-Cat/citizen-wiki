@@ -146,7 +146,7 @@ class DatabaseBlockStoreTest extends MediaWikiIntegrationTestCase {
 		$this->assertTrue( $block->equals( $retrievedBlock ) );
 	}
 
-	public function provideInsertBlockSuccess() {
+	public static function provideInsertBlockSuccess() {
 		return [
 			'No conflicting block, not autoblocking' => [
 				'block' => [
@@ -198,7 +198,7 @@ class DatabaseBlockStoreTest extends MediaWikiIntegrationTestCase {
 		$targetToken = $userFactory->newFromUserIdentity( $block->getTargetUserIdentity() )->getToken();
 
 		$store = $this->getStore( $options );
-		$result = $store->insertBlock( $block );
+		$store->insertBlock( $block );
 
 		$this->assertSame(
 			$expectTokenEqual,
@@ -206,7 +206,7 @@ class DatabaseBlockStoreTest extends MediaWikiIntegrationTestCase {
 		);
 	}
 
-	public function provideInsertBlockLogout() {
+	public static function provideInsertBlockLogout() {
 		return [
 			'Blocked user can log in' => [
 				[
@@ -323,7 +323,7 @@ class DatabaseBlockStoreTest extends MediaWikiIntegrationTestCase {
 		);
 	}
 
-	public function provideUpdateBlockRestrictions() {
+	public static function provideUpdateBlockRestrictions() {
 		return [
 			'Restrictions deleted if removed' => [ 0 ],
 			'Restrictions changed if updated' => [ 2 ],

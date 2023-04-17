@@ -199,10 +199,6 @@ class DBConnRef implements IMaintainableDatabase {
 		return $this->__call( __FUNCTION__, func_get_args() );
 	}
 
-	public function lastQuery() {
-		return $this->__call( __FUNCTION__, func_get_args() );
-	}
-
 	public function lastDoneWrites() {
 		return $this->__call( __FUNCTION__, func_get_args() );
 	}
@@ -318,6 +314,11 @@ class DBConnRef implements IMaintainableDatabase {
 	public function newSelectQueryBuilder(): SelectQueryBuilder {
 		// Use $this not $this->conn so that the domain is preserved (T326377)
 		return new SelectQueryBuilder( $this );
+	}
+
+	public function newUnionQueryBuilder(): UnionQueryBuilder {
+		// Use $this not $this->conn so that the domain is preserved (T326377)
+		return new UnionQueryBuilder( $this );
 	}
 
 	public function newUpdateQueryBuilder(): UpdateQueryBuilder {
@@ -556,7 +557,7 @@ class DBConnRef implements IMaintainableDatabase {
 	) {
 		$this->assertRoleAllowsWrites();
 
-		return $this->__call( __FUNCTION__, func_get_args() );
+		$this->__call( __FUNCTION__, func_get_args() );
 	}
 
 	public function delete( $table, $conds, $fname = __METHOD__ ) {
@@ -601,19 +602,7 @@ class DBConnRef implements IMaintainableDatabase {
 		return $this->__call( __FUNCTION__, func_get_args() );
 	}
 
-	public function wasLockTimeout() {
-		return $this->__call( __FUNCTION__, func_get_args() );
-	}
-
-	public function wasConnectionLoss() {
-		return $this->__call( __FUNCTION__, func_get_args() );
-	}
-
 	public function wasReadOnlyError() {
-		return $this->__call( __FUNCTION__, func_get_args() );
-	}
-
-	public function wasErrorReissuable() {
 		return $this->__call( __FUNCTION__, func_get_args() );
 	}
 

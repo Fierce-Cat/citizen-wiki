@@ -2,6 +2,7 @@
 	"@metadata": {
 		"authors": [
 			"Anggoro",
+			"Base",
 			"Bawoor",
 			"Bennylin",
 			"Diki Ananta",
@@ -23,8 +24,7 @@
 			"Sumbukompor",
 			"Vlad5250",
 			"לערי ריינהארט",
-			"아라",
-			"Base"
+			"아라"
 		]
 	},
 	"tog-underline": "Garis ngisori pranala:",
@@ -249,7 +249,6 @@
 	"versionrequired": "Butuh MediaWiki vèrsi $1",
 	"versionrequiredtext": "MediaWiki vèrsi $1 dibutuhaké kanggo nggunakaké kaca iki. Mangga mirsani [[Special:Version|kaca iki]]",
 	"ok": "Oké",
-	"pagetitle": "$1 - {{SITENAME}}",
 	"retrievedfrom": "Dijupuk saka \"$1\"",
 	"youhavenewmessages": "{{PLURAL:$3|Kowé duwé}} $1 ($2).",
 	"youhavenewmessagesfromusers": "{{PLURAL:$4|Kowé duwé}} $1 saka {{PLURAL:$3|naraguna liya|$3 naraguna}} ($2).",
@@ -2130,7 +2129,7 @@
 	"mycontris": "Pasumbang",
 	"anoncontribs": "Pasumbang",
 	"contribsub2": "Kanggo {{GENDER:$3|$1}} ($2)",
-	"contributions-subtitle": "Marang {{GENDER:$3|$1}}",
+	"contributions-subtitle": "Marang {{GENDER:$2|$1}}",
 	"nocontribs": "Owah-owahan kang cocog karo wewaton mangkono ora tinemu.",
 	"uctop": "saiki",
 	"month": "Saka wulan (lan sadurungé):",

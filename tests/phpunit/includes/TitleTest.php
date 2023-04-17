@@ -395,7 +395,7 @@ class TitleTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( 42, $title1->getLatestRevID() );
 	}
 
-	public function provideGetLinkURL() {
+	public static function provideGetLinkURL() {
 		yield 'Simple' => [
 			'/wiki/Goats',
 			NS_MAIN,
@@ -486,7 +486,7 @@ class TitleTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $expected, $title->getLinkURL( $query, $query2, $proto ) );
 	}
 
-	public function provideProperPage() {
+	public static function provideProperPage() {
 		return [
 			[ NS_MAIN, 'Test' ],
 			[ NS_MAIN, 'User' ],
@@ -545,7 +545,7 @@ class TitleTest extends MediaWikiIntegrationTestCase {
 		$title->toPageRecord();
 	}
 
-	public function provideImproperPage() {
+	public static function provideImproperPage() {
 		return [
 			[ NS_MAIN, '' ],
 			[ NS_MAIN, '<>' ],
@@ -602,7 +602,7 @@ class TitleTest extends MediaWikiIntegrationTestCase {
 		$title->toPageIdentity();
 	}
 
-	public function provideMakeTitle() {
+	public static function provideMakeTitle() {
 		yield 'main namespace' => [ 'Foo', NS_MAIN, 'Foo' ];
 		yield 'user namespace' => [ 'User:Foo', NS_USER, 'Foo' ];
 		yield 'fragment' => [ 'Foo#Section', NS_MAIN, 'Foo', 'Section' ];
@@ -622,7 +622,7 @@ class TitleTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $expected, $title->getFullText() );
 	}
 
-	public function provideMakeTitle_invalid() {
+	public static function provideMakeTitle_invalid() {
 		yield 'bad namespace' => [ 'Special:Badtitle/NS-1234:Foo', -1234, 'Foo' ];
 		yield 'lower case' => [ 'User:foo', NS_USER, 'foo' ];
 		yield 'empty' => [ '', NS_MAIN, '' ];
@@ -641,7 +641,30 @@ class TitleTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $expected, $title->getFullText() );
 	}
 
-	public function provideMakeTitleSafe() {
+	public static function provideMakeName() {
+		yield 'main namespace' => [ 'Foo', NS_MAIN, 'Foo' ];
+		yield 'user namespace' => [ 'User:Foo', NS_USER, 'Foo' ];
+		yield 'fragment' => [ 'Foo#Section', NS_MAIN, 'Foo', 'Section' ];
+		yield 'only fragment' => [ '#Section', NS_MAIN, '', 'Section' ];
+		yield 'interwiki' => [ 'acme:Foo', NS_MAIN, 'Foo', '', 'acme' ];
+		yield 'bad namespace' => [ 'Special:Badtitle/NS-1234:Foo', -1234, 'Foo' ];
+		yield 'lower case' => [ 'User:foo', NS_USER, 'foo' ];
+		yield 'empty' => [ '', NS_MAIN, '' ];
+		yield 'bad character' => [ 'Foo|Bar', NS_MAIN, 'Foo|Bar' ];
+		yield 'bad interwiki' => [ 'qwerty:Foo', NS_MAIN, 'Foo', '', 'qwerty' ];
+	}
+
+	/**
+	 * @dataProvider provideMakeName
+	 * @covers Title::makeName
+	 */
+	public function testMakeName( $expected, $ns, $text, $fragment = '', $interwiki = '' ) {
+		$titleName = Title::makeName( $ns, $text, $fragment, $interwiki );
+
+		$this->assertSame( $expected, $titleName );
+	}
+
+	public static function provideMakeTitleSafe() {
 		yield 'main namespace' => [ 'Foo', NS_MAIN, 'Foo' ];
 		yield 'user namespace' => [ 'User:Foo', NS_USER, 'Foo' ];
 		yield 'fragment' => [ 'Foo#Section', NS_MAIN, 'Foo', 'Section' ];
@@ -667,7 +690,7 @@ class TitleTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $expected, $title->getFullText() );
 	}
 
-	public function provideMakeTitleSafe_invalid() {
+	public static function provideMakeTitleSafe_invalid() {
 		yield 'bad namespace' => [ -1234, 'Foo' ];
 		yield 'empty' => [ '', NS_MAIN, '' ];
 		yield 'bad character' => [ NS_MAIN, 'Foo|Bar' ];
@@ -977,7 +1000,7 @@ class TitleTest extends MediaWikiIntegrationTestCase {
 		);
 	}
 
-	public function provideSubpage() {
+	public static function provideSubpage() {
 		// NOTE: avoid constructing Title objects in the provider, since it may access the database.
 		return [
 			[ 'Foo', 'x', new TitleValue( NS_MAIN, 'Foo/x' ) ],
@@ -1125,7 +1148,7 @@ class TitleTest extends MediaWikiIntegrationTestCase {
 		$this->assertTrue( $title->isAlwaysKnown() );
 	}
 
-	public function provideGetSkinFromConfigSubpage() {
+	public static function provideGetSkinFromConfigSubpage() {
 		return [
 			[ 'User:Foo', '' ],
 			[ 'User:Foo.css', '' ],
@@ -1404,7 +1427,7 @@ class TitleTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $title->getArticleID(), $title->getId() );
 	}
 
-	public function provideNonProperTitles() {
+	public static function provideNonProperTitles() {
 		return [
 			'section link' => [ Title::makeTitle( NS_MAIN, '', 'Section' ) ],
 			'empty' => [ Title::makeTitle( NS_MAIN, '' ) ],
@@ -1424,7 +1447,7 @@ class TitleTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( 0, $title->getArticleID() );
 	}
 
-	public function provideCanHaveTalkPage() {
+	public static function provideCanHaveTalkPage() {
 		return [
 			'User page has talk page' => [
 				Title::makeTitle( NS_USER, 'Jane' ), true
@@ -1619,7 +1642,7 @@ class TitleTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $expected, $title->isMovable() );
 	}
 
-	public function provideGetPrefixedText() {
+	public static function provideGetPrefixedText() {
 		return [
 			// ns = 0
 			[
@@ -1662,7 +1685,7 @@ class TitleTest extends MediaWikiIntegrationTestCase {
 		$this->assertEquals( $expected, $title->getPrefixedText() );
 	}
 
-	public function provideGetPrefixedDBKey() {
+	public static function provideGetPrefixedDBKey() {
 		return [
 			// ns = 0
 			[
@@ -1705,7 +1728,7 @@ class TitleTest extends MediaWikiIntegrationTestCase {
 		$this->assertEquals( $expected, $title->getPrefixedDBkey() );
 	}
 
-	public function provideGetFragmentForURL() {
+	public static function provideGetFragmentForURL() {
 		return [
 			[ 'Foo', '' ],
 			[ 'Foo#ümlåût', '#ümlåût' ],
@@ -1732,7 +1755,7 @@ class TitleTest extends MediaWikiIntegrationTestCase {
 		self::assertEquals( $expected, $title->getFragmentForURL() );
 	}
 
-	public function provideIsRawHtmlMessage() {
+	public static function provideIsRawHtmlMessage() {
 		return [
 			[ 'MediaWiki:Foobar', true ],
 			[ 'MediaWiki:Foo bar', true ],
@@ -1843,7 +1866,7 @@ class TitleTest extends MediaWikiIntegrationTestCase {
 		);
 	}
 
-	public function provideRestrictionsRows() {
+	public static function provideRestrictionsRows() {
 		yield [ [ (object)[
 			'pr_id' => 1,
 			'pr_page' => 1,
@@ -2276,7 +2299,7 @@ class TitleTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( [], $title->getSubpages() );
 	}
 
-	public function provideNamespaces() {
+	public static function provideNamespaces() {
 		// For ->isExternal() code path, construct a title with interwiki
 		$title = Title::makeTitle( NS_FILE, 'test', 'frag', 'meta' );
 		return [
@@ -2302,7 +2325,7 @@ class TitleTest extends MediaWikiIntegrationTestCase {
 		}
 	}
 
-	public function providePagesWithSubjects() {
+	public static function providePagesWithSubjects() {
 		return [
 			[ Title::makeTitle( NS_USER_TALK, 'User_test' ), 'User' ],
 			[ Title::makeTitle( NS_PROJECT, 'Test' ), 'Project' ],
@@ -2320,7 +2343,7 @@ class TitleTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $expected, $actual );
 	}
 
-	public function provideTitlesWithTalkPages() {
+	public static function provideTitlesWithTalkPages() {
 		return [
 			[ Title::makeTitle( NS_HELP, 'Help page' ), 'Help_talk' ],
 			[ Title::newMainPage(), 'Talk' ],
@@ -2373,7 +2396,7 @@ class TitleTest extends MediaWikiIntegrationTestCase {
 		$this->assertInstanceOf( BacklinkCache::class, $backlinkCache );
 	}
 
-	public function provideNsWithSubpagesSupport() {
+	public static function provideNsWithSubpagesSupport() {
 		return [
 			[ NS_HELP, 'Mainhelp', 'Mainhelp/Subhelp' ],
 			[ NS_USER, 'Mainuser', 'Mainuser/Subuser' ],
@@ -2395,7 +2418,7 @@ class TitleTest extends MediaWikiIntegrationTestCase {
 		$this->assertTrue( $subPage->isSubpage() );
 	}
 
-	public function provideNsWithNoSubpages() {
+	public static function provideNsWithNoSubpages() {
 		return [
 			[ NS_CATEGORY, 'Maincat', 'Maincat/Subcat' ],
 			[ NS_MAIN, 'Mainpage', 'Mainpage/Subpage' ]
@@ -2415,7 +2438,7 @@ class TitleTest extends MediaWikiIntegrationTestCase {
 		$this->assertFalse( $subPage->isSubpage() );
 	}
 
-	public function provideTitleEditURLs() {
+	public static function provideTitleEditURLs() {
 		return [
 			[ Title::makeTitle( NS_MAIN, 'Title' ), '/w/index.php?title=Title&action=edit' ],
 			[ Title::makeTitle( NS_HELP, 'Test', '', 'mw' ), '' ],
@@ -2432,7 +2455,7 @@ class TitleTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $expected, $actual );
 	}
 
-	public function provideTitleEditURLsWithActionPaths() {
+	public static function provideTitleEditURLsWithActionPaths() {
 		return [
 			[ Title::newFromText( 'Title', NS_MAIN ), '/wiki/edit/Title' ],
 			[ Title::makeTitle( NS_HELP, 'Test', '', 'mw' ), '' ],
@@ -2467,7 +2490,7 @@ class TitleTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $expected, $title->isMainPage() );
 	}
 
-	public function provideMainPageTitles() {
+	public static function provideMainPageTitles() {
 		return [
 			[ Title::makeTitle( NS_MAIN, 'Test' ), false ],
 			[ Title::makeTitle( NS_CATEGORY, 'mw:Category' ), false ],
@@ -2485,7 +2508,7 @@ class TitleTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $expected, $actual );
 	}
 
-	public function provideDataForTestGetPrefixedURL() {
+	public static function provideDataForTestGetPrefixedURL() {
 		return [
 			[ Title::makeTitle( NS_FILE, 'Title' ), 'File:Title' ],
 			[ Title::makeTitle( NS_MEDIA, 'Title' ), 'Media:Title' ],
@@ -2517,7 +2540,7 @@ class TitleTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $expected, $actual );
 	}
 
-	public function provideDataForTestGetFullText() {
+	public static function provideDataForTestGetFullText() {
 		return [
 			[ Title::makeTitle( NS_TALK, 'Test' ), 'Talk:Test' ],
 			[ Title::makeTitle( NS_HELP, 'Test', 'frag' ), 'Help:Test#frag' ],
@@ -2525,7 +2548,7 @@ class TitleTest extends MediaWikiIntegrationTestCase {
 		];
 	}
 
-	public function provideIsSamePageAs() {
+	public static function provideIsSamePageAs() {
 		$title = Title::makeTitle( 0, 'Foo' );
 		$title->resetArticleID( 1 );
 		yield '(PageIdentityValue) same text, title has ID 0' => [

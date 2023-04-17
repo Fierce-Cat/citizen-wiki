@@ -20,7 +20,6 @@ class ImportFailureTest extends MediaWikiLangTestCase {
 
 	/**
 	 * @param ImportSource $source
-	 *
 	 * @return WikiImporter
 	 */
 	private function getImporter( ImportSource $source ) {
@@ -47,7 +46,7 @@ class ImportFailureTest extends MediaWikiLangTestCase {
 	/**
 	 * @param string $testName
 	 *
-	 * @return string[]
+	 * @return string
 	 */
 	private function getFileToImport( string $testName ) {
 		return __DIR__ . "/../../data/import/$testName.xml";
@@ -87,7 +86,7 @@ class ImportFailureTest extends MediaWikiLangTestCase {
 		);
 	}
 
-	public function provideImportFailure() {
+	public static function provideImportFailure() {
 		yield [ 'BadXML', MWException::class, '/^XML error at line 3: Opening and ending tag mismatch:.*$/' ];
 		yield [ 'MissingMediaWikiTag', MWException::class, '/^Expected <mediawiki> tag, got .*$/' ];
 		yield [ 'MissingMainTextField', MWException::class, '/^Missing text field in import.$/' ];

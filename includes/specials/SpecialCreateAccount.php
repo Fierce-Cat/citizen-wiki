@@ -160,7 +160,7 @@ class SpecialCreateAccount extends LoginSignupSpecialPage {
 	}
 
 	protected function clearToken() {
-		return $this->getRequest()->getSession()->resetToken( 'createaccount' );
+		$this->getRequest()->getSession()->resetToken( 'createaccount' );
 	}
 
 	protected function getTokenName() {
@@ -168,7 +168,7 @@ class SpecialCreateAccount extends LoginSignupSpecialPage {
 	}
 
 	protected function getGroupName() {
-		return 'login';
+		return 'users';
 	}
 
 	protected function logAuthResult( $success, $status = null ) {

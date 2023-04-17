@@ -31,6 +31,12 @@ use Wikimedia\Rdbms\Platform\ISQLPlatform;
  * @ingroup Database
  */
 interface IReadableDatabase extends ISQLPlatform, DbQuoter, IDatabaseFlags {
+
+	/** @var bool Parameter to unionQueries() for UNION ALL */
+	public const UNION_ALL = true;
+	/** @var bool Parameter to unionQueries() for UNION DISTINCT */
+	public const UNION_DISTINCT = false;
+
 	/**
 	 * Get a human-readable string describing the current software version
 	 *
@@ -55,14 +61,6 @@ interface IReadableDatabase extends ISQLPlatform, DbQuoter, IDatabaseFlags {
 	 * @return string The previous db schema
 	 */
 	public function dbSchema( $schema = null );
-
-	/**
-	 * Get the last query that sent on account of IDatabase::query()
-	 *
-	 * @deprecated since 1.40 without replacement
-	 * @return string SQL text or empty string if there was no such query
-	 */
-	public function lastQuery();
 
 	/**
 	 * @return bool Whether a connection to the database open
@@ -141,6 +139,19 @@ interface IReadableDatabase extends ISQLPlatform, DbQuoter, IDatabaseFlags {
 	 * @return SelectQueryBuilder
 	 */
 	public function newSelectQueryBuilder(): SelectQueryBuilder;
+
+	/**
+	 * Create an empty UnionQueryBuilder which can be used to run queries
+	 * against this connection.
+	 *
+	 * @note A new query builder must be created per query. Query builders
+	 *   should not be reused since this uses a fluent interface and the state of
+	 *   the builder changes during the query which may cause unexpected results.
+	 *
+	 * @since 1.41
+	 * @return UnionQueryBuilder
+	 */
+	public function newUnionQueryBuilder(): UnionQueryBuilder;
 
 	/**
 	 * A SELECT wrapper which returns a single field from a single result row
@@ -321,7 +332,7 @@ interface IReadableDatabase extends ISQLPlatform, DbQuoter, IDatabaseFlags {
 	 *   - GROUP BY: May be either an SQL fragment string naming a field or
 	 *     expression to group by, or an array of such SQL fragments.
 	 *
-	 *   - HAVING: May be either an string containing a HAVING clause or an array of
+	 *   - HAVING: May be either a string containing a HAVING clause or an array of
 	 *     conditions building the HAVING clause. If an array is given, the conditions
 	 *     constructed from each element are combined with AND.
 	 *
@@ -523,40 +534,11 @@ interface IReadableDatabase extends ISQLPlatform, DbQuoter, IDatabaseFlags {
 	public function wasDeadlock();
 
 	/**
-	 * Determines if the last failure was due to a lock timeout
-	 *
-	 * Note that during a lock wait timeout, the prior transaction will have been lost
-	 *
-	 * @return bool
-	 */
-	public function wasLockTimeout();
-
-	/**
-	 * Determines if the last query error was due to a dropped connection
-	 *
-	 * Note that during a connection loss, the prior transaction will have been lost
-	 *
-	 * @return bool
-	 * @since 1.31
-	 */
-	public function wasConnectionLoss();
-
-	/**
 	 * Determines if the last failure was due to the database being read-only
 	 *
 	 * @return bool
 	 */
 	public function wasReadOnlyError();
-
-	/**
-	 * Determines if the last query error was due to something outside of the query itself
-	 *
-	 * Note that the transaction may have been lost, discarding prior writes and results
-	 *
-	 * @return bool
-	 * @deprecated Since 1.40
-	 */
-	public function wasErrorReissuable();
 
 	/**
 	 * Wait for the replica server to catch up to a given primary server position

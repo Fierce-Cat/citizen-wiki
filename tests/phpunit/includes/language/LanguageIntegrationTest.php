@@ -1607,7 +1607,7 @@ class LanguageIntegrationTest extends LanguageClassesTestCase {
 		$this->assertEquals( $expected, $formattedNum );
 	}
 
-	public function provideFormatNum() {
+	public static function provideFormatNum() {
 		return [
 			[ true, 'en', 100, false, '100' ],
 			[ true, 'en', 101, true, '101' ],
@@ -1785,7 +1785,7 @@ class LanguageIntegrationTest extends LanguageClassesTestCase {
 				'Cat_toots' => NS_FILE_TALK,
 				// inherited from x-foo
 				'Dog' => NS_USER,
-				'Dog' => NS_USER_TALK,
+				'Dog_woofs' => NS_USER_TALK,
 				// add from site configuration
 				'Mouse' => NS_SPECIAL,
 			],
@@ -1985,7 +1985,7 @@ class LanguageIntegrationTest extends LanguageClassesTestCase {
 		$this->assertArraySubmapSame( $expected, $namespaces );
 	}
 
-	public function provideGetNamespaces() {
+	public static function provideGetNamespaces() {
 		$enNamespaces = [
 			NS_MEDIA            => 'Media',
 			NS_SPECIAL          => 'Special',

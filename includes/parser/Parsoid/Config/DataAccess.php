@@ -21,6 +21,7 @@ namespace MediaWiki\Parser\Parsoid\Config;
 
 use ContentHandler;
 use File;
+use LanguageCode;
 use MediaTransformError;
 use MediaWiki\Cache\LinkBatchFactory;
 use MediaWiki\Config\ServiceOptions;
@@ -159,8 +160,12 @@ class DataAccess extends IDataAccess {
 			// for thumbnails.
 		}
 
-		// Parser::makeImage() always sets this
-		$hp['targetlang'] = $pageConfig->getPageLanguage();
+		# Parser::makeImage() always sets this
+		# T310453: Use page view language for language variants.
+		# TODO: Use page view language instead of page source code language
+		$hp['targetlang'] = LanguageCode::bcp47ToInternal(
+			$pageConfig->getPageLanguageBcp47()->toBcp47Code()
+		);
 
 		return $hp;
 	}
@@ -392,7 +397,7 @@ class DataAccess extends IDataAccess {
 		$wikitext = $parser->getStripState()->unstripBoth( $wikitext );
 
 		// XXX: Ideally we will eventually have the legacy parser use our
-		// ContentMetadataCollector instead of having an new ParserOutput
+		// ContentMetadataCollector instead of having a new ParserOutput
 		// created (implicitly in ::prepareParser()/Parser::resetOutput() )
 		// which we then have to manually merge.
 		$out = $parser->getOutput();

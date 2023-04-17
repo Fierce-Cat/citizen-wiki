@@ -216,6 +216,51 @@ class ResourceLoaderTest extends ResourceLoaderTestCase {
 		$this->assertStringEqualsFile( "$basePath/module/styles.css", $css );
 	}
 
+	public static function provideLessImportRemappingCases() {
+		$basePath = dirname( dirname( __DIR__ ) ) . '/data/less';
+		return [
+			[
+				'input' => "$basePath/import-codex-icons.less",
+				'expected' => "$basePath/import-codex-icons.css"
+			],
+			[
+				'input' => "$basePath/import-codex-tokens.less",
+				'expected' => "$basePath/import-codex-tokens.css"
+			],
+			[
+				'input' => "$basePath/import-codex-tokens-npm.less",
+				'expected' => null,
+				'exception' => [
+					'class' => Exception::class,
+					'message' => 'Importing from @wikimedia/codex-design-tokens is not supported. ' .
+						"To use the Codex tokens, use `@import 'mediawiki.skin.variables.less';` instead."
+				]
+			]
+		];
+	}
+
+	/**
+	 * @dataProvider provideLessImportRemappingCases
+	 */
+	public function testLessImportRemapping( $input, $expected, $exception = null ) {
+		$rl = new EmptyResourceLoader();
+		$lc = $rl->getLessCompiler();
+
+		if ( $exception !== null ) {
+			if ( isset( $exception['class'] ) ) {
+				$this->expectException( $exception['class'] );
+			}
+			if ( isset( $exception['message'] ) ) {
+				$this->expectExceptionMessage( $exception['message'] );
+			}
+		}
+
+		$css = $lc->parseFile( $input )->getCss();
+		if ( $expected !== null ) {
+			$this->assertStringEqualsFile( $expected, $css );
+		}
+	}
+
 	public static function provideMediaWikiVariablesCases() {
 		$basePath = __DIR__ . '/../../data/less';
 		return [
@@ -939,12 +984,12 @@ END
 			'startup response undisrupted (T152266)'
 		);
 		$this->assertMatchesRegularExpression(
-			'/register\([^)]+"ferry",\s*""/s',
+			'/register\([^)]+"ferry",\s*""/',
 			$response,
 			'startup response registers broken module'
 		);
 		$this->assertMatchesRegularExpression(
-			'/state\([^)]+"ferry":\s*"error"/s',
+			'/state\([^)]+"ferry":\s*"error"/',
 			$response,
 			'startup response sets state to error'
 		);
@@ -1074,6 +1119,37 @@ END
 
 		$this->expectOutputRegex( '/mw\.loader\.state.*"unknown": "missing"/s' );
 
+		$rl->respond( $context );
+	}
+
+	/**
+	 * Silently ignore invalid UTF-8 injected into random query parameters.
+	 *
+	 * @see https://phabricator.wikimedia.org/T331641
+	 */
+	public function testRespondInvalidMissingModule() {
+		$rl = $this->getMockBuilder( EmptyResourceLoader::class )
+			->onlyMethods( [
+				'measureResponseTime',
+				'tryRespondNotModified',
+				'sendResponseHeaders',
+			] )
+			->getMock();
+
+		// Cover the JS-response which formats via mw.loader.state()
+		$context = $this->getResourceLoaderContext(
+			[ 'modules' => "foo|bar\x80\xf0bara|quux", 'only' => null ],
+			$rl
+		);
+		$this->expectOutputRegex( '/mw\.loader\.state.*"foo": "missing"/s' );
+		$rl->respond( $context );
+
+		// Cover the CSS-response which formats via a block comment
+		$context = $this->getResourceLoaderContext(
+			[ 'modules' => "foo|bar\x80\xf0bara|quux", 'only' => 'styles' ],
+			$rl
+		);
+		$this->expectOutputRegex( '/Problematic modules.*"foo": "missing"/s' );
 		$rl->respond( $context );
 	}
 

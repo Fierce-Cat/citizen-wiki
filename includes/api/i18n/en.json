@@ -118,6 +118,7 @@
 	"apihelp-compare-paramvalue-prop-comment": "The comment on the 'from' and 'to' revisions. If the comment has been revision deleted, a <samp>fromcommenthidden</samp> or <samp>tocommenthidden</samp> property will be returned.",
 	"apihelp-compare-paramvalue-prop-parsedcomment": "The parsed comment on the 'from' and 'to' revisions. If the comment has been revision deleted, a <samp>fromcommenthidden</samp> or <samp>tocommenthidden</samp> property will be returned.",
 	"apihelp-compare-paramvalue-prop-size": "The size of the 'from' and 'to' revisions.",
+	"apihelp-compare-param-difftype": "Return the comparison formatted as inline HTML.",
 	"apihelp-compare-param-slots": "Return individual diffs for these slots, rather than one combined diff for all slots.",
 	"apihelp-compare-example-1": "Create a diff between revision 1 and 2.",
 
@@ -409,6 +410,7 @@
 	"apihelp-parse-paramvalue-prop-parsewarnings": "Gives the warnings that occurred while parsing content (as wikitext).",
 	"apihelp-parse-paramvalue-prop-parsewarningshtml": "Gives the warnings that occurred while parsing content (as HTML).",
 	"apihelp-parse-param-wrapoutputclass": "CSS class to use to wrap the parser output.",
+	"apihelp-parse-param-parsoid": "Generate HTML conforming to the [[mw:Specs/HTML|MediaWiki DOM spec]] using [[mw:Parsoid|Parsoid]].",
 	"apihelp-parse-param-pst": "Do a pre-save transform on the input before parsing it. Only valid when used with text.",
 	"apihelp-parse-param-onlypst": "Do a pre-save transform (PST) on the input, but don't parse it. Returns the same wikitext, after a PST has been applied. Only valid when used with <var>$1text</var>.",
 	"apihelp-parse-param-effectivelanglinks": "Includes language links supplied by extensions (for use with <kbd>$1prop=langlinks</kbd>).",
@@ -1530,6 +1532,8 @@
 	"apihelp-unblock-param-userid": "Specify <kbd>$1user=#<var>ID</var></kbd> instead.",
 	"apihelp-unblock-param-reason": "Reason for unblock.",
 	"apihelp-unblock-param-tags": "Change tags to apply to the entry in the block log.",
+	"apihelp-unblock-param-watchuser": "Watch the user's or IP address's user and talk pages.",
+	"apihelp-unblock-param-watchlistexpiry": "Watchlist expiry timestamp. Omit this parameter entirely to leave the current expiry unchanged.",
 	"apihelp-unblock-example-id": "Unblock block ID #<kbd>105</kbd>.",
 	"apihelp-unblock-example-user": "Unblock user <kbd>Bob</kbd> with reason <kbd>Sorry Bob</kbd>.",
 
@@ -1639,7 +1643,7 @@
 
 	"api-pageset-param-titles": "A list of titles to work on.",
 	"api-pageset-param-pageids": "A list of page IDs to work on.",
-	"api-pageset-param-revids": "A list of revision IDs to work on.",
+	"api-pageset-param-revids": "A list of revision IDs to work on. Note that almost all query modules will convert revision IDs to the corresponding page ID and work on the latest revision instead. Only <kbd>prop=revisions</kbd> uses exact revisions for its response.",
 	"api-pageset-param-generator": "Get the list of pages to work on by executing the specified query module.\n\n<strong>Note:</strong> Generator parameter names must be prefixed with a \"g\", see examples.",
 	"api-pageset-param-redirects-generator": "Automatically resolve redirects in <var>$1titles</var>, <var>$1pageids</var>, and <var>$1revids</var>, and in pages returned by <var>$1generator</var>.",
 	"api-pageset-param-redirects-nogenerator": "Automatically resolve redirects in <var>$1titles</var>, <var>$1pageids</var>, and <var>$1revids</var>.",

@@ -1434,6 +1434,8 @@
 	"apihelp-unblock-param-userid": "Bunun yerine <kbd>$1user=#<var>ID</var></kbd> belirtin.",
 	"apihelp-unblock-param-reason": "Engel kaldırma sebebi.",
 	"apihelp-unblock-param-tags": "Engel günlüğündeki girişe uygulanacak etiketleri değiştirin.",
+	"apihelp-unblock-param-watchuser": "Kullanıcının ya da IP adresinin kullanıcı ve mesaj sayfalarını izle.",
+	"apihelp-unblock-param-watchlistexpiry": "İzleme listesi süresinin dolması zaman damgası. Geçerli bitiş tarihini değiştirmeden bırakmak için bu değişkeni tamamen atlayın.",
 	"apihelp-unblock-example-id": "Engel kimliği #<kbd>105</kbd> üzerindeki engellemeyi kaldırın.",
 	"apihelp-unblock-example-user": "<kbd>Üzgünüm Bob </kbd> sebebi ile <kbd>Bob</kbd> kullanıcısının engellemesini kaldırın.",
 	"apihelp-undelete-summary": "Silinen bir sayfanın silinmiş revizyonlarını geri getirin.",

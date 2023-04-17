@@ -287,7 +287,7 @@ class SkinModuleTest extends ResourceLoaderTestCase {
 		);
 	}
 
-	public function provideGetLogoData() {
+	public static function provideGetLogoData() {
 		return [
 			'wordmark' => [
 				'config' => [
@@ -405,7 +405,7 @@ class SkinModuleTest extends ResourceLoaderTestCase {
 		$this->assertEquals( [ $result ], $module->getHeaders( $ctx ) );
 	}
 
-	public function providePreloadLinks() {
+	public static function providePreloadLinks() {
 		return [
 			[
 				[
@@ -516,7 +516,7 @@ class SkinModuleTest extends ResourceLoaderTestCase {
 		$this->assertFileExists( $file );
 	}
 
-	public function provideFeatureFiles(): Generator {
+	public static function provideFeatureFiles(): Generator {
 		global $IP;
 
 		$featureFiles = ( new ReflectionClass( SkinModule::class ) )
@@ -619,7 +619,7 @@ class SkinModuleTest extends ResourceLoaderTestCase {
 		$ctx = $this->createMock( Context::class );
 		$module = new SkinModule(
 			[
-				// The ordering should be controlled by ResourceLoaderSkinModule
+				// The ordering should be controlled by SkinModule
 				// `normalize` will be outputted before `elements` despite the ordering
 				'features' => $features,
 				'styles' => $styles,

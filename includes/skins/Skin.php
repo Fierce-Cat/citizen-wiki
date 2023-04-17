@@ -1314,6 +1314,7 @@ abstract class Skin extends ContextSource {
 			$revid = $out->getRevisionId();
 			if ( $revid ) {
 				$nav_urls['permalink'] = [
+					'icon' => 'link',
 					'text' => $this->msg( 'permalink' )->text(),
 					'href' => $title->getLocalURL( "oldid=$revid" )
 				];
@@ -1326,6 +1327,7 @@ abstract class Skin extends ContextSource {
 			];
 
 			$nav_urls['info'] = [
+				'icon' => 'infoFilled',
 				'text' => $this->msg( 'pageinfo-toolboxlink' )->text(),
 				'href' => $title->getLocalURL( "action=info" )
 			];
@@ -1381,8 +1383,10 @@ abstract class Skin extends ContextSource {
 			}
 
 			if ( $user->isRegistered() ) {
-				if ( $this->getUser()->isRegistered() &&
-				$this->getConfig()->get( MainConfigNames::EnableSpecialMute ) ) {
+				if ( $this->getConfig()->get( MainConfigNames::EnableSpecialMute ) &&
+					$this->getUser()->isNamed() &&
+					!MediaWikiServices::getInstance()->getUserNameUtils()->isTemp( $rootUser )
+				) {
 					$nav_urls['mute'] = [
 						'text' => $this->msg( 'mute-preferences' )->text(),
 						'href' => self::makeSpecialUrlSubpage( 'Mute', $rootUser )
@@ -1898,6 +1902,7 @@ abstract class Skin extends ContextSource {
 		if ( $navUrls['whatlinkshere'] ?? null ) {
 			$toolbox['whatlinkshere'] = $navUrls['whatlinkshere'];
 			$toolbox['whatlinkshere']['id'] = 't-whatlinkshere';
+			$toolbox['whatlinkshere']['icon'] = 'articleRedirect';
 		}
 		if ( $navUrls['recentchangeslinked'] ?? null ) {
 			$toolbox['recentchangeslinked'] = $navUrls['recentchangeslinked'];
@@ -2232,7 +2237,7 @@ abstract class Skin extends ContextSource {
 	 *
 	 * @return array HTML attributes
 	 */
-	private function getUserLanguageAttributes() {
+	final protected function getUserLanguageAttributes() {
 		$userLang = $this->getLanguage();
 		$userLangCode = $userLang->getHtmlCode();
 		$userLangDir = $userLang->getDir();

@@ -419,7 +419,7 @@ abstract class DatabaseMysqlBase extends Database {
 		$res = $this->query( "SELECT @@GLOBAL.read_only AS Value", __METHOD__, $flags );
 		$row = $res->fetchObject();
 
-		return $row ? (bool)$row->Value : false;
+		return $row && (bool)$row->Value;
 	}
 
 	/**
@@ -485,6 +485,10 @@ abstract class DatabaseMysqlBase extends Database {
 			$encTimeout = (int)$options['connTimeout'];
 			$sqlAssignments[] = "net_read_timeout=$encTimeout";
 			$sqlAssignments[] = "net_write_timeout=$encTimeout";
+		}
+		if ( isset( $options['groupConcatMaxLen'] ) ) {
+			$maxLength = (int)$options['groupConcatMaxLen'];
+			$sqlAssignments[] = "group_concat_max_len=$maxLength";
 		}
 
 		if ( $sqlAssignments ) {
@@ -606,15 +610,6 @@ abstract class DatabaseMysqlBase extends Database {
 	}
 
 	/**
-	 * Determines if the last failure was due to a lock timeout
-	 *
-	 * @return bool
-	 */
-	public function wasLockTimeout() {
-		return $this->lastErrno() == 1205;
-	}
-
-	/**
 	 * Determines if the last failure was due to the database being read-only.
 	 *
 	 * @return bool
@@ -719,7 +714,7 @@ abstract class DatabaseMysqlBase extends Database {
 
 		$allViews = [];
 		foreach ( $res as $row ) {
-			array_push( $allViews, $row->$propertyName );
+			$allViews[] = $row->$propertyName;
 		}
 
 		if ( $prefix === null || $prefix === '' ) {
@@ -730,23 +725,11 @@ abstract class DatabaseMysqlBase extends Database {
 		foreach ( $allViews as $viewName ) {
 			// Does the name of this VIEW start with the table-prefix?
 			if ( strpos( $viewName, $prefix ) === 0 ) {
-				array_push( $filteredViews, $viewName );
+				$filteredViews[] = $viewName;
 			}
 		}
 
 		return $filteredViews;
-	}
-
-	/**
-	 * Differentiates between a TABLE and a VIEW.
-	 *
-	 * @param string $name Name of the TABLE/VIEW to test
-	 * @param string|null $prefix
-	 * @return bool
-	 * @since 1.22
-	 */
-	public function isView( $name, $prefix = null ) {
-		return in_array( $name, $this->listViews( $prefix, __METHOD__ ) );
 	}
 
 	public function selectSQLText(

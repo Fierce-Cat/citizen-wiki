@@ -7,6 +7,7 @@
 			"Amire80",
 			"Amjad Khan",
 			"Baloch Khan",
+			"Base",
 			"DannyS712",
 			"Fitoschido",
 			"Ibrahim khashrowdi",
@@ -15,8 +16,7 @@
 			"Matma Rex",
 			"Vlad5250",
 			"عثمان خان شاہ",
-			"아라",
-			"Base"
+			"아라"
 		]
 	},
 	"tog-underline": "کرښنې تړنې:",
@@ -242,7 +242,6 @@
 	"versionrequired": "د ميډياويکي $1 بڼې ته اړتيا ده",
 	"versionrequiredtext": "د دې مخ په ليدلو کې د مېډياويکي $1 بڼې ته اړتيا ده. \n[[Special:Version|د بڼې مخ وگورۍ]].",
 	"ok": "ښه",
-	"pagetitle": "$1 - {{SITENAME}}",
 	"backlinksubtitle": "→ $1",
 	"retrievedfrom": "\"$1\" نه اخيستل شوی",
 	"youhavenewmessages": "تاسې $1 لری  ($2).",

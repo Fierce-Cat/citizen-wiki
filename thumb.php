@@ -28,6 +28,7 @@
 
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Profiler\ProfilingContext;
 use MediaWiki\Title\Title;
 use Wikimedia\AtEase\AtEase;
 
@@ -43,6 +44,8 @@ wfThumbMain();
 
 function wfThumbMain() {
 	global $wgTrivialMimeDetection, $wgRequest;
+
+	ProfilingContext::singleton()->init( MW_ENTRY_POINT, 'stream' );
 
 	// Don't use fancy MIME detection, just check the file extension for jpg/gif/png
 	$wgTrivialMimeDetection = true;
@@ -427,7 +430,7 @@ function wfProxyThumbnailRequest( $img, $thumbName ) {
 	}
 
 	// Send request to proxied service
-	$status = $req->execute();
+	$req->execute();
 
 	\MediaWiki\Request\HeaderCallback::warnIfHeadersSent();
 
@@ -564,7 +567,7 @@ function wfExtractThumbRequestInfo( $thumbRel ) {
 	// Check if this is a thumbnail of an original in the local file repo
 	if ( preg_match( "!^((archive/)?$hashDirReg([^/]*)/([^/]*))$!", $thumbRel, $m ) ) {
 		[ /*all*/, $rel, $archOrTemp, $filename, $thumbname ] = $m;
-	// Check if this is a thumbnail of an temp file in the local file repo
+	// Check if this is a thumbnail of a temp file in the local file repo
 	} elseif ( preg_match( "!^(temp/)($hashDirReg([^/]*)/([^/]*))$!", $thumbRel, $m ) ) {
 		[ /*all*/, $archOrTemp, $rel, $filename, $thumbname ] = $m;
 	} else {

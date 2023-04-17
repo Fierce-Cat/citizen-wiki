@@ -1489,7 +1489,7 @@ class DifferenceEngine extends ContextSource {
 	 * Process DiffEngine config and get a sensible, usable engine
 	 *
 	 * @return string 'wikidiff2', 'php', or path to an executable
-	 * @internal For use by this class and TextSlotDiffRenderer only.
+	 * @internal For use by this class and within Core only.
 	 */
 	public static function getEngine() {
 		$diffEngine = MediaWikiServices::getInstance()->getMainConfig()
@@ -1814,7 +1814,14 @@ class DifferenceEngine extends ContextSource {
 		$header = Html::openElement( 'table', [
 			'class' => [
 				'diff',
+				// The following classes are used here:
+				// * diff-contentalign-left
+				// * diff-contentalign-right
 				'diff-contentalign-' . $this->getDiffLang()->alignStart(),
+				// The following classes are used here:
+				// * diff-editfont-monospace
+				// * diff-editfont-sans-serif
+				// * diff-editfont-serif
 				'diff-editfont-' . $this->userOptionsLookup->getOption(
 					$this->getUser(),
 					'editfont'

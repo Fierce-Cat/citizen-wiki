@@ -125,48 +125,75 @@
 
 		// Otherwise, fetch protection status of all templates.
 		$parent.addClass( 'mw-preview-loading-elements-loading' );
-		api.get( {
-			action: 'query',
-			format: 'json',
-			titles: templates.map( function ( template ) { return template.title; } ).join( '|' ),
-			prop: 'info',
-			// @todo Do we need inlinkcontext here?
-			inprop: 'linkclasses|protection',
-			intestactions: 'edit'
-		} ).done( function ( response ) {
-			// Empty the list in preparation for either adding new items or not needing to.
-			$list.empty();
 
-			var templatesInfo = ( response.query && response.query.pages ) || {};
+		// Batch titles because API is limited to 50 at a time.
+		var batchSize = 50;
+		var requests = [];
+		for ( var batch = 0; batch < templates.length; batch += batchSize ) {
+			// Build a list of template names for this batch.
+			var titles = templates
+				.slice( batch, batch + batchSize )
+				.map( function ( template ) { return template.title; } );
+			requests.push( api.post( {
+				action: 'query',
+				format: 'json',
+				formatversion: 2,
+				titles: titles,
+				prop: 'info',
+				// @todo Do we need inlinkcontext here?
+				inprop: 'linkclasses|protection',
+				intestactions: 'edit'
+			} ) );
+		}
+		$.when.apply( null, requests ).done( function () {
+			var templatesAllInfo = [];
+			// For the first batch, empty the list in preparation for either adding new items or not needing to.
+			// @todo Don't empty the list till the new list items are ready to be inserted.
+			$list.empty();
+			for ( var r = 0; r < arguments.length; r++ ) {
+				// Response is either the whole argument, or the 0th element of it.
+				var response = arguments[ r ][ 0 ] || arguments[ r ];
+				var templatesInfo = ( response.query && response.query.pages ) || [];
+				templatesInfo.forEach( function ( ti ) {
+					templatesAllInfo.push( {
+						title: mw.Title.newFromText( ti.title ),
+						apiData: ti
+					} );
+				} );
+			}
+			// Sort alphabetically.
+			templatesAllInfo.sort( function ( t1, t2 ) {
+				// Compare titles with the same rules of Title::compare() in PHP.
+				return t1.title.getNamespaceId() !== t2.title.getNamespaceId() ?
+					t1.title.getNamespaceId() > t2.title.getNamespaceId() :
+					t1.title.getMain().localeCompare( t2.title.getMain() );
+			} );
+
+			// Add all templates to the list, and update the list header.
+			templatesAllInfo.forEach( function ( t ) {
+				addItemToTemplateList( $list, t );
+			} );
 			// The following messages can be used here:
 			// * templatesusedpreview
 			// * templatesusedsection
-			$explanation.msg( explanationMsg, templatesInfo.length );
-			if ( templatesInfo.length === 0 ) {
-				return;
-			}
-
-			// Add all templates to the list, in the order they're returned by the API.
-			Object.keys( templatesInfo ).forEach( function ( t ) {
-				$list.append( getTemplateListItem( templatesInfo[ t ] ) );
-			} );
+			$explanation.msg( explanationMsg, templatesAllInfo.length );
 		} ).always( function () {
 			$parent.removeClass( 'mw-preview-loading-elements-loading' );
 		} );
 	}
 
 	/**
-	 * Get a list item with relevant links for the given template.
+	 * Create list item with relevant links for the given template, and add it to the $list.
 	 *
 	 * @private
-	 * @param {Object} template
-	 * @return {jQuery}
+	 * @param {jQuery} $list The `<ul>` to add the item to.
+	 * @param {Object} template Template info with which to construct the `<li>`.
+	 * @return {void}
 	 */
-	function getTemplateListItem( template ) {
-		var canEdit = template.actions.edit !== undefined;
-		var title = mw.Title.newFromText( template.title );
-		var linkClasses = template.linkclasses || [];
-		if ( template.missing !== undefined ) {
+	function addItemToTemplateList( $list, template ) {
+		var canEdit = template.apiData.actions.edit !== undefined;
+		var linkClasses = template.apiData.linkclasses || [];
+		if ( template.apiData.missing !== undefined ) {
 			linkClasses.push( 'new' );
 		}
 		var $baseLink = $( '<a>' )
@@ -177,33 +204,33 @@
 			// * any added by the GetLinkColours hook
 			.addClass( linkClasses );
 		var $link = $baseLink.clone()
-			.attr( 'href', title.getUrl() )
-			.text( title.getPrefixedText() );
+			.attr( 'href', template.title.getUrl() )
+			.text( template.title.getPrefixedText() );
 		var $editLink = $baseLink.clone()
-			.attr( 'href', title.getUrl( { action: 'edit' } ) )
+			.attr( 'href', template.title.getUrl( { action: 'edit' } ) )
 			.append( mw.msg( canEdit ? 'editlink' : 'viewsourcelink' ) );
 		var wordSep = mw.message( 'word-separator' ).escaped();
-		return $( '<li>' ).append(
-			$link,
-			wordSep,
-			parenthesesWrap( $editLink[ 0 ].outerHTML ),
-			wordSep,
-			getRestrictionsText( template.protection || [] )
-		);
+		getRestrictionsText( template.apiData.protection || [] ).then( function ( restrictionsList ) {
+			// restrictionsList is a comma-separated parentheses-wrapped localized list of restriction level names.
+			var editLinkParens = parenthesesWrap( $editLink[ 0 ].outerHTML );
+			var $li = $( '<li>' ).append( $link, wordSep, editLinkParens, wordSep, restrictionsList );
+			$list.append( $li );
+		} );
 	}
 
 	/**
-	 * Get messages about the restriction levels for a template.
+	 * Get a localized string listing the restriction levels for a template.
 	 *
 	 * This should match the logic from TemplatesOnThisPageFormatter::getRestrictionsText().
 	 *
+	 * @private
 	 * @param {Array} restrictions Set of protection info objects from the inprop=protection API.
-	 * @return {string}
+	 * @return {jQuery.Promise}
 	 */
 	function getRestrictionsText( restrictions ) {
 		var msg = '';
 		if ( !restrictions ) {
-			return msg;
+			return $.Deferred().resolve( msg );
 		}
 
 		// Record other restriction levels, in case it's protected for others.
@@ -221,20 +248,28 @@
 			}
 		} );
 
-		// If the edit restriction isn't one of the backwards-compatible ones, use restriction-level-* messages.
-		if ( msg === '' ) {
-			var msgs = [];
-			restrictionLevels.forEach( function ( level ) {
+		// If sysop or autoconfirmed, use that.
+		if ( msg !== '' ) {
+			return $.Deferred().resolve( msg );
+		}
+
+		// Otherwise, if the edit restriction isn't one of the backwards-compatible ones,
+		// use the (possibly custom) restriction-level-* messages.
+		var msgs = [];
+		restrictionLevels.forEach( function ( level ) {
+			msgs.push( 'restriction-level-' + level );
+		} );
+		// Custom restriction levels don't have their messages loaded, so we have to do that.
+		return api.loadMessagesIfMissing( msgs ).then( function () {
+			var localizedMessages = msgs.map( function ( m ) {
 				// Messages that can be used here include:
 				// * restriction-level-sysop
 				// * restriction-level-autoconfirmed
-				msgs.push( mw.msg( 'restriction-level-' + level ) );
+				return mw.message( m ).parse();
 			} );
-			// There's no commaList in JS, so just a comma (doesn't handle the last item).
-			msg = parenthesesWrap( msgs.join( mw.msg( 'comma-separator' ) ) );
-		}
-
-		return msg;
+			// There's no commaList in JS, so just join with commas (doesn't handle the last item).
+			return parenthesesWrap( localizedMessages.join( mw.msg( 'comma-separator' ) ) );
+		} );
 	}
 
 	/**

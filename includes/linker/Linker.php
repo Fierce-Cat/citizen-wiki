@@ -189,12 +189,10 @@ class Linker {
 	 */
 	public static function makeSelfLinkObj( $nt, $html = '', $query = '', $trail = '', $prefix = '', $hash = '' ) {
 		$nt = Title::newFromLinkTarget( $nt );
-		$attrs = [
-			'class' => 'mw-selflink',
-		];
+		$attrs = [];
 		if ( $hash ) {
-			$attrs['href'] = '#' . $hash;
 			$attrs['class'] = 'mw-selflink-fragment';
+			$attrs['href'] = '#' . $hash;
 		} else {
 			// For backwards compatibility with gadgets we add selflink as well.
 			$attrs['class'] = 'mw-selflink selflink';
@@ -469,7 +467,6 @@ class Linker {
 
 		if ( !$thumb ) {
 			$rdfaType = 'mw:Error ' . $rdfaType;
-			$label = '';
 			if ( $enableLegacyMediaDOM ) {
 				$label = $frameParams['title'];
 			} else {
@@ -1145,7 +1142,7 @@ class Linker {
 		} else {
 			$services = MediaWikiServices::getInstance();
 			if (
-				$services->getTempUserConfig()->isReservedName( $userName )
+				$services->getTempUserConfig()->isTempName( $userName )
 			) {
 				$classes .= ' mw-tempuserlink';
 				$page = SpecialPage::getTitleFor( 'Contributions', $userName );

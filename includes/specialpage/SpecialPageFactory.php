@@ -33,6 +33,25 @@ use MediaWiki\Linker\LinkRenderer;
 use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Page\PageReference;
+use MediaWiki\Profiler\ProfilingContext;
+use MediaWiki\Specials\SpecialActiveUsers;
+use MediaWiki\Specials\SpecialAllMessages;
+use MediaWiki\Specials\SpecialAllPages;
+use MediaWiki\Specials\SpecialAncientPages;
+use MediaWiki\Specials\SpecialApiHelp;
+use MediaWiki\Specials\SpecialApiSandbox;
+use MediaWiki\Specials\SpecialAutoblockList;
+use MediaWiki\Specials\SpecialBlankpage;
+use MediaWiki\Specials\SpecialBlock;
+use MediaWiki\Specials\SpecialBlockList;
+use MediaWiki\Specials\SpecialBookSources;
+use MediaWiki\Specials\SpecialBotPasswords;
+use MediaWiki\Specials\SpecialBrokenRedirects;
+use MediaWiki\Specials\SpecialMostImages;
+use MediaWiki\Specials\SpecialMovePage;
+use MediaWiki\Specials\SpecialUserRights;
+use MediaWiki\Specials\SpecialWantedFiles;
+use MediaWiki\Specials\SpecialWantedPages;
 use MediaWiki\Title\Title;
 use MediaWiki\Title\TitleFactory;
 use Profiler;
@@ -72,7 +91,7 @@ class SpecialPageFactory {
 	private const CORE_LIST = [
 		// Maintenance Reports
 		'BrokenRedirects' => [
-			'class' => \SpecialBrokenRedirects::class,
+			'class' => SpecialBrokenRedirects::class,
 			'services' => [
 				'ContentHandlerFactory',
 				'DBLoadBalancer',
@@ -106,7 +125,7 @@ class SpecialPageFactory {
 			]
 		],
 		'Ancientpages' => [
-			'class' => \SpecialAncientPages::class,
+			'class' => SpecialAncientPages::class,
 			'services' => [
 				'NamespaceInfo',
 				'DBLoadBalancer',
@@ -243,7 +262,7 @@ class SpecialPageFactory {
 			]
 		],
 		'Wantedfiles' => [
-			'class' => \MediaWiki\Specials\SpecialWantedFiles::class,
+			'class' => SpecialWantedFiles::class,
 			'services' => [
 				'RepoGroup',
 				'DBLoadBalancer',
@@ -251,7 +270,7 @@ class SpecialPageFactory {
 			]
 		],
 		'Wantedpages' => [
-			'class' => \MediaWiki\Specials\SpecialWantedPages::class,
+			'class' => SpecialWantedPages::class,
 			'services' => [
 				'DBLoadBalancer',
 				'LinkBatchFactory',
@@ -268,7 +287,7 @@ class SpecialPageFactory {
 
 		// List of pages
 		'Allpages' => [
-			'class' => \SpecialAllPages::class,
+			'class' => SpecialAllPages::class,
 			'services' => [
 				'DBLoadBalancer',
 				'SearchEngineFactory',
@@ -355,7 +374,7 @@ class SpecialPageFactory {
 
 		// Users and rights
 		'Activeusers' => [
-			'class' => \SpecialActiveUsers::class,
+			'class' => SpecialActiveUsers::class,
 			'services' => [
 				'LinkBatchFactory',
 				'DBLoadBalancer',
@@ -364,7 +383,7 @@ class SpecialPageFactory {
 			]
 		],
 		'Block' => [
-			'class' => \SpecialBlock::class,
+			'class' => SpecialBlock::class,
 			'services' => [
 				'BlockUtils',
 				'BlockPermissionCheckerFactory',
@@ -383,10 +402,11 @@ class SpecialPageFactory {
 				'BlockUtils',
 				'UserNameUtils',
 				'UserNamePrefixSearch',
+				'WatchlistManager',
 			]
 		],
 		'BlockList' => [
-			'class' => \SpecialBlockList::class,
+			'class' => SpecialBlockList::class,
 			'services' => [
 				'LinkBatchFactory',
 				'BlockRestrictionStore',
@@ -398,7 +418,7 @@ class SpecialPageFactory {
 			],
 		],
 		'AutoblockList' => [
-			'class' => \SpecialAutoblockList::class,
+			'class' => SpecialAutoblockList::class,
 			'services' => [
 				'LinkBatchFactory',
 				'BlockRestrictionStore',
@@ -413,7 +433,7 @@ class SpecialPageFactory {
 			'class' => \SpecialChangePassword::class,
 		],
 		'BotPasswords' => [
-			'class' => \SpecialBotPasswords::class,
+			'class' => SpecialBotPasswords::class,
 			'services' => [
 				'PasswordFactory',
 				'AuthManager',
@@ -499,7 +519,7 @@ class SpecialPageFactory {
 			'class' => \SpecialListBots::class,
 		],
 		'Userrights' => [
-			'class' => \MediaWiki\Specials\SpecialUserRights::class,
+			'class' => SpecialUserRights::class,
 			'services' => [
 				'UserGroupManagerFactory',
 				'UserNameUtils',
@@ -661,7 +681,7 @@ class SpecialPageFactory {
 
 		// Data and tools
 		'ApiSandbox' => [
-			'class' => \SpecialApiSandbox::class,
+			'class' => SpecialApiSandbox::class,
 		],
 		'Statistics' => [
 			'class' => \SpecialStatistics::class,
@@ -670,7 +690,7 @@ class SpecialPageFactory {
 			]
 		],
 		'Allmessages' => [
-			'class' => \SpecialAllMessages::class,
+			'class' => SpecialAllMessages::class,
 			'services' => [
 				'LanguageFactory',
 				'LanguageNameUtils',
@@ -742,7 +762,7 @@ class SpecialPageFactory {
 			]
 		],
 		'Mostimages' => [
-			'class' => \MediaWiki\Specials\SpecialMostImages::class,
+			'class' => SpecialMostImages::class,
 			'services' => [
 				'DBLoadBalancer',
 				'LanguageConverterFactory',
@@ -877,7 +897,7 @@ class SpecialPageFactory {
 
 		// Other
 		'Booksources' => [
-			'class' => \SpecialBookSources::class,
+			'class' => SpecialBookSources::class,
 			'services' => [
 				'RevisionLookup',
 			]
@@ -885,13 +905,13 @@ class SpecialPageFactory {
 
 		// Unlisted / redirects
 		'ApiHelp' => [
-			'class' => \SpecialApiHelp::class,
+			'class' => SpecialApiHelp::class,
 			'services' => [
 				'UrlUtils',
 			]
 		],
 		'Blankpage' => [
-			'class' => \SpecialBlankpage::class,
+			'class' => SpecialBlankpage::class,
 		],
 		'DeletePage' => [
 			'class' => \SpecialDeletePage::class,
@@ -923,7 +943,7 @@ class SpecialPageFactory {
 			]
 		],
 		'Movepage' => [
-			'class' => \MediaWiki\Specials\SpecialMovePage::class,
+			'class' => SpecialMovePage::class,
 			'services' => [
 				'MovePageFactory',
 				'PermissionManager',
@@ -1187,6 +1207,7 @@ class SpecialPageFactory {
 						'CentralIdLookup',
 						'UserOptionsManager',
 						'UserIdentityLookup',
+						'UserNameUtils',
 					]
 				];
 			}
@@ -1432,6 +1453,7 @@ class SpecialPageFactory {
 		}
 
 		if ( !$including ) {
+			ProfilingContext::singleton()->init( MW_ENTRY_POINT, $page->getName() );
 			// Narrow DB query expectations for this HTTP request
 			$trxLimits = $context->getConfig()->get( MainConfigNames::TrxProfilerLimits );
 			$trxProfiler = Profiler::instance()->getTransactionProfiler();
@@ -1490,7 +1512,7 @@ class SpecialPageFactory {
 	 * @param PageReference $page
 	 * @param IContextSource $context
 	 * @param LinkRenderer|null $linkRenderer (since 1.28)
-	 * @return string HTML fragment
+	 * @return bool|Title
 	 */
 	public function capturePath(
 		PageReference $page, IContextSource $context, LinkRenderer $linkRenderer = null

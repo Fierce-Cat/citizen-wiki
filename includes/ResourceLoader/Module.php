@@ -175,8 +175,7 @@ abstract class Module implements LoggerAwareInterface {
 	 * Get this module's origin. This is set when the module is registered
 	 * with ResourceLoader::register()
 	 *
-	 * @return int ResourceLoaderModule class constant, the subclass default
-	 *     if not set manually
+	 * @return int Module class constant, the subclass default if not set manually
 	 */
 	public function getOrigin() {
 		return $this->origin;
@@ -297,7 +296,7 @@ abstract class Module implements LoggerAwareInterface {
 	/**
 	 * Get a HookRunner for running core hooks.
 	 *
-	 * @internal For use only within core ResourceLoaderModule subclasses. Hook interfaces may be removed
+	 * @internal For use only within core Module subclasses. Hook interfaces may be removed
 	 *   without notice.
 	 * @return HookRunner
 	 */
@@ -521,12 +520,12 @@ abstract class Module implements LoggerAwareInterface {
 	 * If the client does not support ES6, attempting to load a module that requires ES6 will
 	 * result in an error.
 	 *
-	 * @stable to override
+	 * @deprecated since 1.41, ignored by ResourceLoader
 	 * @since 1.36
 	 * @return bool
 	 */
 	public function requiresES6() {
-		return false;
+		return true;
 	}
 
 	/**
@@ -885,10 +884,8 @@ abstract class Module implements LoggerAwareInterface {
 		$statTiming = microtime( true ) - $statStart;
 		$stats->timing( "resourceloader_build.all", 1000 * $statTiming );
 		$name = $this->getName();
-		if ( $name !== null ) {
-			$statName = strtr( $name, '.', '_' );
-			$stats->timing( "resourceloader_build.$statName", 1000 * $statTiming );
-		}
+		$statName = strtr( $name, '.', '_' );
+		$stats->timing( "resourceloader_build.$statName", 1000 * $statTiming );
 
 		return $content;
 	}

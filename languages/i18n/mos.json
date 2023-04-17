@@ -237,7 +237,7 @@
 	"showpreview": "Wilgi gese-rẽenem",
 	"showdiff": "Wilgi tekre",
 	"anoneditwarning": "<strong>Saglga:</strong> Fo pa kẽ. Fo IP aderse nan vẽenega mi fo sãn maane tekre. Fo sãn <strong>[$1 kẽ]</strong> bii <strong>[$2 naane kõnte]</strong>, fo tekra bilga ni fo tʋʋmʋ-tʋʋmde yɩɩre, n pʋge ni sõngre a taaba.",
-	"blockedtext": "<strong>Fo tʋʋmtʋmda yʋʋre bii fo IP aderse gida mɩ.</strong>\n\n{{int:blockedtext-made-by|$1}}\n{{int:blockedtext-reason-comment|$2}}.\n\n*{{int:blockedtext-start-time|$8}}\n*{{int:blockedtext-expiration-time|$6}}\n*{{int:blockedtext-intended-blockee|$7}}\n\n{{int:blockedtext-contact-blocker-admin|$1}}\nFo tõe tʋma ni \"{{int:emailuser}}\" toor zalle san yi ti email aderse songo be fo \n[[Special:Preferences|preferences]] ti o be pa gɩde fo ni atʋʋma.\n{{int:blockedtext-block-ip|$3}} ti gɩdba ID yaa #$5.\n{{int:blockedtext-include-details-queries}}",
+	"blockedtext": "<strong>Fo tʋʋmtʋmda yʋʋre bii fo IP aderse gida mɩ.</strong>\n\n{{int:blockedtext-made-by|$1}}\n{{int:blockedtext-reason-comment|$2}}.\n\n*{{int:blockedtext-start-time|$8}}\n*{{int:blockedtext-expiration-time|$6}}\n*{{int:blockedtext-intended-blockee|$7}}\n\n{{int:blockedtext-contact-blocker-admin|$1}}\nFo tõe tʋma ni \"{{int:emailuser}}\" toor zalle san yi ti email aderse songo be fo \n[[Special:Preferences|preferences]] ti o be ka gɩde fo ni atʋʋma.\n{{int:blockedtext-block-ip|$3}}\n{{int:blockedtext-block-id|$5}}\n{{int:blockedtext-include-details-queries}}",
 	"loginreqlink": "kẽ",
 	"newarticletext": "Fo pʋga tõkre ni neng m pa be yɛ.\nN naane nenga, sɩnge wẽre botse pʋga tẽngre (gese ni [$1 songe nenga] ni kibaya).\nFo sãn be ka ni tudgri, ri-y fo vɛɛsda <strong>back</strong> biiga.",
 	"anontalkpagetext": "----\n<em>Sõs kada nenga ya ni ned ning n nan ka naane kõnte ye, bɩɩ n nan ka tʋm ni wã.</em>\nTogm ti tond tʋm ni IP aderse sõdga n diki m bãng ba.\nWoto IP aderse wã toe dika mi n pʋɩ ni tʋmdba wʋsgo.\nFo san ya tʋmtʋmda ni ning kada la fo tags ti woto goama tesda ni fo, M bõs [[Special:CreateAccount|N naane kõnte]] bɩɩ [[Special:UserLogin|kẽ]] n tilg taore yɛla diki kẽng tʋʋma ni tʋmtʋmdba.",
@@ -583,6 +583,6 @@
 	"blockedtext-expiration-time": "Gɩdba saabo: $1",
 	"blockedtext-intended-blockee": "Niya sîn be ti o be gɩde nina: $1",
 	"blockedtext-contact-blocker-admin": "Fo na tõoge n boolé $1 bɩɩ nina [[{{MediaWiki:Grouppage-sysop}}|administrator]] n sõso gɩdba yelle.",
-	"blockedtext-block-ip": "Fo IP aderse fo si tara masâ ya $1",
+	"blockedtext-block-ip": "Fo marsa IP adersa ya $1.",
 	"blockedtext-include-details-queries": "D bõosdame tɩ f naag kibay wã fãa vɛɛsg buud fãa f sẽn maande."
 }

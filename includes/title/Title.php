@@ -732,31 +732,31 @@ class Title implements LinkTarget, PageIdentity, IDBAccessObject {
 	 */
 	public static function newMainPage( MessageLocalizer $localizer = null ) {
 		static $recursionGuard = false;
-		if ( $recursionGuard ) {
-			// Somehow parsing the message contents has fallen back to the
-			// main page (bare local interwiki), so use the hardcoded
-			// fallback (T297571).
-			return self::newFromText( 'Main Page' );
-		}
-		if ( $localizer ) {
-			$msg = $localizer->msg( 'mainpage' );
-		} else {
-			$msg = wfMessage( 'mainpage' );
-		}
 
-		$recursionGuard = true;
-		$title = self::newFromText( $msg->inContentLanguage()->text() );
-		$recursionGuard = false;
+		$title = null;
+
+		if ( !$recursionGuard ) {
+			$msg = $localizer ? $localizer->msg( 'mainpage' ) : wfMessage( 'mainpage' );
+
+			$recursionGuard = true;
+			$title = self::newFromText( $msg->inContentLanguage()->text() );
+			$recursionGuard = false;
+		}
 
 		// Every page renders at least one link to the Main Page (e.g. sidebar).
-		// If the localised value is invalid, don't produce fatal errors that
-		// would make the wiki inaccessible (and hard to fix the invalid message).
-		// Gracefully fallback...
-		if ( !$title ) {
-			$title = self::newFromText( 'Main Page' );
-		}
+		// Don't produce fatal errors that would make the wiki inaccessible, and hard to fix the
+		// invalid message.
+		//
+		// Fallback scenarios:
+		// * Recursion guard
+		//   If the message contains a bare local interwiki (T297571), then
+		//   Title::newFromText via MediaWikiTitleCodec::splitTitleString can get back here.
+		// * Invalid title
+		//   If the 'mainpage' message contains something that is invalid,  Title::newFromText
+		//   will return null.
+
 		// @phan-suppress-next-line PhanTypeMismatchReturnNullable Fallback is always valid
-		return $title;
+		return $title ?? self::newFromText( 'Main Page' );
 	}
 
 	/**
@@ -893,7 +893,11 @@ class Title implements LinkTarget, PageIdentity, IDBAccessObject {
 		} else {
 			$namespace = MediaWikiServices::getInstance()->getContentLanguage()->getNsText( $ns );
 		}
-		$name = $namespace == '' ? $title : "$namespace:$title";
+		if ( $namespace === false ) {
+			// See T165149. Awkward, but better than erroneously linking to the main namespace.
+			$namespace = self::makeName( NS_SPECIAL, "Badtitle/NS$ns", '', '', $canonicalNamespace );
+		}
+		$name = $namespace === '' ? $title : "$namespace:$title";
 		if ( strval( $interwiki ) != '' ) {
 			$name = "$interwiki:$name";
 		}
@@ -938,7 +942,9 @@ class Title implements LinkTarget, PageIdentity, IDBAccessObject {
 		}
 
 		try {
-			$text = $this->getFullText();
+			// Optimization: Avoid Title::getFullText because that involves GenderCache
+			// and (unbatched) database queries. For validation, canonical namespace suffices.
+			$text = self::makeName( $this->mNamespace, $this->mDbkeyform, $this->mFragment, $this->mInterwiki, true );
 			$titleCodec = MediaWikiServices::getInstance()->getTitleParser();
 
 			'@phan-var MediaWikiTitleCodec $titleCodec';
@@ -1448,10 +1454,10 @@ class Title implements LinkTarget, PageIdentity, IDBAccessObject {
 	 * @return bool
 	 */
 	public function isSubpage() {
-		return MediaWikiServices::getInstance()->getNamespaceInfo()->
-			hasSubpages( $this->mNamespace )
-			? str_contains( $this->getText(), '/' )
-			: false;
+		return MediaWikiServices::getInstance()
+				->getNamespaceInfo()
+				->hasSubpages( $this->mNamespace )
+			&& str_contains( $this->getText(), '/' );
 	}
 
 	/**
@@ -3626,7 +3632,7 @@ class Title implements LinkTarget, PageIdentity, IDBAccessObject {
 	}
 
 	/**
-	 * Get the default (plain) message contents for an page that overrides an
+	 * Get the default (plain) message contents for a page that overrides an
 	 * interface message key.
 	 *
 	 * Primary use cases:

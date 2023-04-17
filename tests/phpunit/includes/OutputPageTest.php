@@ -78,7 +78,7 @@ class OutputPageTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $code ?? '302', $op->mRedirectCode );
 	}
 
-	public function provideRedirect() {
+	public static function provideRedirect() {
 		return [
 			[ 'http://example.com' ],
 			[ 'http://example.com', '400' ],
@@ -1406,7 +1406,6 @@ class OutputPageTest extends MediaWikiIntegrationTestCase {
 
 		// We don't reset the categories, for some reason, only the links
 		$expectedNormalCats = array_merge( [ 'Initial page' ], $expectedNormal );
-		$expectedCats = array_merge( $expectedHidden, $expectedNormalCats );
 
 		$this->doCategoryAsserts( $op, $expectedNormalCats, $expectedHidden );
 		$this->doCategoryLinkAsserts( $op, $expectedNormal, $expectedHidden );
@@ -1529,7 +1528,7 @@ class OutputPageTest extends MediaWikiIntegrationTestCase {
 		}
 	}
 
-	public function provideGetCategories() {
+	public static function provideGetCategories() {
 		return [
 			'No categories' => [ [], [], null, [], [] ],
 			'Simple test' => [
@@ -1688,7 +1687,7 @@ class OutputPageTest extends MediaWikiIntegrationTestCase {
 		$this->assertNull( $op->getRevisionId() );
 	}
 
-	public function provideRevisionId() {
+	public static function provideRevisionId() {
 		return [
 			[ null, null ],
 			[ 7, 7 ],
@@ -1905,7 +1904,7 @@ class OutputPageTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $expected, $op->getHTML() );
 	}
 
-	public function provideAddWikiText() {
+	public static function provideAddWikiText() {
 		$somePageRef = new PageReferenceValue( NS_TALK, 'Some page', PageReference::LOCAL );
 
 		$tests = [
@@ -2197,7 +2196,7 @@ class OutputPageTest extends MediaWikiIntegrationTestCase {
 		);
 	}
 
-	public function provideParseAs() {
+	public static function provideParseAs() {
 		return [
 			'List at start of line' => [
 				[ '* List', true ],
@@ -2338,7 +2337,7 @@ class OutputPageTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $expected, $wrapper->mCdnMaxage, 'member value after new set' );
 	}
 
-	public function provideAdaptCdnTTL() {
+	public static function provideAdaptCdnTTL() {
 		global $wgCdnMaxAge;
 		$now = time();
 		self::$fakeTime = $now;
@@ -2483,7 +2482,7 @@ class OutputPageTest extends MediaWikiIntegrationTestCase {
 		$this->assertEquals( $vary, $op->getVaryHeader(), 'Vary:' );
 	}
 
-	public function provideVaryHeaders() {
+	public static function provideVaryHeaders() {
 		return [
 			'No header' => [
 				[],
@@ -2598,7 +2597,7 @@ class OutputPageTest extends MediaWikiIntegrationTestCase {
 		$this->assertEquals( $result, $op->getLinkHeader() );
 	}
 
-	public function provideLinkHeaders() {
+	public static function provideLinkHeaders() {
 		return [
 			[
 				[],
@@ -2663,7 +2662,7 @@ class OutputPageTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( "Vary: $expected", $op->getVaryHeader() );
 	}
 
-	public function provideAddAcceptLanguage() {
+	public static function provideAddAcceptLanguage() {
 		return [
 			'No variants' => [
 				'en',
@@ -2751,7 +2750,7 @@ class OutputPageTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $expected, $op->getFrameOptions() );
 	}
 
-	public function provideGetFrameOptions() {
+	public static function provideGetFrameOptions() {
 		return [
 			'BreakFrames true' => [ true, false, false, 'DENY' ],
 			'Allow clickjacking locally' => [ false, false, 'DENY', false ],
@@ -3226,7 +3225,7 @@ class OutputPageTest extends MediaWikiIntegrationTestCase {
 		$this->assertEquals( [ $result ], $module->getHeaders( $ctx ) );
 	}
 
-	public function providePreloadLinkHeaders() {
+	public static function providePreloadLinkHeaders() {
 		return [
 			[
 				[
@@ -3307,7 +3306,7 @@ class OutputPageTest extends MediaWikiIntegrationTestCase {
 		$this->assertEquals( $expectedResult, $output->isRevisionCurrent() );
 	}
 
-	public function provideIsRevisionCurrent() {
+	public static function provideIsRevisionCurrent() {
 		return [
 			[ 10, null, true ],
 			[ 42, 42, true ],
@@ -3368,7 +3367,7 @@ class OutputPageTest extends MediaWikiIntegrationTestCase {
 		}
 	}
 
-	public function provideSendCacheControl() {
+	public static function provideSendCacheControl() {
 		return [
 			'Vary on variant' => [
 				[

@@ -2,6 +2,7 @@
 	"@metadata": {
 		"authors": [
 			"Bada Kaji",
+			"Base",
 			"Bhawani Gautam",
 			"Bhawani Gautam Rhk",
 			"CAPTAIN MEDUSA",
@@ -40,8 +41,7 @@
 			"राम प्रसाद जोशी",
 			"सरोज कुमार ढकाल",
 			"हिमाल सुबेदी",
-			"아라",
-			"Base"
+			"아라"
 		]
 	},
 	"tog-underline": "रेखाङ्कित सूत्र:",
@@ -275,7 +275,6 @@
 	"versionrequired": "MediaWiki संस्करण $1 चाहिने",
 	"versionrequiredtext": "यो पृष्ठ प्रयोग गर्नको लागि MediaWiki $1 संस्करण चाहिन्छ ।\nहेर्नुहोस्  [[Special:Version|version page]]",
 	"ok": "हुन्छ",
-	"pagetitle": "$1 - {{SITENAME}}",
 	"backlinksubtitle": "← $1",
 	"retrievedfrom": " \"$1\" बाट अनुप्रेषित",
 	"youhavenewmessages": "तपाईंको लागि ($2) मा  $1 छ ।",
@@ -2196,7 +2195,7 @@
 	"anoncontribs": "मेरो योगदानहरू",
 	"contribute": "योगदान गर्नुहोस्",
 	"contribsub2": " {{GENDER:$3|$1}} ($2)को लागि",
-	"contributions-subtitle": "{{GENDER:$3|$1}}को लागी",
+	"contributions-subtitle": "{{GENDER:$2|$1}}को लागी",
 	"contributions-userdoesnotexist": "प्रयोगकर्ता \"$1\" दर्ता गरिएको छैन् ।",
 	"nocontribs": "यस मापदण्ड अनुसार परिवर्त पाइएन।",
 	"uctop": "वर्तमान",
@@ -2995,7 +2994,7 @@
 	"specialpages-note-restricted": "* साधारण विशेष पृष्ठहरू।\n* <span class=\"mw-specialpagerestricted\">निषेधित विशेष पृष्ठहरू।</span>",
 	"specialpages-group-maintenance": "मर्मत प्रतिवेदनहरू",
 	"specialpages-group-other": "अरू विशेष पृष्ठहरू",
-	"specialpages-group-login": "प्रवेश गर्नुहोस् / नयाँ खाता बनाउनुहोस्",
+	"specialpages-group-login": "खाता व्यवस्थापन",
 	"specialpages-group-changes": "हालैको परिवर्तन र अभिलेखहरू",
 	"specialpages-group-media": "मिडिया प्रतिवेदन र उर्ध्वभरणहरू",
 	"specialpages-group-users": "प्रयोगकर्ता र अधिकारहरू",

@@ -42,10 +42,9 @@
 		}
 
 		function updateBlockOptions() {
-			var blocktarget = blockTargetWidget.getValue().trim(),
+			var blocktarget = blockTargetWidget.getValue().toString().trim(),
 				isEmpty = blocktarget === '',
 				isIp = mw.util.isIPAddress( blocktarget, true ),
-				isIpRange = isIp && blocktarget.match( /\/\d+$/ ),
 				isNonEmptyIp = isIp && !isEmpty,
 				expiryValue = expiryWidget.getValue(),
 				// infinityValues are the values the BlockUser class accepts as infinity (sf. wfIsInfinity)
@@ -62,9 +61,7 @@
 				hideUserWidget.setDisabled( isNonEmptyIp || !isIndefinite || !isSitewide );
 			}
 
-			if ( watchUserWidget ) {
-				watchUserWidget.setDisabled( isIpRange && !isEmpty );
-			}
+			updateWatchOption( blocktarget );
 
 			pageRestrictionsWidget.setDisabled( isSitewide );
 			namespaceRestrictionsWidget.setDisabled( isSitewide );
@@ -92,11 +89,49 @@
 			}
 		}
 
+		function updateWatchOption( blocktarget ) {
+			var isEmpty = blocktarget === '',
+				isIp = mw.util.isIPAddress( blocktarget, true ),
+				isIpRange = isIp && blocktarget.match( /\/\d+$/ ),
+				isAutoBlock = blocktarget.match( /^#\d+$/ );
+
+			if ( watchUserWidget ) {
+				watchUserWidget.setDisabled( ( isAutoBlock || isIpRange ) && !isEmpty );
+			}
+		}
+
+		watchUserWidget = infuseIfExists( $( '#mw-input-wpWatch' ) );
+		if ( mw.config.get( 'wgCanonicalSpecialPageName' ) === 'Unblock' ) {
+			var $wpTarget = $( '#mw-input-wpTarget' );
+			if ( $wpTarget.attr( 'type' ) === 'hidden' ) {
+				// target is not changeable, determine watch state once
+				updateWatchOption( $wpTarget.val() );
+				return;
+			}
+			blockTargetWidget = infuseIfExists( $wpTarget );
+			if ( blockTargetWidget ) {
+				blockTargetWidget.on( 'change', function () {
+					updateWatchOption( blockTargetWidget.getValue().toString().trim() );
+				} );
+				updateWatchOption( blockTargetWidget.getValue().toString().trim() );
+			}
+			return;
+		}
+
 		// This code is also loaded on the "block succeeded" page where there is no form,
 		// so check for block target widget; if it exists, the form is present
 		blockTargetWidget = infuseIfExists( $( '#mw-bi-target' ) );
 
 		if ( blockTargetWidget ) {
+			// If widget is prefilled with an IP address, make it editable at first
+			if ( mw.util.isIPAddress( mw.config.get( 'wgRelevantUserName' ) ) ) {
+				blockTargetWidget.removeItems( blockTargetWidget.getItems() );
+				blockTargetWidget.input
+					.setValue( mw.config.get( 'wgRelevantUserName' ) )
+					.focus();
+				blockTargetWidget.menu.toggle( false );
+			}
+
 			userChangedCreateAccount = mw.config.get( 'wgCreateAccountDirty' );
 			updatingBlockOptions = false;
 
@@ -119,7 +154,6 @@
 			namespaceRestrictionsWidget.on( 'change', updateBlockOptions );
 
 			// Present for certain rights
-			watchUserWidget = infuseIfExists( $( '#mw-input-wpWatch' ) );
 			hideUserWidget = infuseIfExists( $( '#mw-input-wpHideUser' ) );
 
 			// Present for certain global configs

@@ -209,16 +209,16 @@ class SpecialVersion extends SpecialPage {
 
 				// Build the page contents (this also fills in TOCData)
 				$sections = [
-					[ 'html', $this->softwareInformation() ],
-					[ 'wikitext', $this->getEntryPointInfo() ],
-					[ 'html', $this->getSkinCredits( $credits ) ],
-					[ 'html', $this->getExtensionCredits( $credits ) ],
-					[ 'html', $this->getExternalLibraries( $credits ) ],
-					[ 'html', $this->getClientSideLibraries() ],
-					[ 'html', $this->getParserTags() ],
-					[ 'html', $this->getParserFunctionHooks() ],
-					[ 'wikitext', $this->getHooks() ],
-					[ 'html', $this->IPInfo() ],
+					$this->softwareInformation(),
+					$this->getEntryPointInfo(),
+					$this->getSkinCredits( $credits ),
+					$this->getExtensionCredits( $credits ),
+					$this->getExternalLibraries( $credits ),
+					$this->getClientSideLibraries(),
+					$this->getParserTags(),
+					$this->getParserFunctionHooks(),
+					$this->getHooks(),
+					$this->IPInfo(),
 				];
 
 				// Insert TOC first
@@ -226,21 +226,12 @@ class SpecialVersion extends SpecialPage {
 				$pout->setTOCData( $this->tocData );
 				$pout->setOutputFlag( ParserOutputFlags::SHOW_TOC );
 				$pout->setText( Parser::TOC_PLACEHOLDER );
-				$out->addParserOutputText( $pout );
+				$out->addParserOutput( $pout );
 
 				// Insert contents
-				foreach ( $sections as [ $mode, $content ] ) {
-					if ( $mode === 'wikitext' ) {
-						$out->addWikiTextAsInterface( $content );
-					} elseif ( $mode === 'html' ) {
-						// Yeah Phan, I get it, mixing HTML and wikitext like this is not a good practice
-						// @phan-suppress-next-line SecurityCheck-XSS
-						$out->addHTML( $content );
-					}
+				foreach ( $sections as $content ) {
+					$out->addHTML( $content );
 				}
-
-				// Set TOC metadata at the end, because otherwise the addWikiTextAsInterface() calls override it
-				$out->addParserOutputMetadata( $pout );
 
 				break;
 		}
@@ -392,7 +383,7 @@ class SpecialVersion extends SpecialPage {
 	 * @param string $flags If set to 'nodb', the language-specific parantheses are not used.
 	 * @param Language|string|null $lang Language in which to render the version; ignored if
 	 *   $flags is set to 'nodb'.
-	 * @return mixed
+	 * @return string
 	 */
 	public static function getVersion( $flags = '', $lang = null ) {
 		global $IP;
@@ -421,7 +412,7 @@ class SpecialVersion extends SpecialPage {
 	 * the Git SHA1 of head if available.
 	 * The fallback is just MW_VERSION.
 	 *
-	 * @return mixed
+	 * @return string
 	 */
 	public static function getVersionLinked() {
 		$gitVersion = self::getVersionLinkedGit();
@@ -522,10 +513,10 @@ class SpecialVersion extends SpecialPage {
 	}
 
 	/**
-	 * Generate wikitext showing the name, URL, author and description of each extension.
+	 * Generate HTML showing the name, URL, author and description of each extension.
 	 *
 	 * @param array $credits
-	 * @return string Wikitext
+	 * @return string HTML
 	 */
 	private function getExtensionCredits( array $credits ) {
 		if (
@@ -577,10 +568,10 @@ class SpecialVersion extends SpecialPage {
 	}
 
 	/**
-	 * Generate wikitext showing the name, URL, author and description of each skin.
+	 * Generate HTML showing the name, URL, author and description of each skin.
 	 *
 	 * @param array $credits
-	 * @return string Wikitext
+	 * @return string HTML
 	 */
 	private function getSkinCredits( array $credits ) {
 		if ( !isset( $credits['skin'] ) || !$credits['skin'] ) {
@@ -1067,9 +1058,9 @@ class SpecialVersion extends SpecialPage {
 	}
 
 	/**
-	 * Generate wikitext showing hooks in $wgHooks.
+	 * Generate HTML showing hooks in $wgHooks.
 	 *
-	 * @return string Wikitext
+	 * @return string HTML
 	 */
 	private function getHooks() {
 		if ( $this->getConfig()->get( MainConfigNames::SpecialVersionShowHooks ) ) {
@@ -1078,7 +1069,12 @@ class SpecialVersion extends SpecialPage {
 			sort( $hookNames );
 
 			$ret = [];
-			$ret[] = '== {{int:version-hooks}} ==';
+			$this->addTocSection( 'version-hooks', 'mw-version-hooks' );
+			$ret[] = Html::element(
+				'h2',
+				[ 'id' => 'mw-version-hooks' ],
+				$this->msg( 'version-hooks' )->text()
+			);
 			$ret[] = Html::openElement( 'table', [ 'class' => 'wikitable', 'id' => 'sv-hooks' ] );
 			$ret[] = Html::openElement( 'tr' );
 			$ret[] = Html::element( 'th', [], $this->msg( 'version-hook-name' )->text() );
@@ -1301,7 +1297,7 @@ class SpecialVersion extends SpecialPage {
 
 	/**
 	 * Get the list of entry points and their URLs
-	 * @return string Wikitext
+	 * @return string HTML
 	 */
 	public function getEntryPointInfo() {
 		$config = $this->getConfig();
@@ -1352,10 +1348,9 @@ class SpecialVersion extends SpecialPage {
 		foreach ( $entryPoints as $message => $value ) {
 			$url = $this->urlUtils->expand( $value, PROTO_RELATIVE );
 			$out .= Html::openElement( 'tr' ) .
-				// ->plain() looks like it should be ->parse(), but this function
-				// returns wikitext, not HTML, boo
-				Html::rawElement( 'td', [], $this->msg( $message )->plain() ) .
-				Html::rawElement( 'td', [], Html::rawElement( 'code', [], "[$url $value]" ) ) .
+				Html::rawElement( 'td', [], $this->msg( $message )->parse() ) .
+				Html::rawElement( 'td', [], Html::rawElement( 'code', [],
+					$this->msg( new RawMessage( "[$url $value]" ) )->parse() ) ) .
 				Html::closeElement( 'tr' );
 		}
 

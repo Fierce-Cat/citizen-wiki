@@ -594,11 +594,6 @@ __INDEXATTR__;
 		return $this->lastErrno() === '40P01';
 	}
 
-	public function wasLockTimeout() {
-		// https://www.postgresql.org/docs/9.2/static/errcodes-appendix.html
-		return $this->lastErrno() === '55P03';
-	}
-
 	protected function isConnectionError( $errno ) {
 		// https://www.postgresql.org/docs/9.2/static/errcodes-appendix.html
 		static $codes = [ '08000', '08003', '08006', '08001', '08004', '57P01', '57P03', '53300' ];
@@ -1209,7 +1204,7 @@ SQL;
 		);
 		$row = $res->fetchObject();
 
-		return $row ? ( strtolower( $row->default_transaction_read_only ) === 'on' ) : false;
+		return $row && strtolower( $row->default_transaction_read_only ) === 'on';
 	}
 
 	public static function getAttributes() {

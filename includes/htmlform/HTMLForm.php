@@ -1370,11 +1370,10 @@ class HTMLForm extends ContextSource {
 
 	/**
 	 * Wrap the form innards in an actual "<form>" element
+	 *
 	 * @stable to override
-	 *
 	 * @param string $html HTML contents to wrap.
-	 *
-	 * @return string Wrapped HTML.
+	 * @return string|OOUI\Tag Wrapped HTML.
 	 */
 	public function wrapForm( $html ) {
 		# Include a <fieldset> wrapper for style, if requested.
@@ -1904,7 +1903,7 @@ class HTMLForm extends ContextSource {
 	}
 
 	/**
-	 * Wraps the given $section into an user-visible fieldset.
+	 * Wraps the given $section into a user-visible fieldset.
 	 * @stable to override
 	 *
 	 * @param string $legend Legend text for the fieldset
@@ -2181,7 +2180,7 @@ class HTMLForm extends ContextSource {
 		// meaning that getLocalURL() would return something like "index.php?title=...".
 		// As browser remove the query string before submitting GET forms,
 		// it means that the title would be lost. In such case use script path instead
-		// and put title in an hidden field (see getHiddenFields()).
+		// and put title in a hidden field (see getHiddenFields()).
 		if ( str_contains( $articlePath, '?' ) && $this->getMethod() === 'get' ) {
 			return $this->getConfig()->get( MainConfigNames::Script );
 		}

@@ -2,6 +2,7 @@
 	"@metadata": {
 		"authors": [
 			"Ansumang",
+			"Chinmayee Mishra",
 			"DannyS712",
 			"Fitoschido",
 			"Jnanaranjan Sahu",
@@ -19,8 +20,7 @@
 			"Susant purohit",
 			"Vlad5250",
 			"ଶିତିକଣ୍ଠ ଦାଶ",
-			"아라",
-			"Chinmayee Mishra"
+			"아라"
 		]
 	},
 	"tog-underline": "ଲିଙ୍କତଳେ ଗାର ଟାଣିବା:",
@@ -1971,6 +1971,8 @@
 	"blocklogpage": "ଲଗଟିକୁ ଅଟକାଇଦେବେ",
 	"blocklog-showlog": "ଏହି ସଭ୍ୟଜଣଙ୍କୁକ ଆଗରୁ ଅଟକାଯାଇଛି ।\nତଳେ ଅଟକ ଇତିହାସଟି ଅବଗତି ନିମନ୍ତେ ଦିଆଗଲା:",
 	"blocklog-showsuppresslog": "ଏହି ସଭ୍ୟଜଣଙ୍କୁ ଆଗରୁ ଅଟକାଯାଇଛି ବା ଲୁଚାଯାଇଛି ।\nତଳେ ଲୁଚାଇବା ଇତିହାସ ଅବଗତି ନିମନ୍ତେ ଦିଆଗଲା:",
+	"unblocklog-showlog": "ଏହି {{GENDER:$1|user}} reference ରେଫରେନ୍ସ ପାଇଁ ନିମ୍ନରେ ପ୍ରଦାନ କରାଯାଇଛି:",
+	"unblocklog-showsuppresslog": "ଏହି {{GENDER:$1|user}} reference ରେଫରେନ୍ସ ପାଇଁ ନିମ୍ନରେ ପ୍ରଦାନ କରାଯାଇଛି:",
 	"blocklogtext": "ଏହା ଏକ ବ୍ୟବହାରକାରୀ ଅଟକ ଓ ଛାଡ଼ ପାଇଁ ଇତିହାସ ।\nଆପେଆପେ ଅଟକାଯାଇଥିବା IP ଠିକଣା ଏଠାରେ ସ୍ଥାନିତ ହୋଇନାହିଁ ।\nଏବେ ସଚଳ କରାଯାଇଥିବା ଅଟକ ଓ ବାରଣସବୁ ଦେଖବା ନିମନ୍ତେ [[Special:BlockList|block]] ଦେଖନ୍ତୁ ।",
 	"block-log-flags-anononly": "କେବଳ ବେନାମି ସଭ୍ୟ",
 	"block-log-flags-nocreate": "ନୂଆ ଖାତା ଖୋଲିବା ଅଚଳ କରାଯାଇଅଛି",

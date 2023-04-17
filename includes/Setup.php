@@ -106,7 +106,7 @@ if ( !defined( 'MW_ENTRY_POINT' ) ) {
 // MainConfigNames::BaseDirectory setting. The BaseDirectory setting is set further
 // down in Setup.php to the value of MW_INSTALL_PATH.
 global $IP;
-$IP = $IP = wfDetectInstallPath(); // ensure MW_INSTALL_PATH is defined
+$IP = wfDetectInstallPath(); // ensure MW_INSTALL_PATH is defined
 
 /**
  * Pre-config setup: Before loading LocalSettings.php
@@ -453,7 +453,7 @@ if ( MW_ENTRY_POINT === 'index' ) {
 }
 
 /**
- * @var MediaWiki\Session\SessionId|null The persistent session ID (if any) loaded at startup
+ * @var MediaWiki\Session\SessionId|null $wgInitialSessionId The persistent session ID (if any) loaded at startup
  */
 $wgInitialSessionId = null;
 if ( !defined( 'MW_NO_SESSION' ) && !$wgCommandLineMode ) {

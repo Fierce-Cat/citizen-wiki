@@ -391,7 +391,7 @@ class SearchMySQL extends SearchDatabase {
 	 * Converts some characters for MySQL's indexing to grok it correctly,
 	 * and pads short words to overcome limitations.
 	 * @param string $string
-	 * @return mixed|string
+	 * @return string
 	 */
 	public function normalizeText( $string ) {
 		$out = parent::normalizeText( $string );
@@ -449,6 +449,7 @@ class SearchMySQL extends SearchDatabase {
 			$sql = "SHOW GLOBAL VARIABLES LIKE 'ft\\_min\\_word\\_len'";
 
 			$dbr = $this->lb->getConnectionRef( DB_REPLICA );
+			// phpcs:ignore MediaWiki.Usage.DbrQueryUsage.DbrQueryFound
 			$result = $dbr->query( $sql, __METHOD__ );
 			$row = $result->fetchObject();
 			$result->free();

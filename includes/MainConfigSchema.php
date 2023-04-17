@@ -3269,6 +3269,7 @@ class MainConfigSchema {
 						'GlobalIdGenerator',
 						'LanguageNameUtils',
 						'MagicWordFactory',
+						'ParsoidParserFactory',
 					],
 				],
 				// dumb version, no syntax highlighting
@@ -5497,14 +5498,9 @@ class MainConfigSchema {
 	 *   Default: `[]`
 	 *
 	 * - es6 `{boolean}`:
-	 *   If true, this module will only be executed in browsers that support ES6. You should set
-	 *     this flag for modules that use ES6 in their JavaScript. Only use this for modules that
-	 *     provide progressive enhancements that are safe to not load in browsers that are not
-	 *     modern but still have a substantial user base, like IE11.
+	 *   Since: MW 1.36; ignored since MW 1.41.
 	 *
-	 *   Since: MW 1.36
-	 *
-	 *   Default: `false`
+	 *   Default: `true`
 	 *
 	 * ## Examples
 	 *
@@ -7464,6 +7460,10 @@ class MainConfigSchema {
 	 *   - matchPattern: (string) The pattern used when determining whether a
 	 *     username is a temporary user. This affects the rights of the user
 	 *     and also prevents explicit creation of users with matching names.
+	 *     This is ignored if "enabled" is false.
+	 *   - reservedPattern: (string) A pattern used to determine whether a
+	 *     username should be denied for explicit creation, in addition to
+	 *     matchPattern. This is used even if "enabled" is false.
 	 *   - serialProvider: (array) Configuration for generation of unique integer
 	 *     indexes which are used to make temporary usernames.
 	 *       - type: (string) May be "local" to allocate indexes using the local
@@ -7499,6 +7499,7 @@ class MainConfigSchema {
 			'actions' => [ 'type' => 'list', 'default' => [ 'edit' ] ],
 			'genPattern' => [ 'type' => 'string', 'default' => '*Unregistered $1' ],
 			'matchPattern' => [ 'type' => 'string', 'default' => '*$1' ],
+			'reservedPattern' => [ 'type' => 'string|null', 'default' => null ],
 			'serialProvider' => [ 'type' => 'object', 'default' => [ 'type' => 'local' ] ],
 			'serialMapping' => [ 'type' => 'object', 'default' => [ 'type' => 'plain-numeric' ] ]
 		],

@@ -173,7 +173,7 @@ class RevisionStoreDbTest extends MediaWikiIntegrationTestCase {
 		return $db;
 	}
 
-	public function provideDomainCheck() {
+	public static function provideDomainCheck() {
 		yield [ false, 'test', '' ];
 		yield [ 'test', 'test', '' ];
 
@@ -634,7 +634,7 @@ class RevisionStoreDbTest extends MediaWikiIntegrationTestCase {
 		$store->insertRevisionOn( $rev, wfGetDB( DB_PRIMARY ) );
 	}
 
-	public function provideNewNullRevision() {
+	public static function provideNewNullRevision() {
 		yield [
 			Title::newFromText( 'UTPage_notAutoCreated' ),
 			[ 'content' => [ SlotRecord::MAIN => new WikitextContent( 'Flubber1' ) ] ],
@@ -977,6 +977,9 @@ class RevisionStoreDbTest extends MediaWikiIntegrationTestCase {
 
 		try {
 			$this->setService( 'DBLoadBalancer', $localLoadBalancerMock );
+			// There may be other code which indirectly uses the RevisionStore
+			// service; make sure it picks up the external store as well.
+			$this->setService( 'RevisionStore', $store );
 			$callback( $store );
 		} finally {
 			// Restore the original load balancer to make test teardown work
@@ -1353,7 +1356,7 @@ class RevisionStoreDbTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $text, $storeRecord->getContent( SlotRecord::MAIN )->serialize() );
 	}
 
-	public function provideNewRevisionFromArchiveRowAndSlotsTitles() {
+	public static function provideNewRevisionFromArchiveRowAndSlotsTitles() {
 		return [
 			[ static function () {
 				return Title::newFromText( 'Test_NewRevisionFromArchiveRowAndSlotsTitles' );
@@ -1383,7 +1386,7 @@ class RevisionStoreDbTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( $text, $storeRecord->getContent( SlotRecord::MAIN )->serialize() );
 	}
 
-	public function provideNewRevisionFromArchiveRowAndSlotsInArray() {
+	public static function provideNewRevisionFromArchiveRowAndSlotsInArray() {
 		return [
 			[
 				[
@@ -1728,7 +1731,7 @@ class RevisionStoreDbTest extends MediaWikiIntegrationTestCase {
 		$this->assertRevisionExistsInDatabase( $restored );
 	}
 
-	public function provideInsertRevisionOn() {
+	public static function provideInsertRevisionOn() {
 		return [
 			[ static function () {
 				$pageTitle = Title::newFromText( 'Test_Insert_Revision_On' );
@@ -1833,7 +1836,7 @@ class RevisionStoreDbTest extends MediaWikiIntegrationTestCase {
 		);
 	}
 
-	public function provideNonHistoryRevision() {
+	public static function provideNonHistoryRevision() {
 		$title = Title::newFromText( __METHOD__ );
 		$rev = new MutableRevisionRecord( $title );
 		yield [ $rev ];
@@ -2242,7 +2245,7 @@ class RevisionStoreDbTest extends MediaWikiIntegrationTestCase {
 		$this->assertSame( RevisionRecord::DELETED_TEXT, $deletedAfter );
 	}
 
-	public function provideGetContentBlobsForBatchOptions() {
+	public static function provideGetContentBlobsForBatchOptions() {
 		yield 'all slots' => [ null ];
 		yield 'no slots' => [ [] ];
 		yield 'main slot' => [ [ SlotRecord::MAIN ] ];
@@ -2345,7 +2348,7 @@ class RevisionStoreDbTest extends MediaWikiIntegrationTestCase {
 		$this->assertStatusValue( [], $result );
 	}
 
-	public function provideNewRevisionsFromBatchOptions() {
+	public static function provideNewRevisionsFromBatchOptions() {
 		yield 'No preload slots or content, single page' => [
 			[ 'comment' ],
 			static function () {
@@ -2816,7 +2819,7 @@ class RevisionStoreDbTest extends MediaWikiIntegrationTestCase {
 			'getAuthorsBetween provides right number of users' );
 	}
 
-	public function provideBetweenMethodNames() {
+	public static function provideBetweenMethodNames() {
 		yield [ 'getRevisionIdsBetween' ];
 		yield [ 'countRevisionsBetween' ];
 		yield [ 'countAuthorsBetween' ];
@@ -2894,7 +2897,7 @@ class RevisionStoreDbTest extends MediaWikiIntegrationTestCase {
 		);
 	}
 
-	public function provideGetFirstRevision() {
+	public static function provideGetFirstRevision() {
 		return [
 			[ static function () {
 				$pageTitle = Title::newFromText( 'Test_Get_First_Revision' );
@@ -2918,7 +2921,7 @@ class RevisionStoreDbTest extends MediaWikiIntegrationTestCase {
 		);
 	}
 
-	public function provideInsertRevisionByAnonAssignsNewActor() {
+	public static function provideInsertRevisionByAnonAssignsNewActor() {
 		yield 'User' => [ '127.1.1.0', static function ( MediaWikiServices $services, string $ip ) {
 			return $services->getUserFactory()->newAnonymous( $ip );
 		} ];

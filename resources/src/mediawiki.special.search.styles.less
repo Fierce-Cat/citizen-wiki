@@ -62,18 +62,11 @@
 @media only screen and ( min-width: @width-breakpoint-tablet ) {
 	.mw-search-results-container,
 	.mw-search-results-info {
-		width: calc( 100% / 12 * 8 );
+		width: ~'calc( 100% / 12 * 7 )';
 	}
 
 	.mw-search-profile-tabs {
 		width: 50em;
-	}
-}
-
-@media only screen and ( min-width: 1440px ) {
-	.mw-search-results-container,
-	.mw-search-results-info {
-		width: calc( 100% / 12 * 7 );
 	}
 }
 
@@ -251,6 +244,11 @@
 	padding: 0.15em 0.15em 0.2em 0.2em;
 	background-color: @colorGray14;
 	border-top: 1px solid @colorGray12;
+}
+
+.mw-search-interwiki-header {
+	font-size: 1.3125em;
+	border-bottom: 1px solid @border-color-base;
 }
 
 .searchdidyoumean {

@@ -395,6 +395,7 @@ return [
 						2 => 'GlobalIdGenerator',
 						3 => 'LanguageNameUtils',
 						4 => 'MagicWordFactory',
+						5 => 'ParsoidParserFactory',
 					],
 				],
 				'javascript' => 'JavaScriptContentHandler',
@@ -1127,6 +1128,7 @@ return [
 				],
 				'genPattern' => '*Unregistered $1',
 				'matchPattern' => '*$1',
+				'reservedPattern' => null,
 				'serialProvider' => [
 					'type' => 'local',
 				],

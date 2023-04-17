@@ -439,7 +439,6 @@ class SessionManagerTest extends MediaWikiIntegrationTestCase {
 	public function testGetEmptySession() {
 		$manager = $this->getManager();
 		$pmanager = TestingAccessWrapper::newFromObject( $manager );
-		$request = new \MediaWiki\Request\FauxRequest();
 
 		$providerBuilder = $this->getMockBuilder( \DummySessionProvider::class )
 			->onlyMethods( [ 'provideSessionInfo', 'newSessionInfo', '__toString' ] );
@@ -1569,7 +1568,7 @@ class SessionManagerTest extends MediaWikiIntegrationTestCase {
 		$manager->logPotentialSessionLeakage( $session );
 	}
 
-	public function provideLogPotentialSessionLeakage() {
+	public static function provideLogPotentialSessionLeakage() {
 		$now = 1234567;
 		$valid = $now - 100;
 		$expired = $now - 1000;

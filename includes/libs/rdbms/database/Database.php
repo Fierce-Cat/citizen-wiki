@@ -107,10 +107,6 @@ abstract class Database implements IDatabase, IMaintainableDatabase, LoggerAware
 
 	/** @var float UNIX timestamp of the last server response */
 	private $lastPing = 0.0;
-	/** @var string Whole or simplified SQL from the last query */
-	private $lastQuery = '';
-	/** @var float Seconds elapsed during execution of the last query */
-	private $lastQueryDuration = 0.0;
 	/** @var float|false UNIX timestamp of last write query */
 	private $lastWriteTime = false;
 	/** @var string|false */
@@ -454,11 +450,6 @@ abstract class Database implements IDatabase, IMaintainableDatabase, LoggerAware
 		} else {
 			throw new InvalidArgumentException( "Got non-string key" );
 		}
-	}
-
-	public function lastQuery() {
-		wfDeprecated( __METHOD__, '1.40' );
-		return $this->lastQuery;
 	}
 
 	public function lastDoneWrites() {
@@ -1064,7 +1055,6 @@ abstract class Database implements IDatabase, IMaintainableDatabase, LoggerAware
 		$ps = $this->profiler ? ( $this->profiler )( $generalizedSql->stringify() ) : null;
 		$startTime = microtime( true );
 
-		$this->lastQuery = $summarySql;
 		$this->affectedRowCount = null;
 		if ( $hasPermWrite ) {
 			$this->lastWriteTime = $startTime;
@@ -1108,7 +1098,6 @@ abstract class Database implements IDatabase, IMaintainableDatabase, LoggerAware
 					$fname
 				);
 			}
-			$this->lastQueryDuration = $queryRuntime;
 		}
 
 		$this->transactionManager->recordQueryCompletion(
@@ -1136,7 +1125,8 @@ abstract class Database implements IDatabase, IMaintainableDatabase, LoggerAware
 				$connLossFlag = $this->assessConnectionLoss(
 					$sql,
 					$queryRuntime,
-					$priorSessInfo
+					$priorSessInfo,
+					__METHOD__
 				);
 				// Update session state tracking and try to reestablish a connection
 				$reconnected = $this->replaceLostConnection( $errno, __METHOD__ );
@@ -1314,6 +1304,7 @@ abstract class Database implements IDatabase, IMaintainableDatabase, LoggerAware
 	 * @param string $sql SQL query statement that encountered or caused the connection loss
 	 * @param float $walltime How many seconds passes while attempting the query
 	 * @param CriticalSessionInfo $priorSessInfo Session state just before the query
+	 * @param string $fname
 	 * @return int Recovery approach. One of the following ERR_* class constants:
 	 *   - Database::ERR_RETRY_QUERY: reconnect silently, retry query
 	 *   - Database::ERR_ABORT_QUERY: reconnect silently, do not retry query
@@ -1323,7 +1314,8 @@ abstract class Database implements IDatabase, IMaintainableDatabase, LoggerAware
 	private function assessConnectionLoss(
 		string $sql,
 		float $walltime,
-		CriticalSessionInfo $priorSessInfo
+		CriticalSessionInfo $priorSessInfo,
+		string $fname
 	) {
 		$verb = $this->platform->getQueryVerb( $sql );
 
@@ -1393,7 +1385,7 @@ abstract class Database implements IDatabase, IMaintainableDatabase, LoggerAware
 
 		if ( $blockers ) {
 			$this->logger->warning(
-				"Silent reconnection to {db_server} could not be attempted: {error}",
+				"$fname: cannot reconnect to {db_server} silently: {error}",
 				$this->getLogContext( [
 					'error' => 'session state loss (' . implode( ', ', $blockers ) . ')',
 					'exception' => new RuntimeException(),
@@ -1555,6 +1547,16 @@ abstract class Database implements IDatabase, IMaintainableDatabase, LoggerAware
 	 */
 	public function newSelectQueryBuilder(): SelectQueryBuilder {
 		return new SelectQueryBuilder( $this );
+	}
+
+	/**
+	 * Get a UnionQueryBuilder bound to this connection. This is overridden by
+	 * DBConnRef.
+	 *
+	 * @return UnionQueryBuilder
+	 */
+	public function newUnionQueryBuilder(): UnionQueryBuilder {
+		return new UnionQueryBuilder( $this );
 	}
 
 	/**
@@ -2192,32 +2194,8 @@ abstract class Database implements IDatabase, IMaintainableDatabase, LoggerAware
 	 * @inheritDoc
 	 * @stable to override
 	 */
-	public function wasLockTimeout() {
-		return false;
-	}
-
-	/**
-	 * @inheritDoc
-	 * @stable to override
-	 */
-	public function wasConnectionLoss() {
-		return $this->isConnectionError( $this->lastErrno() );
-	}
-
-	/**
-	 * @inheritDoc
-	 * @stable to override
-	 */
 	public function wasReadOnlyError() {
 		return false;
-	}
-
-	public function wasErrorReissuable() {
-		return (
-			$this->wasDeadlock() ||
-			$this->wasLockTimeout() ||
-			$this->wasConnectionLoss()
-		);
 	}
 
 	/**
@@ -3171,7 +3149,7 @@ abstract class Database implements IDatabase, IMaintainableDatabase, LoggerAware
 		} else {
 			$locked = false;
 			$this->logger->info(
-				__METHOD__ . " failed to acquire lock '{lockname}'",
+				__METHOD__ . ": failed to acquire lock '{lockname}'",
 				[
 					'lockname' => $lockName,
 					'db_log_category' => 'locking'
@@ -3200,14 +3178,22 @@ abstract class Database implements IDatabase, IMaintainableDatabase, LoggerAware
 	 * @inheritDoc
 	 */
 	public function unlock( $lockName, $method ) {
-		$released = $this->doUnlock( $lockName, $method );
-		if ( $released ) {
-			unset( $this->sessionNamedLocks[$lockName] );
-		} else {
+		if ( !isset( $this->sessionNamedLocks[$lockName] ) ) {
+			$released = false;
 			$this->logger->warning(
-				__METHOD__ . " failed to release lock '$lockName'\n",
+				__METHOD__ . ": trying to release unheld lock '$lockName'\n",
 				[ 'db_log_category' => 'locking' ]
 			);
+		} else {
+			$released = $this->doUnlock( $lockName, $method );
+			if ( $released ) {
+				unset( $this->sessionNamedLocks[$lockName] );
+			} else {
+				$this->logger->warning(
+					__METHOD__ . ": failed to release lock '$lockName'\n",
+					[ 'db_log_category' => 'locking' ]
+				);
+			}
 		}
 
 		return $released;
@@ -3234,10 +3220,17 @@ abstract class Database implements IDatabase, IMaintainableDatabase, LoggerAware
 		}
 
 		$unlocker = new ScopedCallback( function () use ( $lockKey, $fname ) {
+			// Note that the callback can be reached due to an exception making the calling
+			// function end early. If the transaction/session is in an error state, avoid log
+			// spam and confusing replacement of an original DBError with one about unlock().
+			// Unlock query will fail anyway; avoid possibly triggering errors in rollback()
+			if (
+				$this->transactionManager->sessionStatus() <= TransactionManager::STATUS_SESS_ERROR ||
+				$this->transactionManager->trxStatus() <= TransactionManager::STATUS_TRX_ERROR
+			) {
+				return;
+			}
 			if ( $this->trxLevel() ) {
-				// There is a good chance an exception was thrown, causing any early return
-				// from the caller. Let any error handler get a chance to issue rollback().
-				// If there isn't one, let the error bubble up and trigger server-side rollback.
 				$this->onTransactionResolution(
 					function () use ( $lockKey, $fname ) {
 						$this->unlock( $lockKey, $fname );

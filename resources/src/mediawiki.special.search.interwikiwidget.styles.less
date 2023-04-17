@@ -25,8 +25,8 @@
 		/* Matching regular search title */
 	}
 
-	.iw-result:after,
-	.iw-result__content:after {
+	.iw-result::after,
+	.iw-result__content::after {
 		/* Clearfix */
 		visibility: hidden;
 		display: block;
@@ -116,12 +116,14 @@
 	@media only screen and ( min-width: @width-breakpoint-tablet ) {
 		#mw-interwiki-results {
 			display: inline-block;
-			width: calc( 100% / 12 * 3 );
-			margin-left: calc( 100% / 12 );
+			width: ~'calc( 100% / 12 * 4 )';
+			margin-left: ~'calc( 100% / 12 )';
 		}
 
 		.iw-resultset:nth-child( 1 ) {
 			.iw-result__header {
+				// Fallback is graceful enough.
+				/* stylelint-disable-next-line plugin/no-unsupported-browser-features */
 				border-top: unset;
 			}
 		}
@@ -129,7 +131,8 @@
 
 	@media only screen and ( min-width: 1440px ) {
 		#mw-interwiki-results {
-			margin-right: calc( 100% / 12 );
+			margin-right: ~'calc( 100% / 12 )';
+			width: ~'calc( 100% / 12 * 3 )';
 		}
 	}
 

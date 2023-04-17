@@ -66,7 +66,10 @@
 			{ action: 'cancel', label: mw.msg( 'prefs-back-title' ), flags: [ 'safe', 'close' ] }
 		];
 		PrefDialog.prototype.initialize = function () {
-			insertToggles( sectionBody.querySelectorAll( 'span.oo-ui-checkboxInputWidget' ) );
+			// T334260 Mobile format breaks global preferences;
+			if ( mw.config.get( 'wgCanonicalSpecialPageName' ) === 'Preferences' ) {
+				insertToggles( sectionBody.querySelectorAll( 'span.oo-ui-checkboxInputWidget' ) );
+			}
 			this.name = sectionId;
 			PrefDialog.super.prototype.initialize.call( this );
 			this.$body.append( sectionBody );
@@ -94,6 +97,7 @@
 		var preferencesForm = document.getElementById( 'mw-prefs-form' );
 		var prefButtons = preferencesForm.querySelector( '.mw-htmlform-submit-buttons' );
 		var sections = preferencesForm.querySelectorAll( '.mw-mobile-prefsection' );
+
 		// Move the form buttons (such as save) into the dialog after opening.
 		windowManager.on( 'opening', function ( win, opened ) {
 			if ( opened ) {
@@ -113,12 +117,18 @@
 		Array.prototype.forEach.call( sections, function ( section ) {
 			var sectionContent = document.getElementById( section.id + '-content' );
 			var sectionBody = sectionContent.querySelector( 'div > div.oo-ui-widget' );
-			var sectionTitle = document.getElementById( section.id + '-title' ).textContent;
-			document.getElementById( section.id ).addEventListener( 'click', function () {
-				setSection( section.id );
-			} );
-			createSectionDialog( section.id, sectionTitle, sectionBody );
+			var sectionTitle = document.getElementById( section.id + '-title' );
+			var sectionText = sectionTitle.querySelector( '.mw-prefs-title' ).textContent;
+			createSectionDialog( section.id, sectionText, sectionBody );
 		} );
+		var prefSelect = OO.ui.infuse( $( '.mw-mobile-prefs-sections' ) );
+		prefSelect.aggregate( {
+			click: 'itemClick'
+		} );
+		prefSelect.on( 'itemClick', function ( button ) {
+			setSection( button.getData() );
+		} );
+
 	}
 	// DOM-dependant code
 	$( function () {

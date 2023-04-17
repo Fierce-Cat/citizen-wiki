@@ -118,7 +118,7 @@ class DatabaseTest extends PHPUnit\Framework\TestCase {
 		);
 	}
 
-	public function provideTableNamesWithIndexClauseOrJOIN() {
+	public static function provideTableNamesWithIndexClauseOrJOIN() {
 		return [
 			'one-element array' => [
 				[ 'table' ], [], 'table '
@@ -576,7 +576,7 @@ class DatabaseTest extends PHPUnit\Framework\TestCase {
 		$this->assertEquals( $origTrx, $db->getFlag( DBO_TRX ) );
 	}
 
-	public function provideImmutableDBOFlags() {
+	public static function provideImmutableDBOFlags() {
 		return [
 			[ Database::DBO_IGNORE ],
 			[ Database::DBO_DEFAULT ],
@@ -612,7 +612,6 @@ class DatabaseTest extends PHPUnit\Framework\TestCase {
 		$this->assertEquals( $ud->getId(), $this->db->getDomainID() );
 
 		$oldDomain = $this->db->getDomainID();
-		$oldDbName = $this->db->getDBname();
 		$oldSchema = $this->db->dbSchema();
 		$oldPrefix = $this->db->tablePrefix();
 		$this->assertIsString( $oldDomain, 'DB domain is string' );
@@ -723,6 +722,7 @@ class DatabaseTest extends PHPUnit\Framework\TestCase {
 			[ 'topologyRole' => Database::ROLE_STREAMING_REPLICA ]
 		);
 
+		// phpcs:ignore MediaWiki.Usage.DbrQueryUsage.DbrQueryFound
 		$dbr->query( "INSERT INTO test_table (a_column) VALUES ('foo');", __METHOD__ );
 	}
 
@@ -732,11 +732,13 @@ class DatabaseTest extends PHPUnit\Framework\TestCase {
 			[ 'topologyRole' => Database::ROLE_STREAMING_REPLICA ]
 		);
 
+		// phpcs:ignore MediaWiki.Usage.DbrQueryUsage.DbrQueryFound
 		$resCreate = $dbr->query(
 			"CREATE TEMPORARY TABLE temp_test_table (temp_column int);",
 			__METHOD__
 		);
 
+		// phpcs:ignore MediaWiki.Usage.DbrQueryUsage.DbrQueryFound
 		$resModify = $dbr->query(
 			"INSERT INTO temp_test_table (temp_column) VALUES (42);",
 			__METHOD__
@@ -755,6 +757,7 @@ class DatabaseTest extends PHPUnit\Framework\TestCase {
 			[ 'topologyRole' => Database::ROLE_STREAMING_REPLICA ]
 		);
 
+		// phpcs:ignore MediaWiki.Usage.DbrQueryUsage.DbrQueryFound
 		$dbr->query(
 			"CREATE TEMPORARY TABLE temp_test_table (temp_column int);",
 			__METHOD__,
@@ -768,6 +771,7 @@ class DatabaseTest extends PHPUnit\Framework\TestCase {
 			[ 'topologyRole' => Database::ROLE_STREAMING_MASTER ]
 		);
 
+		// phpcs:ignore MediaWiki.Usage.DbrQueryUsage.DbrQueryFound
 		$res = $dbr->query( "INSERT INTO test_table (a_column) VALUES ('foo');", __METHOD__ );
 
 		$this->assertInstanceOf( IResultWrapper::class, $res );
@@ -782,6 +786,7 @@ class DatabaseTest extends PHPUnit\Framework\TestCase {
 			[ 'topologyRole' => Database::ROLE_STREAMING_MASTER ]
 		);
 
+		// phpcs:ignore MediaWiki.Usage.DbrQueryUsage.DbrQueryFound
 		$dbr->query(
 			"INSERT INTO test_table (a_column) VALUES ('foo');",
 			__METHOD__,

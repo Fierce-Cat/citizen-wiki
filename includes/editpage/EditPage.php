@@ -35,6 +35,7 @@ use IContextSource;
 use LogEventsList;
 use LogPage;
 use ManualLogEntry;
+use MediaWiki\Block\BlockErrorFormatter;
 use MediaWiki\Block\DatabaseBlock;
 use MediaWiki\Cache\LinkBatchFactory;
 use MediaWiki\CommentStore\CommentStore;
@@ -522,6 +523,9 @@ class EditPage implements IEditObject {
 	/** @var CommentStore */
 	private $commentStore;
 
+	/** @var BlockErrorFormatter */
+	private $blockErrorFormatter;
+
 	/**
 	 * @stable to call
 	 * @param Article $article
@@ -564,6 +568,7 @@ class EditPage implements IEditObject {
 		$this->linkBatchFactory = $services->getLinkBatchFactory();
 		$this->restrictionStore = $services->getRestrictionStore();
 		$this->commentStore = $services->getCommentStore();
+		$this->blockErrorFormatter = $services->getBlockErrorFormatter();
 
 		$this->deprecatePublicProperty( 'mArticle', '1.30', __CLASS__ );
 		$this->deprecatePublicProperty( 'mTitle', '1.30', __CLASS__ );
@@ -695,6 +700,10 @@ class EditPage implements IEditObject {
 			}
 		}
 
+		// Check permissions after possibly creating a placeholder temp user.
+		// This allows anonymous users to edit via a temporary account, if the site is
+		// configured to (1) disallow anonymous editing and (2) autocreate temporary
+		// accounts on edit.
 		$this->maybeActivateTempUserCreate( !$this->firsttime );
 
 		$permErrors = $this->getEditPermissionErrors(
@@ -973,13 +982,39 @@ class EditPage implements IEditObject {
 		if ( $this->preview || $this->diff ) {
 			$ignoredErrors = [ 'blockedtext', 'autoblockedtext', 'systemblockedtext' ];
 		}
-		return $this->permManager->getPermissionErrors(
+		$permErrors = $this->permManager->getPermissionErrors(
 			'edit',
 			$user,
 			$this->mTitle,
 			$rigor,
 			$ignoredErrors
 		);
+
+		// Check if the user is blocked from editing.
+		// This check must be done on the context user, in order to trigger
+		// checks for blocks against IP address, XFF, etc, until T221067
+		if ( !$user->getBlock() ) {
+			$contextUser = $this->context->getUser();
+			if (
+				$user->getName() !== $contextUser->getName() &&
+				$this->permManager->isBlockedFrom(
+					$contextUser,
+					$this->mTitle,
+					$rigor !== PermissionManager::RIGOR_SECURE
+				)
+			) {
+				$message = $this->blockErrorFormatter->getMessage(
+					// @phan-suppress-next-line PhanTypeMismatchArgumentNullable User must have a block
+					$contextUser->getBlock(),
+					$contextUser,
+					$this->context->getLanguage(),
+					$this->context->getRequest()->getIP()
+				);
+				$permErrors[] = array_merge( [ $message->getKey() ], $message->getParams() );
+			}
+		}
+
+		return $permErrors;
 	}
 
 	/**
@@ -1636,9 +1671,9 @@ class EditPage implements IEditObject {
 										)->inContentLanguage()->text();
 									}
 								} else {
-									$undoIsAnon = $undorev->getUser() ?
-										!$undorev->getUser()->isRegistered() :
-										true;
+									$undoIsAnon =
+										!$undorev->getUser() ||
+										!$undorev->getUser()->isRegistered();
 									$undoMessage = ( $undoIsAnon && $disableAnonTalk ) ?
 										'undo-summary-anon' :
 										'undo-summary';
@@ -2973,7 +3008,10 @@ class EditPage implements IEditObject {
 
 		$out = $this->context->getOutput();
 		$namespace = $this->mTitle->getNamespace();
-		$intro = $this->getCodeEditingIntro();
+		$intro = $this->getCodeEditingIntro(
+			$this->mTitle,
+			$this->context
+		);
 		$out->addHTML( $intro );
 
 		if ( $namespace === NS_FILE ) {
@@ -3693,15 +3731,15 @@ class EditPage implements IEditObject {
 	/**
 	 * Adds introduction to code editing.
 	 *
+	 * @param Title $title
+	 * @param IContextSource $ctx
 	 * @return string
 	 */
-	private function getCodeEditingIntro(): string {
-		$title = $this->mTitle;
-		$ctx = $this->context;
+	private function getCodeEditingIntro( Title $title, IContextSource $ctx ): string {
 		$isUserJsConfig = $title->isUserJsConfigPage();
 		$namespace = $title->getNamespace();
 		$intro = '';
-		$user = $this->context->getUser();
+		$user = $ctx->getUser();
 
 		if ( $title->isUserConfigPage() ) {
 			if ( $title->isSubpageOf( $user->getUserPage() ) ) {
@@ -3713,45 +3751,71 @@ class EditPage implements IEditObject {
 					? 'usercssispublic'
 					: ( $isUserJsonConfig ? 'userjsonispublic' : 'userjsispublic' );
 
-				$intro .= Html::rawElement(
+				$warningText = $ctx->msg( $warning )->parse();
+				$intro .= $warningText ? Html::rawElement(
 					'div',
 					[ 'class' => 'mw-userconfigpublic' ],
-					$ctx->msg( $warning )->parse()
-				);
+					$warningText
+				) : '';
 			}
 		}
+		$codeMsg = $ctx->msg( 'editpage-code-message' );
+		$codeMessageText = $codeMsg->isDisabled() ? '' : $codeMsg->parseAsBlock();
+		$isJavaScript = $title->hasContentModel( CONTENT_MODEL_JAVASCRIPT );
+		$isCSS = $title->hasContentModel( CONTENT_MODEL_CSS );
 
 		if ( $namespace === NS_MEDIAWIKI ) {
+			$interfaceMsg = $ctx->msg( 'editinginterface' );
+			$interfaceMsgText = $interfaceMsg->parse();
 			# Show a warning if editing an interface message
-			$intro .= Html::rawElement(
+			$intro .= $interfaceMsgText ? Html::rawElement(
 				'div',
 				[ 'class' => 'mw-editinginterface' ],
-				$ctx->msg( 'editinginterface' )->parse()
-			);
+				$interfaceMsgText
+			) : '';
 			# If this is a default message (but not css, json, or js),
 			# show a hint that it is translatable on translatewiki.net
 			if (
-				!$title->hasContentModel( CONTENT_MODEL_CSS )
+				!$isCSS
 				&& !$title->hasContentModel( CONTENT_MODEL_JSON )
-				&& !$title->hasContentModel( CONTENT_MODEL_JAVASCRIPT )
+				&& !$isJavaScript
 			) {
 				$defaultMessageText = $title->getDefaultMessageText();
 				if ( $defaultMessageText !== false ) {
-					$intro .= Html::rawElement(
+					$translateInterfaceText = $ctx->msg( 'translateinterface' )->parse();
+					$intro .= $translateInterfaceText ? Html::rawElement(
 						'div',
 						[ 'class' => 'mw-translateinterface' ],
-						$ctx->msg( 'translateinterface' )->parse()
-					);
+						$translateInterfaceText
+					) : '';
 				}
 			}
 		}
 
 		if ( $isUserJsConfig ) {
-			$intro .= Html::rawElement(
+			$userConfigDangerousMsg = $ctx->msg( 'userjsdangerous' )->parse();
+			$intro .= $userConfigDangerousMsg ? Html::rawElement(
 				'div',
 				[ 'class' => 'mw-userconfigdangerous' ],
-				$ctx->msg( 'userjsdangerous' )->parse()
-			);
+				$userConfigDangerousMsg
+			) : '';
+		}
+
+		// If the wiki page contains JavaScript or CSS link add message specific to code.
+		if ( $isJavaScript || $isCSS ) {
+			$intro .= $codeMessageText;
+		}
+
+		// If the message is plaintext, (which is the default for a MediaWiki
+		// install) wrap it. If not, then local wiki customizations should be
+		// respected.
+		if ( !empty( $intro ) ) {
+			// While semantically this is a warning, given the impact of editing
+			// these pages,
+			// it's best to deter users who don't understand what they are doing by
+			// acknowledging the danger here. This is a potentially destructive action
+			// so requires destructive coloring.
+			$intro = Html::errorBox( $intro );
 		}
 
 		return $intro;

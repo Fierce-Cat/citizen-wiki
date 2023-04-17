@@ -620,10 +620,10 @@ class SkinTemplate extends Skin {
 	 */
 	private function getCategoryPortletsData( array $links ): array {
 		$categories = [];
-		foreach ( $links as $group => $links ) {
+		foreach ( $links as $group => $groupLinks ) {
 			$allLinks = [];
 			$groupName = 'category-' . $group;
-			foreach ( $links as $i => $link ) {
+			foreach ( $groupLinks as $i => $link ) {
 				$allLinks[$groupName . '-' . $i] = [
 					'html' => $link,
 				];
@@ -1238,6 +1238,7 @@ class SkinTemplate extends Skin {
 
 					if ( $this->getAuthority()->probablyCan( 'delete', $title ) ) {
 						$content_navigation['actions']['delete'] = [
+							'icon' => 'trash',
 							'class' => ( $onPage && $action == 'delete' ) ? 'selected' : false,
 							'text' => $this->getSkinNavOverrideableLabel(
 								'action-delete'
@@ -1253,6 +1254,7 @@ class SkinTemplate extends Skin {
 							'text' => $this->getSkinNavOverrideableLabel(
 								'action-move'
 							),
+							'icon' => 'move',
 							'href' => $moveTitle->getLocalURL()
 						];
 					}
@@ -1271,6 +1273,7 @@ class SkinTemplate extends Skin {
 								'text' => $this->getSkinNavOverrideableLabel(
 									"action-$msgKey", $n
 								),
+								'icon' => 'trash',
 								'href' => $undelTitle->getLocalURL()
 							];
 						}
@@ -1285,12 +1288,14 @@ class SkinTemplate extends Skin {
 						$performer->getUser()
 					) !== [ '' ]
 				) {
-					$mode = $restrictionStore->isProtected( $title ) ? 'unprotect' : 'protect';
+					$isProtected = $restrictionStore->isProtected( $title );
+					$mode = $isProtected ? 'unprotect' : 'protect';
 					$content_navigation['actions'][$mode] = [
 						'class' => ( $onPage && $action == $mode ) ? 'selected' : false,
 						'text' => $this->getSkinNavOverrideableLabel(
 							"action-$mode"
 						),
+						'icon' => $isProtected ? 'unLock' : 'lock',
 						'href' => $title->getLocalURL( "action=$mode" )
 					];
 				}
@@ -1454,7 +1459,7 @@ class SkinTemplate extends Skin {
 			} else {
 				$text = $special->getShortDescription( $relatedTitle->getSubpageText() );
 			}
-			$specialAssociatedNavigationLinks['special-specialAssociatedNavigationLinks-link-' . strval( $i ) ] = [
+			$specialAssociatedNavigationLinks['special-specialAssociatedNavigationLinks-link-' . $i ] = [
 				'text' => $text,
 				'href' => $relatedTitle->getLocalURL(),
 				'class' => $relatedTitle->equals( $title ) ? 'selected' : '',

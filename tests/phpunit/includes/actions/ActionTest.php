@@ -114,7 +114,7 @@ class ActionTest extends MediaWikiIntegrationTestCase {
 		return $context;
 	}
 
-	public function provideActions() {
+	public static function provideActions() {
 		return [
 			[ 'dummy', 'DummyAction' ],
 			[ 'string', 'NamedDummyAction' ],
@@ -156,7 +156,7 @@ class ActionTest extends MediaWikiIntegrationTestCase {
 		$this->assertTrue( $exists );
 	}
 
-	public function provideGetActionName() {
+	public static function provideGetActionName() {
 		return [
 			'dummy' => [ 'dummy', 'DummyAction' ],
 			'string' => [ 'string', 'NamedDummyAction' ],
@@ -298,7 +298,7 @@ class DummyAction extends Action {
 	}
 
 	public function canExecute( User $user ) {
-		return $this->checkCanExecute( $user );
+		$this->checkCanExecute( $user );
 	}
 }
 
