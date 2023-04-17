@@ -1,0 +1,153 @@
+@width-search-bar: 560px;
+
+.citizen-search {
+	--width-search-bar: @width-search-bar;
+	--height-search-bar: var( --header-button-size );
+
+	&__card {
+		position: fixed;
+		top: 0;
+		right: 0;
+		left: 0;
+		display: flex;
+		width: var( --width-search-bar );
+		max-width: ~'calc(100vw - var( --padding-page ) )';
+		height: var( --height-search-bar );
+		margin: var( --space-md ) auto;
+		gap: 0.25rem;
+		.citizen-card();
+		.citizen-card-hide( top center, '', false );
+
+		.citizen-ui-icon {
+			width: var( --height-search-bar );
+			height: var( --height-search-bar );
+
+			&::before {
+				background-size: 1rem;
+			}
+		}
+
+		/**
+		 * Loading indicator for searchbox
+		 * See common/progressbar.less
+		 **/
+		&.citizen-loading::after {
+			position: absolute;
+			top: 100%;
+		}
+	}
+
+	&__icon,
+	&__random {
+		// So that searchInput has the full width,
+		// and search suggestions will match that width
+		position: absolute;
+	}
+
+	&__icon {
+		left: 0;
+	}
+
+	&__random {
+		right: 0;
+		border-radius: var( --border-radius--small );
+
+		.citizen-ui-icon::before {
+			transition: @transition-transform;
+		}
+
+		&:hover {
+			background-color: var( --background-color-quiet--hover );
+
+			.citizen-ui-icon::before {
+				opacity: var( --opacity-icon-base--hover );
+				transform: rotate( 30deg );
+			}
+		}
+
+		&:active {
+			background-color: var( --background-color-quiet--active );
+
+			.citizen-ui-icon::before {
+				opacity: var( --opacity-icon-base--active );
+			}
+		}
+	}
+
+	&__form {
+		flex-grow: 1;
+	}
+
+	#searchInput {
+		width: 100%;
+		height: 100%;
+		padding: 0 var( --height-search-bar );
+		border: 0; // Cancel default border
+		appearance: none;
+		background: transparent; // Cancel default background
+		font-size: 0.8125rem;
+
+		&:focus {
+			outline: 0;
+			// The search suggestion pop-up indicates for focus state
+			// border-color: var( --color-primary );
+			// box-shadow: inset 0 0 0 1px var( --color-primary );
+		}
+	}
+}
+
+// Checkbox hack
+#citizen-search__checkbox:checked {
+	~ .citizen-search__card {
+		.citizen-card-show( false );
+	}
+}
+
+.citizen-animations-ready {
+	.citizen-search__card {
+		.citizen-card-transition();
+	}
+}
+
+@media ( max-width: @width-breakpoint-desktop ) {
+	.citizen-search__card {
+		z-index: 1; // So that overlay does not cover card
+		width: auto;
+		margin: var( --space-xs );
+
+		// Remove searchbox open animation on mobile
+		// But keep suggestion animation
+		// So user can get to search instantly
+		.citizen-animations-ready & {
+			transition: none;
+		}
+	}
+
+	#citizen-search__checkbox:checked {
+		+ .citizen-search__card {
+			z-index: 2;
+		}
+
+		// HACK: Click overlay to dismiss search bar
+		~ .citizen-search__button {
+			// Reset containment so that the overlay is visible
+			contain: initial;
+
+			.citizen-search__buttonIcon {
+				display: none;
+			}
+
+			#citizen-search__buttonCheckbox {
+				position: fixed;
+				z-index: 1;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				width: auto;
+				height: auto;
+				background-color: var( --background-color-overlay );
+			}
+		}
+	}
+}

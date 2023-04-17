@@ -1,0 +1,88 @@
+.citizen-menu {
+	&__heading {
+		display: block;
+		padding: 0.625rem var( --space-md );
+		margin: 0;
+		color: var( --color-base--subtle );
+		font-size: inherit;
+		font-weight: var( --font-weight-normal );
+		letter-spacing: 0.05em;
+	}
+}
+
+// FIXME: This should not be here
+.citizen-ui-icon {
+	display: block;
+	width: var( --size-icon );
+	height: var( --size-icon );
+	contain: strict;
+
+	&::before {
+		display: block;
+		width: 100%;
+		height: 100%;
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: contain;
+		content: '';
+		opacity: var( --opacity-icon-base );
+	}
+}
+
+/**
+ * Invisible checkbox covering the menu button.
+ */
+.citizen-menu-checkbox {
+	// Has to be visible to be focusable
+	&-checkbox {
+		position: absolute;
+		z-index: 1;
+		top: 0;
+		left: 0;
+		width: 0;
+		height: 0;
+		padding: 0;
+		margin: 0;
+		opacity: 0;
+
+		// HACK: Fake focus styles
+		&:focus {
+			& + .citizen-header__button,
+			& + .citizen-menu-checkbox-button {
+				outline: 2px solid var( --color-primary );
+				outline-offset: 1px;
+			}
+		}
+	}
+
+	&-button {
+		cursor: pointer;
+
+		// Icons have to use span inside label elements
+		> span:not( .citizen-ui-icon ) {
+			.mixin-screen-reader-text;
+		}
+	}
+}
+
+.mw-portlet {
+	// Hide selected item
+	.selected {
+		.mixin-screen-reader-text;
+	}
+
+	// Hide empty menu
+	&-empty {
+		display: none !important;
+	}
+}
+
+.skin-citizen-dark {
+	.citizen-ui-icon::before {
+		filter: invert( 1 );
+	}
+
+	.mw-portlet a::after {
+		filter: invert( 1 );
+	}
+}

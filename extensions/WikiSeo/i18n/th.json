@@ -1,0 +1,13 @@
+{
+	"@metadata": {
+		"authors": [
+			"Bebiezaza"
+		]
+	},
+	"wiki-seo-pageinfo-header-description": "คำอธิบาย",
+	"wiki-seo-pageinfo-header-content": "เนื้อหา",
+	"wiki-seo-param-title": "ชื่อหน้า:",
+	"wiki-seo-param-image_width": "ความกว้างของภาพ:",
+	"wiki-seo-param-image_height": "ความสูงของภาพ:",
+	"wiki-seo-param-type": "ประเภทบทความ:"
+}

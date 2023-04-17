@@ -1,0 +1,13 @@
+{
+	"@metadata": {
+		"authors": [
+			"Candalua",
+			"Conky77",
+			"GatoSelvadego"
+		]
+	},
+	"intersection-desc": "Mostra un elenco puntato coi elementi piassè reçenti inserìi in te na categoria o ne l'union de più categorie",
+	"intersection_toomanycats": "Error: Ghe xe massa categorie!",
+	"intersection_noresults": "Nisuna pàgina ƚa sodisfa i to criteri.",
+	"intersection_noincludecats": "Error: Te ghè da inclùdar almanco na categoria opure specificar un namespace."
+}

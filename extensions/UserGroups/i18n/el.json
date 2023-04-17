@@ -1,0 +1,15 @@
+{
+	"@metadata": {
+		"authors": [
+			"NikosLikomitros",
+			"Nikosgranturismogt"
+		]
+	},
+	"usergroups-createnew": "(δημιουργία νέου σε εξέλιξη...)",
+	"usergroups-editgroup-reason": "Αιτία:",
+	"usergroups-editgroup-save": "Αποθήκευση αλλαγών",
+	"usergroups-editgroup-userrights": "Όλες οι διαθέσιμες άδειες",
+	"usergroups-log-name": "Μητρώο δικαιωμάτων χρήστη",
+	"usergroups-log-none": "(κανένα)",
+	"usergroups-log-revoke": "αναστροφή τύπου"
+}

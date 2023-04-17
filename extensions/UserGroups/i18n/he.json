@@ -1,0 +1,16 @@
+{
+	"@metadata": {
+		"authors": [
+			"Amire80",
+			"Guycn2",
+			"SGTTechnologicBunny"
+		]
+	},
+	"usergroups-desc": "אפשרות לעשות בקרה מדויקת יותר על אילו הרשאות משתמש אפשר לתת לאילו קבוצות משתמשים",
+	"usergroups-editgroup-reason": "סיבה:",
+	"usergroups-editgroup-save": "שמירת השינויים",
+	"action-modifygroups": "לשנות קבוצות משתמשים",
+	"invalidusergroupname-error": "השם שהזנת עבור קבוצת משתמשים חדשה אינו תקין.\n\n[[Special:UserGroups|חזרה]].",
+	"nosuchusergroup": "אין קבוצת משתמשים שנקראת \"$1\". אולי רצית [[Special:UserGroups/new|ליצור]] את קבוצת משתמשים החדשה הזאת?",
+	"right-modifygroups": "יצירה, שינוי ומחיקה של קבוצות משתמשים"
+}

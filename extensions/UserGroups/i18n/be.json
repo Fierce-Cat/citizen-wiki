@@ -1,0 +1,17 @@
+{
+	"@metadata": {
+		"authors": [
+			"Artsiom91",
+			"Vlad5250"
+		]
+	},
+	"usergroups": "Кіраванне групамі ўдзельнікаў",
+	"usergroups-createnew": "(стварыць новую...)",
+	"usergroups-editgroup-reason": "Прычына:",
+	"usergroups-editgroup-save": "Запісаць змены",
+	"usergroups-editgroup-userrights": "Усе даступныя дазволы",
+	"usergroups-log-name": "Журнал груп удзельнікаў",
+	"usergroups-log-none": "(няма)",
+	"action-modifygroups": "змяняць групы ўдзельнікаў",
+	"right-modifygroups": "Стварэнне, змяненне і выдаленне груп удзельнікаў"
+}

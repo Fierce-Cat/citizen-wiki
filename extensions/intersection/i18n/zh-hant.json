@@ -1,0 +1,19 @@
+{
+	"@metadata": {
+		"authors": [
+			"Cwlin0416",
+			"EagerLin",
+			"Kly",
+			"Mark85296341",
+			"Shinjiman",
+			"Simon Shek"
+		]
+	},
+	"intersection-desc": "可顯示一個分類或彙總多個分類內最近更改頁面的清單",
+	"intersection_toomanycats": "錯誤：分類過多！",
+	"intersection_noresults": "沒有符合條件的頁面。",
+	"intersection_noincludecats": "錯誤：您至少需要指定一個分類或者命名空間！",
+	"intersection_pcerror": "因為伺服器超載，導致無法顯示此清單。請稍後再試。",
+	"intersection-category": "使用 DynamicPageList 的頁面",
+	"intersection-category-desc": "頁面包含 <code><nowiki><DynamicPageList></nowiki></code> 標籤"
+}

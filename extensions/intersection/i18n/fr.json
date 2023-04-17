@@ -1,0 +1,19 @@
+{
+	"@metadata": {
+		"authors": [
+			"Florian COLLIN",
+			"Gomoko",
+			"Grondin",
+			"IAlex",
+			"Urhixidur",
+			"Verdy p"
+		]
+	},
+	"intersection-desc": "Affiche une liste, à puces, des articles les plus récents dans une catégorie, ou à partir d’une combinaison de plusieurs catégories.",
+	"intersection_toomanycats": "Erreur : trop de catégories !",
+	"intersection_noresults": "Aucune page ne correspond à ces critères.",
+	"intersection_noincludecats": "Erreur : vous devez inclure au moins une catégorie, ou préciser un espace de noms !",
+	"intersection_pcerror": "Cette liste ne peut pas être affichée car les serveurs sont surchargés. Veuillez réessayer plus tard.",
+	"intersection-category": "Pages utilisant DynamicPageList",
+	"intersection-category-desc": "La page inclut une balise <code><nowiki><DynamicPageList></nowiki></code>"
+}

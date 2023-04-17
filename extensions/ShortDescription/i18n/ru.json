@@ -1,0 +1,11 @@
+{
+	"@metadata": {
+		"authors": [
+			"Kareyac",
+			"Pacha Tchernof"
+		]
+	},
+	"shortdescription-desc": "Позволяет вики-проектам добавлять краткие описания на страницы с вики-текстом",
+	"shortdescription-info-label": "Краткое описание",
+	"shortdescription-category": "Страницы с кратким описанием"
+}

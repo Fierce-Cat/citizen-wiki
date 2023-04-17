@@ -1,0 +1,14 @@
+{
+	"@metadata": {
+		"authors": [
+			"BadDog",
+			"FriedrickMILBarbarossa",
+			"Millosh",
+			"Rancher"
+		]
+	},
+	"intersection-desc": "Избације листу са знаковима за набрајање недавих ставки које се налазе у категорији или пресеку неколико категорија",
+	"intersection_toomanycats": "Грешка: Превише категорија!",
+	"intersection_noresults": "Ниједна страница не задовољава наведене критеријуме.",
+	"intersection_noincludecats": "Грешка: Потребно је укључити бар једну категорију или одредити именски простор!"
+}

@@ -1,0 +1,14 @@
+{
+	"@metadata": {
+		"authors": [
+			"Daud I.F. Argana"
+		]
+	},
+	"usergroups": "Manajemen kelompok pengguna",
+	"usergroups-desc": "Menyediakan kendali lebih banyak tentang hak pengguna apa yang bisa diberikan kepada kelompok pengguna yang mana",
+	"usergroupnameexists-error": "Anda tidak bisa membuat kelompok pengguna baru dengan nama ini karena sudah ada yang menggunakan nama tersebut.",
+	"usergroups-createnew": "(buat baru...)",
+	"logentry-usergroups-create": "$1 {{GENDER:$2|membuat}} kelompok pengguna $7 baru \"$4\" berisi: $5",
+	"logentry-usergroups-delete": "$1 {{GENDER:$2|menghapus}} kelompok pengguna \"$4\".",
+	"logentry-usergroups-modify": "$1 {{GENDER:$2|mengubah}} pengguna \"$4\". $7 menambahkan $5; menghapus $6"
+}

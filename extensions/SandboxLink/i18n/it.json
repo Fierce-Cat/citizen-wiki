@@ -1,0 +1,14 @@
+{
+	"@metadata": {
+		"authors": [
+			"Beta16",
+			"FRacco",
+			"Lucas2",
+			"Patafisik WMF"
+		]
+	},
+	"sandboxlink-desc": "Aggiunge un collegamento nel menu strumenti alla propria pagina delle prove",
+	"sandboxlink-subpage-name": "sandbox",
+	"sandboxlink-portlet-label": "Sandbox",
+	"tooltip-pt-sandbox": "La tua pagina delle prove"
+}

@@ -1,0 +1,13 @@
+{
+	"@metadata": {
+		"authors": [
+			"Aefgh39622",
+			"Geonuch",
+			"Matma Rex"
+		]
+	},
+	"sandboxlink-desc": "เพิ่มลิงก์ที่ไปยังหน้าทดลองเขียนส่วนตัวของผู้ใช้ไปยังเมนูเครื่องมือส่วนตัว",
+	"sandboxlink-subpage-name": "ทดลองเขียน",
+	"sandboxlink-portlet-label": "ทดลองเขียน",
+	"tooltip-pt-sandbox": "หน้าทดลองเขียนของคุณ"
+}

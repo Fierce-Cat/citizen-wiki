@@ -1,0 +1,16 @@
+{
+	"@metadata": {
+		"authors": [
+			"Abuluntu",
+			"Danmichaelo",
+			"Jon Harald Søby"
+		]
+	},
+	"intersection-desc": "Gir en punktliste over de nyeste elementene i en kategori, eller elementer som er felles i flere kategorier",
+	"intersection_toomanycats": "Dynamisk sideliste: For mange kategorier!",
+	"intersection_noresults": "Ingen sider oppfyller disse kriteriene.",
+	"intersection_noincludecats": "Dynamisk sideliste: Du må inkludere minst én kategori, eller oppgi et navnerom!",
+	"intersection_pcerror": "Denne listen kan ikke vises fordi tjenerne er overbelastet for øyeblikket. Prøv igjen senere.",
+	"intersection-category": "Sider som bruker DynamicPageList",
+	"intersection-category-desc": "Denne siden inneholder en <code><nowiki><DynamicPageList></nowiki></code>-tagg"
+}

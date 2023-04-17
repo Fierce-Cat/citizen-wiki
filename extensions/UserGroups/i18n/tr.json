@@ -1,0 +1,33 @@
+{
+	"@metadata": {
+		"authors": [
+			"BaRaN6161 TURK",
+			"MuratTheTurkish"
+		]
+	},
+	"usergroups": "Kullanıcı grupları yönetimi",
+	"usergroups-desc": "Hangi kullanıcı haklarının hangi kullanıcı gruplarına kaydedilebileceği üzerinde daha iyi kontrol sağlar",
+	"usergroupnameexists-error": "Zaten var olduğu için bu adla yeni bir kullanıcı grubu oluşturamazsınız.",
+	"usergroups-createnew": "(Yeni oluştur...)",
+	"usergroups-editgroup-delete": "Bu kullanıcı grubunu sil <span class=\"important\"style=\"color:red\">(<strong>Uyarı</strong>:Bu geri döndürülemez. Bu sınıfı yeniden oluşturmak için [[Special:UserGroups/new|yenisi yapın]].)</span>",
+	"usergroups-editgroup-desc": "Aşağıdaki açılır menüden bir kullanıcı grubu seçin veya \"yeni oluştur...\" seçeneğiyle kendi grubunuzu oluşturun.",
+	"usergroups-editgroup-newgroup": "Yeni kullanıcı grubunuzun adını girin:",
+	"usergroups-editgroup-reason": "Sebep:",
+	"usergroups-editgroup-revoke": "Bu kullanıcı grubunu hibe izinleri yerine iptal edilecek şekilde ayarla",
+	"usergroups-editgroup-save": "Değişiklikleri kaydet",
+	"usergroups-editgroup-userrights": "Mevcut tüm izinler",
+	"usergroups-log-name": "Kullanıcı grupları günlüğü",
+	"usergroups-log-header": "Bu günlük, her kullanıcı grubunun kullanıcı haklarındaki değişiklikleri kaydeder.",
+	"usergroups-log-none": "(hiçbiri)",
+	"usergroups-log-revoke": "iptal türü",
+	"usergroups-log-revoke-switchon": "İptal tipine geçildi;",
+	"usergroups-log-revoke-switchoff": "İptal etmeyen türe geçildi;",
+	"action-modifygroups": "kullanıcı gruplarını değiştir",
+	"invalidusergroupname-title": "Geçersiz kullanıcı grubu adı",
+	"invalidusergroupname-error": "Yeni kullanıcı grubunuz için girdiğiniz ad geçersiz.\n\n[[Special:UserGroups|Geri dön]].",
+	"nosuchusergroup": "\"$1\" adında bir kullanıcı grubu bulunamadı. Belki de bu yeni kullanıcı grubunu [[Special:UserGroups/new|oluşturmak]] istediniz mi?",
+	"right-modifygroups": "Kullanıcı grupları oluştur, değiştir ve sil",
+	"logentry-usergroups-create": "$1, içeren yeni $7 kullanıcı grubu \"$4\" {{GENDER:$2|oluşturdu}}: $5",
+	"logentry-usergroups-delete": "$1, \"$4\" kullanıcı grubu {{GENDER:$2|sildi}}.",
+	"logentry-usergroups-modify": "$1, \"$4\" kullanıcı grubu {{GENDER:$2|değiştirdi}}. $7 $5 eklendi; $6 kaldırıldı"
+}

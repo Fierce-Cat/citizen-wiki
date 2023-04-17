@@ -1,0 +1,15 @@
+{
+	"@metadata": {
+		"authors": [
+			"Lockal",
+			"Putnik",
+			"Wikisaurus",
+			"Александр Сигачёв"
+		]
+	},
+	"intersection-desc": "Выводит в маркированный список последние добавления в категорию или объединение нескольких категорий",
+	"intersection_toomanycats": "Ошибка. Слишком много категорий!",
+	"intersection_noresults": "Нет страниц, отвечающих этим критериям.",
+	"intersection_noincludecats": "Ошибка. Вы должны включить хотя бы одну категорию или указать пространство имён!",
+	"intersection-category": "Страницы, использующие DynamicPageList"
+}

@@ -1,0 +1,18 @@
+{
+	"@metadata": {
+		"authors": [
+			"Fryed-peach",
+			"JtFuruhata",
+			"MirukuPC",
+			"Shirayuki",
+			"Whym"
+		]
+	},
+	"intersection-desc": "単一カテゴリ内または複数カテゴリ内において最近更新された項目を箇条書きで表示",
+	"intersection_toomanycats": "エラー: カテゴリが多すぎます!",
+	"intersection_noresults": "これらの基準を満たすページはありません。",
+	"intersection_noincludecats": "エラー: カテゴリを少なくとも1つ含めるか、名前空間を指定する必要があります!",
+	"intersection_pcerror": "サーバーに負荷がかかっているため、このリストは表示できません。後ほどもう一度お試しください。",
+	"intersection-category": "DynamicPageListを使用しているページ",
+	"intersection-category-desc": "<code><nowiki><DynamicPageList></nowiki></code>タグが含まれるページ"
+}

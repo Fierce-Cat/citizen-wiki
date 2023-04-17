@@ -1,0 +1,18 @@
+{
+	"@metadata": {
+		"authors": [
+			"Arian Ar",
+			"Ebraminio",
+			"Reza1615"
+		]
+	},
+	"usergroups": "مدیریت گروه‌های کاربری",
+	"usergroups-editgroup-reason": "دلیل:",
+	"usergroups-editgroup-save": "ذخیره کردن تغییرات",
+	"usergroups-editgroup-userrights": "تمام دسترسی‌های قابل استفاده",
+	"usergroups-log-none": "(هیچ)",
+	"action-modifygroups": "تغییر گروه‌های کاربری",
+	"invalidusergroupname-title": "نام گروه کاربری نامعتبر",
+	"invalidusergroupname-error": "نامی که شما برای گروه کاربری جدید خود وارد کرده‌اید نامعتبر است.\n\n[[Special:UserGroups|بازگشت]].",
+	"right-modifygroups": "ایجاد، تغییر و حذف گروه‌های کاربری"
+}

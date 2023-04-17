@@ -1,0 +1,42 @@
+{
+	"@metadata": {
+		"authors": [
+			"BaRaN6161 TURK",
+			"Joseph",
+			"SaldırganSincap"
+		]
+	},
+	"wiki-seo-desc": "Anahtar kelimeler ve açıklama gibi sayfa başına meta ayarlarına izin verir, başlığı ve çeşitli site doğrulama etiketlerini değiştirir.",
+	"wiki-seo-empty-attr-tag": "Hata: &lt;seo&gt; etiketi en az bir boş olmayan özellik içermelidir.",
+	"wiki-seo-empty-attr-parser": "Hata: <nowiki>{{#seo:}}</nowiki> en az bir boş olmayan öznitelik içermelidir.",
+	"wiki-seo-invalid-generator": "Hata: $1 geçerli bir meta veri üreticisi değil.",
+	"wiki-seo-missing-page-title": "Hata: verilen sayfa başlığı geçersiz.",
+	"pageinfo-header-seo": "Seo özellikleri",
+	"wiki-seo-pageinfo-below": "[https://www.mediawiki.org/wiki/Extension:WikiSEO Extension:WikiSEO] hakkında bilgi.",
+	"wiki-seo-pageinfo-header-description": "Açıklama",
+	"wiki-seo-pageinfo-header-content": "İçerik",
+	"wiki-seo-param-title": "Sayfa başlığı:",
+	"wiki-seo-param-title-description": "Bu öznitelik <code>&lt;title&gt;</code> öğesinin içeriğini kontrol eder.",
+	"wiki-seo-param-title_mode": "Başlık modu:",
+	"wiki-seo-param-title_mode-description": "[https://www.mediawiki.org/wiki/Extension:WikiSEO#Title_Modes Daha_fazla_bilgi]",
+	"wiki-seo-param-title_separator": "Başlık ayracı:",
+	"wiki-seo-param-title_separator-description": "[https://www.mediawiki.org/wiki/Extension:WikiSEO#Title_Modes Daha Fazla Bilgi]",
+	"wiki-seo-param-keywords": "Anahtar kelimeler:",
+	"wiki-seo-param-keywords-description": "Bu özellik, <code>keywords</code> ve <code>article:tag</code> öğelerinin içeriğini kontrol eder.",
+	"wiki-seo-param-description": "Sayfa tanımı:",
+	"wiki-seo-param-description-description": "Bu özellik, <code>description</code> ve <code>of:description</code> öğelerinin içeriğini kontrol eder.",
+	"wiki-seo-param-robots": "Web robotu modu:",
+	"wiki-seo-param-google_bot": "GoogleBot modu:",
+	"wiki-seo-param-image": "Sayfa resmi:",
+	"wiki-seo-param-image-description": "Bu özellik <code>og:image</code> öğenin içeriğini düzenler. Bu resim genellikle sosyal medyada küçük resim olarak görünür.",
+	"wiki-seo-param-image_width": "Resim genişliği:",
+	"wiki-seo-param-image_height": "Resim yüksekliği:",
+	"wiki-seo-param-image_alt": "Resime alternatif metin:",
+	"wiki-seo-param-type": "Sayfa türü:",
+	"wiki-seo-param-site_name": "Site adı:",
+	"wiki-seo-param-locale": "Sayfa yereli:",
+	"wiki-seo-param-section": "Sayfa bölümü:",
+	"wiki-seo-param-author": "Sayfa yazarı:",
+	"wiki-seo-param-published_time": "Sayfa yayın tarihi:",
+	"wiki-seo-param-twitter_site": "Sitenin twitter değeri:"
+}

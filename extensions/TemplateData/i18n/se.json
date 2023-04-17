@@ -1,0 +1,32 @@
+{
+	"@metadata": {
+		"authors": [
+			"Yupik",
+			"Kimberli Mäkäräinen (WMNO)"
+		]
+	},
+	"templatedata-doc-param-name": "Paramehter",
+	"templatedata-doc-param-status-optional": "eaktodáhtolaš",
+	"templatedata-doc-param-type-boolean": "Boolelaš árvu",
+	"templatedata-doc-param-type-content": "Sisdoallu",
+	"templatedata-doc-param-type-date": "Beaivemearri",
+	"templatedata-doc-param-type-line": "Gurgadus",
+	"templatedata-doc-param-type-number": "Nummir",
+	"templatedata-doc-param-type-string": "Streaŋga",
+	"templatedata-doc-param-type-unbalanced-wikitext": "Eahpedássedis wikiteakstâ",
+	"templatedata-doc-param-type-unknown": "Dovdameahttun",
+	"templatedata-doc-param-type-url": "URL",
+	"templatedata-doc-param-type-wiki-file-name": "Fiila",
+	"templatedata-doc-param-type-wiki-page-name": "Siidonamma",
+	"templatedata-doc-param-type-wiki-template-name": "Málle",
+	"templatedata-doc-param-type-wiki-user-name": "Geavaheaddji",
+	"templatedata-modal-button-addparam": "Lasit paramehtera",
+	"templatedata-modal-button-apply": "Geavat",
+	"templatedata-modal-button-cancel": "Šluhtte",
+	"templatedata-modal-button-changelang": "Molsso giela",
+	"templatedata-modal-button-saveparam": "Vurke",
+	"templatedata-modal-table-param-example": "Ovdamearka ($1)",
+	"templatedata-modal-title-addparam": "Lasit ođđa paramehtera",
+	"templatedata-modal-title-choose-language": "Vállje giela",
+	"templatedata-modal-title-language": "Giella"
+}

@@ -1,0 +1,16 @@
+{
+	"@metadata": {
+		"authors": [
+			"Hamilton Abreu",
+			"Malafaya",
+			555
+		]
+	},
+	"intersection-desc": "Produz uma lista com marcadores dos elementos mais recentes presentes numa categoria, ou uma interseção de várias categorias",
+	"intersection_toomanycats": "Erro: demasiadas categorias!",
+	"intersection_noresults": "Nenhuma das páginas preenche estes critérios.",
+	"intersection_noincludecats": "Erro: tem de incluir no mínimo uma categoria ou especificar um espaço nominal!",
+	"intersection_pcerror": "Esta lista não pode ser apresentada porque os servidores estão sobrecarregados. Tente novamente mais tarde, por favor.",
+	"intersection-category": "Páginas que usam DynamicPageList",
+	"intersection-category-desc": "A página inclui uma etiqueta <code><nowiki><DynamicPageList></nowiki></code>"
+}

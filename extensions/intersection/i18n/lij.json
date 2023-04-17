@@ -1,0 +1,11 @@
+{
+	"@metadata": {
+		"authors": [
+			"Giromin Cangiaxo"
+		]
+	},
+	"intersection-desc": "A vixoalizza 'n elenco pontou co-i elementi ciù recenti de 'na categoria ò de 'na combinassion de ciù categorie",
+	"intersection_toomanycats": "Errô: Troppe categorie!",
+	"intersection_noresults": "No gh'è paggina ch'a sodisfe i critei de selession.",
+	"intersection_noincludecats": "Errô: Bezoeugna che t'inciodi aomanco 'na categoria, ò che donque speciffica un namespace!"
+}

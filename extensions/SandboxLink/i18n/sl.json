@@ -1,0 +1,11 @@
+{
+	"@metadata": {
+		"authors": [
+			"Eleassar"
+		]
+	},
+	"sandboxlink-desc": "V uporabnikov osebni peskovnik doda povezavo na osebni meni orodij",
+	"sandboxlink-subpage-name": "peskovnik",
+	"sandboxlink-portlet-label": "Peskovnik",
+	"tooltip-pt-sandbox": "Vaš peskovnik"
+}

@@ -1,0 +1,32 @@
+{
+	"@metadata": {
+		"authors": [
+			"Joetaras"
+		]
+	},
+	"usergroups": "Gestione de le gruppe utinde",
+	"usergroups-desc": "Dèje 'nu condrolle cchiù precise sus a ce utinde ponne essere reggìstrate cu quale gruppe de utinde",
+	"usergroupnameexists-error": "Non ge puè ccrejà 'nu gruppe nuève cu stu nome purcé ggià ne stè une.",
+	"usergroups-createnew": "(ccreje nuève...)",
+	"usergroups-editgroup-delete": "Scangìlle stu gruppe utende <span class=\"important\" style=\"color:red\">(<strong>Iapre l'uecchije</strong>: Quiste non g'è annullabbele. Pe ccrejà arrete sta classe, tu n'ha [[Special:UserGroups/new|fa una nove]].)</span>",
+	"usergroups-editgroup-desc": "Scacchie 'u gruppe utende da l'elenghe a tendine aqquà sotte, o ccreje une tune cu l'opzione \"ccreje nuève...\".",
+	"usergroups-editgroup-newgroup": "Mitte 'u nome d'u gruppe utende nuève tune:",
+	"usergroups-editgroup-reason": "Mutive:",
+	"usergroups-editgroup-revoke": "'Mboste stu gruppe utende pe luà le permesse",
+	"usergroups-editgroup-save": "Reggistre le cangiaminde",
+	"usergroups-editgroup-userrights": "Tutte le permesse disponibbele",
+	"usergroups-log-name": "Archivije de le gruppe utinde",
+	"usergroups-log-header": "Stu archivije reggìstre le cangiaminde a le deritte de l'utinde de ogni gruppe utende",
+	"usergroups-log-none": "(nisciune)",
+	"usergroups-log-revoke": "live 'u tipe",
+	"usergroups-log-revoke-switchon": "Cangiate jndr'à 'nu tipe luate;",
+	"usergroups-log-revoke-switchoff": "Cangiate jndr'à 'nu tipe accettate;",
+	"action-modifygroups": "cange le gruppe utinde",
+	"invalidusergroupname-title": "Nome d'u gruppe utende non valide",
+	"invalidusergroupname-error": "'U nome ca è mise pu gruppe utende nuéve non g'è valide.\n\n[[Special:UserGroups|Tuérne]].",
+	"nosuchusergroup": "Non g'ha state acchiate nisciune gruppe utende chiamate \"$1\". No è ca vuè ccu [[Special:UserGroups/new|ccreje]] stu gruppe utende nuève?",
+	"right-modifygroups": "Ccreje, cange e scangìlle le gruppe utinde",
+	"logentry-usergroups-create": "$1 {{GENDER:$2|ave ccrejate}} 'nu $7 gruppe utende nuève \"$4\" ca tène: $5",
+	"logentry-usergroups-delete": "$1 {{GENDER:$2|ave scangellate}} 'u gruppe utende \"$4\".",
+	"logentry-usergroups-modify": "$1 {{GENDER:$2|ave cangiate}} 'u gruppe utende \"$4\". $7 Aggiunde $5; Luate $6"
+}

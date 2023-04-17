@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"Liuxinyu970226"
+		]
+	},
+	"action-modifygroups": "修改用戶組",
+	"invalidusergroupname-title": "無效的用戶組名稱"
+}

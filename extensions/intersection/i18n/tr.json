@@ -1,0 +1,17 @@
+{
+	"@metadata": {
+		"authors": [
+			"Arystanbek",
+			"Joseph",
+			"MuratTheTurkish",
+			"SaldırganSincap"
+		]
+	},
+	"intersection-desc": "Bir kategoride bulunan en son öğelerin madde işaretli bir listesini veya birkaç kategorinin kesişimini verir",
+	"intersection_toomanycats": "Hata: Çok fazla kategori!",
+	"intersection_noresults": "Bu kriterleri karşılayan sayfa yok.",
+	"intersection_noincludecats": "Hata: En az bir kategori eklemeniz veya bir ad alanı belirtmeniz gerekiyor!",
+	"intersection_pcerror": "Sunucular aşırı yüklendiğinden bu liste görüntülenemiyor. Lütfen daha sonra tekrar deneyiniz.",
+	"intersection-category": "DynamicPageList kullanan sayfalar",
+	"intersection-category-desc": "Sayfa bir <code><nowiki><DynamicPageList></nowiki></code> etiketi içeriyor"
+}

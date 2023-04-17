@@ -1,0 +1,84 @@
+{
+	"name": "ShortDescription",
+	"license-name": "GPL-3.0-or-later",
+	"version": "2.4.1",
+	"url": "https://www.mediawiki.org/wiki/Extension:ShortDescription",
+	"author": [
+		"alistair3149"
+	],
+	"namemsg": "shortdescription",
+	"descriptionmsg": "shortdescription-desc",
+	"type": "api",
+	"requires": {
+		"MediaWiki": ">= 1.35.0"
+	},
+	"MessagesDirs": {
+		"ShortDescription": [
+			"i18n",
+			"i18n/api"
+		]
+	},
+	"ResourceFileModulePaths": {
+		"localBasePath": "modules",
+		"remoteExtPath": "ShortDescription/modules"
+	},
+	"ResourceModules": {
+		"ext.shortDescription": {
+			"scripts": [
+				"ext.shortDescription.js"
+			],
+			"styles": "ext.shortDescription.less"
+		}
+	},
+	"AutoloadNamespaces": {
+		"MediaWiki\\Extension\\ShortDescription\\": "includes/"
+	},
+	"APIPropModules": {
+		"description": "MediaWiki\\Extension\\ShortDescription\\ApiQueryDescription"
+	},
+	"ExtensionMessagesFiles": {
+		"ShortDescriptionMagic": "ShortDescription.i18n.magic.php"
+	},
+	"TrackingCategories": [
+		"shortdescription-category"
+	],
+	"Hooks": {
+		"ApiOpenSearchSuggest": "api",
+		"BeforePageDisplay": "page",
+		"InfoAction": "actions",
+		"OutputPageParserOutput": "parser",
+		"ParserFirstCallInit": "parser",
+		"SearchResultProvideDescription": "rest"
+	},
+	"HookHandlers": {
+		"actions": {
+			"class": "MediaWiki\\Extension\\ShortDescription\\Hooks\\ActionsHooks"
+		},
+		"api": {
+			"class": "MediaWiki\\Extension\\ShortDescription\\Hooks\\ApiHooks"
+		},
+		"page": {
+			"class": "MediaWiki\\Extension\\ShortDescription\\Hooks\\PageHooks"
+		},
+		"parser": {
+			"class": "MediaWiki\\Extension\\ShortDescription\\Hooks\\ParserHooks"
+		},
+		"rest": {
+			"class": "MediaWiki\\Extension\\ShortDescription\\Hooks\\RestHooks"
+		}
+	},
+	"config": {
+		"ShortDescriptionEnableTagline": {
+			"value": true,
+			"description": "Enable short description in site tagline."
+		},
+		"ShortDescriptionExtendOpenSearchXml": {
+			"value": false,
+			"description": "Provide short description to the Opensearch API module."
+		}
+	},
+	"ConfigRegistry": {
+		"shortdescription": "GlobalVarConfig::newInstance"
+	},
+	"manifest_version": 2
+}

@@ -1,0 +1,17 @@
+{
+	"@metadata": {
+		"authors": [
+			"CptViraj"
+		]
+	},
+	"usergroups": "સભ્ય સમૂહોનું સંચાલન",
+	"usergroups-createnew": "(નવું બનાવો...)",
+	"usergroups-editgroup-newgroup": "તમારા નવા સભ્ય સમૂહનું નામ આપો:",
+	"usergroups-editgroup-reason": "કારણ:",
+	"usergroups-editgroup-save": "ફેરફારો સાચવો",
+	"usergroups-editgroup-userrights": "બધી ઉપલબ્ધ પરવાનગીઓ",
+	"usergroups-log-name": "સભ્ય સમૂહોની નોંધણીઓ",
+	"action-modifygroups": "સભ્ય સમૂહોમાં ફેરફાર કરો",
+	"invalidusergroupname-title": "અમાન્ય સભ્ય સમૂહ નામ",
+	"right-modifygroups": "સભ્ય સમૂહો બનાવો, ફેરવો અને દૂર કરો"
+}

@@ -1,0 +1,70 @@
+.mw-body,
+.parsoid-body {
+	min-height: 80vh; // avoid footer being in the middle of the page
+}
+
+.citizen-body-container {
+	display: grid;
+	justify-content: center;
+	padding: var( --space-xl ) var( --padding-page );
+	gap: var( --space-md ) var( --space-xl );
+	grid-template-areas: 'header'
+		'content'
+		'footer';
+	// Using auto as min value will cause overflow
+	grid-template-columns: minmax( 0, var( --width-layout ) );
+}
+
+.mw-body-header {
+	position: sticky;
+	// So that the modal are above custom sticky headers
+	z-index: @z-index-page-header + 1;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	padding-top: var( --space-md );
+	gap: var( --space-md );
+	grid-area: header;
+}
+
+.page-heading {
+	flex-grow: 1;
+}
+
+.firstHeading-container {
+	display: flex;
+	align-items: center;
+}
+
+.citizen-body {
+	grid-area: content;
+}
+
+@media ( min-width: @width-breakpoint-desktop ) {
+	.citizen-page-container {
+		// Reserve space for header
+		margin-left: var( --header-size );
+	}
+
+	.citizen-toc-enabled {
+		.citizen-body-container {
+			display: grid;
+			grid-template-areas: 'header header'
+				'content toc'
+				'footer footer';
+			grid-template-columns: minmax( 0, var( --width-layout ) ) var( --width-toc );
+		}
+	}
+}
+
+/* Wider page width for certain namespaces */
+@media ( min-width: @width-breakpoint-desktop-wide ) {
+	// 1 - Special, 6 - File, 14 - Category
+	.ns {
+		&--1,
+		&-6,
+		&-14 {
+			--width-layout: var( --width-layout--extended );
+		}
+	}
+}

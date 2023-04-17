@@ -1,0 +1,220 @@
+/*
+ * Citizen - Mixins
+ * https://starcitizen.tools
+*/
+
+@import 'variables.less';
+
+.citizen-card( @border-radius: true ) {
+	border: 1px solid var( --border-color-base );
+	background-color: var( --color-surface-1 );
+	box-shadow: var( --box-shadow-dialog );
+
+	& when ( @border-radius ) {
+		border-radius: var( --border-radius--medium );
+	}
+}
+
+// Collaspe animation setup
+.citizen-card-hide( @position, @axis: '', @fadeChildren: true ) {
+	opacity: 0;
+	pointer-events: none;
+	transform: ~'scale@{axis}( 0 )';
+	transform-origin: @position;
+	visibility: hidden;
+
+	& when ( @fadeChildren ) {
+		> * {
+			opacity: 0;
+		}
+	}
+}
+
+// Expand animiation setup
+// When using fadeChildren, the child elements need to have
+// opacity: 0 set manually
+.citizen-card-show( @fadeChildren: true ) {
+	opacity: 1;
+	pointer-events: auto;
+	transform: none;
+	// HACK: So that visiblity won't wait 250ms to become visible
+	transition-delay: 0ms;
+	visibility: visible;
+
+	& when ( @fadeChildren ) {
+		> * {
+			.citizen-card-content-show;
+		}
+	}
+}
+
+// Fade content when users open the menu
+// But GTFO instantly when they close the menu
+.citizen-card-content-show() {
+	opacity: 1;
+	transition: @transition-opacity--transform;
+	will-change: opacity;
+}
+
+// Transition animation
+.citizen-card-transition() {
+	transition: @transition-transform, @transition-opacity--transform, @transition-visibility--transform;
+	will-change: transform, opacity, opacity;
+}
+
+// Header card popups
+.citizen-header-card( @position ) {
+	position: absolute;
+	right: 0;
+	bottom: 100%;
+	left: 0;
+	overflow: auto;
+	min-width: 16rem;
+	max-height: var( --header-card-maxheight );
+	margin: var( --space-xs );
+	contain: content;
+	overscroll-behavior: contain;
+	user-select: none;
+	.citizen-card();
+	.citizen-card-hide( bottom @position );
+
+	@media ( min-width: @width-breakpoint-tablet ) {
+		& when ( @position = left ) {
+			right: unset;
+		}
+
+		& when ( @position = right ) {
+			left: unset;
+		}
+	}
+
+	@media ( min-width: @width-breakpoint-desktop ) {
+		right: unset;
+		left: 100%;
+		& when ( @position = left ) {
+			top: 0;
+			bottom: unset;
+			.citizen-card-hide( top left );
+		}
+
+		& when ( @position = right ) {
+			bottom: 0;
+			.citizen-card-hide( bottom left );
+		}
+	}
+}
+
+.citizen-sticky-header( @topOffset: 0, @bottomBorder: true, @zIndex: true ) {
+	position: sticky;
+	top: @topOffset;
+
+	& when ( @bottomBorder ) {
+		border-bottom: 1px solid var( --border-color-base );
+	}
+
+	& when ( @zIndex ) {
+		z-index: @z-index-page-header;
+	}
+
+	// HACK: Hide overflow
+	// This has an issue if parent has overflow set
+	&::before {
+		position: absolute;
+		z-index: -1;
+		top: @topOffset;
+		right: ~'calc( var(--padding-page ) * -1 )';
+		left: ~'calc( var(--padding-page ) * -1 )';
+		height: 100%;
+		backdrop-filter: saturate( 50% ) blur( 16px );
+		background-color: var( --background-color-overlay );
+		content: '';
+	}
+}
+
+// To hide objects, but keep them accessible for screen-readers
+.hidden() {
+	position: absolute;
+	top: -9999px;
+}
+
+// Set content to be at the center
+.content-center() {
+	max-width: var( --width-layout );
+	margin-right: auto;
+	margin-left: auto;
+}
+
+.resource-loader-icon() {
+	position: absolute;
+	width: inherit;
+	height: inherit;
+	background-position: center;
+	background-repeat: no-repeat;
+	content: '';
+}
+
+.resource-loader-menu-icon() {
+	position: absolute;
+	width: @icon-box-size;
+	height: @icon-box-size;
+	background-position: center;
+	background-repeat: no-repeat;
+	content: '';
+}
+
+.resource-loader-list-icon() {
+	position: relative;
+	width: @icon-size;
+	height: @icon-size;
+	flex-shrink: 0;
+	align-self: center;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: contain;
+	content: '';
+}
+
+.menu-item-link() {
+	display: flex;
+	align-items: center;
+	color: var( --color-base ) !important;
+	font-weight: var( --font-weight-medium );
+	gap: var( --space-sm );
+}
+
+.menu-item-link-hover() {
+	background-color: var( --background-color-primary--hover );
+}
+
+.menu-item-link-active() {
+	background-color: var( --background-color-primary--active );
+}
+
+// Button Styles
+.button-blue() {
+	background-color: var( --color-primary );
+	color: #fff !important;
+	transition: @transition-background, @transition-color;
+}
+
+.button-blue-hover() {
+	background-color: var( --color-primary--hover );
+}
+
+.button-blue-active() {
+	background-color: var( --color-primary--active );
+}
+
+.button-red() {
+	background-color: var( --color-destructive );
+	color: #fff !important;
+	transition: @transition-background, @transition-color;
+}
+
+.button-red-hover() {
+	background-color: var( --color-destructive--hover );
+}
+
+.button-red-active() {
+	background-color: var( --color-destructive--active );
+}

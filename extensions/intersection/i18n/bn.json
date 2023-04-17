@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Aftabuzzaman",
+			"Bellayet",
+			"আফতাবুজ্জামান"
+		]
+	},
+	"intersection_toomanycats": "ত্রুটি: অনেক বেশি বিষয়শ্রেণী!",
+	"intersection_noresults": "কোন পাতা এই মানদণ্ড পূরণ করেনি।",
+	"intersection_noincludecats": "ত্রুটি: আপনাকে অন্তত একটি বিষয়শ্রেণী যুক্ত করতে, অথবা একটি নামস্থান দিতে হবে!"
+}

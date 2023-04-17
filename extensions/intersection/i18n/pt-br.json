@@ -1,0 +1,15 @@
+{
+	"@metadata": {
+		"authors": [
+			"Cainamarques",
+			"Eduardo Addad de Oliveira",
+			"Eduardo.mps",
+			"Eduardoaddad"
+		]
+	},
+	"intersection-desc": "Exibe uma lista pontuada dos itens mais recentes presentes numa categoria, ou uma intersecção de várias categorias",
+	"intersection_toomanycats": "Erro: Categorias demais!",
+	"intersection_noresults": "Nenhuma página preenche estes critérios.",
+	"intersection_noincludecats": "Erro: É necessário incluir no mínimo uma categoria ou especificar um espaço nominal!",
+	"intersection_pcerror": "Esta lista não pode ser exibida porque os servidores estão sobrecarregados. Por favor, tente novamente mais tarde."
+}

@@ -1,0 +1,13 @@
+{
+	"@metadata": {
+		"authors": [
+			"Dalibor Bosits",
+			"Dnik",
+			"MaGa"
+		]
+	},
+	"intersection-desc": "Omogućava popis najnovijih stranica ili datoteka iz kategorije, ili presjeka nekoliko kategorija",
+	"intersection_toomanycats": "Error: Previše kategorija!",
+	"intersection_noresults": "Nema stranica koje udovoljavaju kriterijima.",
+	"intersection_noincludecats": "Error: Morate uključiti bar jednu kategoriju, ili odabrati imenski prostor!"
+}
