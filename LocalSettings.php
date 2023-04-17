@@ -223,3 +223,8 @@ $wgVisualEditorEnableWikitext = true;
 $wgVisualEditorUseSingleEditTab = true;
 # 关闭默认编辑完毕监视页面
 $wgDefaultUserOptions['watchdefault'] = 0;
+
+#Debugging
+$wgShowExceptionDetails = true;
+$wgDebugToolbar = true;
+$wgShowDebug = true;
