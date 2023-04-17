@@ -29,7 +29,6 @@
 		"ext-fileinfo": "*",
 		"ext-iconv": "*",
 		"ext-intl": "*",
-		"ext-json": "*",
 		"ext-libxml": "*",
 		"ext-mbstring": "*",
 		"ext-xml": "*",
