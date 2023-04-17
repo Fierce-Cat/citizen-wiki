@@ -30,7 +30,6 @@
 		"ext-iconv": "*",
 		"ext-intl": "*",
 		"ext-apcu": "*",
-		"ext-yac": "*",
 		"ext-opcache": "*",
 		"ext-mbstring": "*",
 		"ext-xml": "*",
