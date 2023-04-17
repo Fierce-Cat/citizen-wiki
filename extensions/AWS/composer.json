@@ -1,0 +1,41 @@
+{
+	"name": "edwardspec/mediawiki-aws-s3",
+	"description": "Allows MediaWiki to use Amazon S3 to store uploaded files.",
+	"type": "mediawiki-extension",
+	"license": "GPL-2.0+",
+	"support": {
+		"docs": "https://www.mediawiki.org/wiki/Extension:AWS",
+		"issues": "https://github.com/edwardspec/mediawiki-aws-s3/issues",
+		"source": "https://github.com/edwardspec/mediawiki-aws-s3.git"
+	},
+	"require": {
+		"aws/aws-sdk-php": "^3.67",
+		"composer/installers": "~1.5"
+	},
+	"require-dev": {
+		"php-parallel-lint/php-parallel-lint": "1.2.0",
+		"php-parallel-lint/php-console-highlighter": "0.5",
+		"mediawiki/minus-x": "1.1.0",
+		"mediawiki/mediawiki-codesniffer": "38.0.0",
+		"mediawiki/mediawiki-phan-config": "0.11.0"
+	},
+	"scripts": {
+		"test": [
+			"parallel-lint . --exclude vendor --exclude node_modules",
+			"minus-x check .",
+			"phpcs -p -s"
+		],
+		"fix": [
+			"minus-x fix .",
+			"phpcbf"
+		]
+	},
+	"extra": {
+		"installer-name": "AWS"
+	},
+	"config": {
+		"allow-plugins": {
+			"composer/installers": true
+		}
+	}
+}

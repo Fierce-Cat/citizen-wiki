@@ -1,0 +1,92 @@
+{
+	"name": "AWS",
+	"version": "0.12.0",
+	"author": [
+		"Tyler Romeo",
+		"Daniel Friesen @ Redwerks",
+		"Edward Chernenko",
+		"David Haslip"
+	],
+	"url": "https://www.mediawiki.org/wiki/Extension:AWS",
+	"descriptionmsg": "aws-desc",
+	"license-name": "GPL-2.0-or-later",
+	"requires": {
+		"MediaWiki": ">= 1.35.0"
+	},
+	"type": "other",
+	"MessagesDirs": {
+		"AWS": [
+			"i18n"
+		]
+	},
+	"AutoloadClasses": {
+		"AmazonS3CompatTools": "includes/AmazonS3CompatTools.php",
+		"AmazonS3FileBackend": "s3/AmazonS3FileBackend.php",
+		"AmazonS3Hooks": "includes/AmazonS3Hooks.php",
+		"AmazonS3LocalCache": "includes/AmazonS3LocalCache.php",
+		"AmazonS3MisconfiguredException": "includes/AmazonS3MisconfiguredException.php",
+		"AmazonS3ProfilingAssist": "includes/AmazonS3ProfilingAssist.php",
+		"AmazonS3SubdirectoryIterator": "s3/AmazonS3SubdirectoryIterator.php",
+		"MWAWS\\FSFile": "includes/MWAWS/FSFile.php",
+		"TrimStringIterator": "includes/TrimStringIterator.php"
+	},
+	"ExtensionFunctions": [
+		"AmazonS3Hooks::setup"
+	],
+	"config": {
+		"AWSCredentials": {
+			"description": "Credentials to connect to AWS. Setting this in LocalSettings.php is NOT NEEDED if your EC2 instance has an IAM instance profile, and its IAM role allows access to Amazon S3 (see README).",
+			"value": {
+				"key": false,
+				"secret": false,
+				"token": false
+			},
+			"merge_strategy": "array_plus"
+		},
+		"AWSRegion": {
+			"description": "Region of AWS to connect to.",
+			"value": false
+		},
+		"AWSUseHTTPS": {
+			"description": "Whether to use HTTPS with AWS.",
+			"value": true
+		},
+		"AWSBucketName": {
+			"description": "MUST BE SET in LocalSettings.php. Name of S3 bucket (e.g. \"wonderfulbali\"). Note: it will be seen in the URL of images.",
+			"value": null
+		},
+		"AWSBucketPrefix": {
+			"description": "[deprecated] Backward-compatibility option to use 4 S3 buckets (public, thumb, deleted, temp) instead of one $wgAWSBucketName. Shouldn't be used in new wikis. If set to \"wonderfulbali\", buckets [wonderfulbali], [wonderfulbali-thumb], [wonderfulbali-deleted] and [wonderfulbali-temp] are used.",
+			"value": null
+		},
+		"AWSBucketDomain": {
+			"description": "Subdomain of Amazon S3. Can be replaced with the URL of CDN. $1 is replaced with bucket name (see README.md for more customization).",
+			"value": "$1.s3.amazonaws.com"
+		},
+		"AWSRepoHashLevels": {
+			"description": "Number of prefix subdirectories. Value \"2\" means that S3 objects will be named a/ab/Filename.png (same as when MediaWiki stores files in local directories). Default value: 0 (objects are named Filename.png without any prefix).",
+			"value": 0
+		},
+		"AWSRepoDeletedHashLevels": {
+			"description": "Same as $wgAWSRepoHashLevels, but for deleted images. Set to \"3\" for naming a/ab/abc/Filename.png (same as when MediaWiki stores deleted files in local directories). Default value: 0 (objects are named Filename.png without any prefix).",
+			"value": 0
+		},
+		"AWSBucketTopSubdirectory": {
+			"description": "Extra path within the S3 bucket (not recommended). E.g. if this is '/something', then images will be in bucketname.s3.amazonaws.com/something/File.png instead of bucketname.s3.amazonaws.com/File.png.",
+			"value": ""
+		},
+		"AWSLocalCacheDirectory": {
+			"description": "Path to the directory for storing local copies of large images from S3 (when they are copied to webserver to make a thumbnail image, etc.). Don't enable this unless you have REALLY HUGE files (e.g. 100Mb+ PDFs). Default: false (disabled).",
+			"value": false
+		},
+		"AWSLocalCacheMinSize": {
+			"description": "Minimal size of image (in bytes) that should be cached. Default: 100Mb.",
+			"value": 104857600
+		},
+		"AWSLocalCacheExcludeFileExtensions": {
+			"description": "File extensions (e.g. 'ogg') of files that shouldn't be stored in the local cache. Recommended values: every non-image (files that are never used to make a thumbnail).",
+			"value": [ "ogg" ]
+		}
+	},
+	"manifest_version": 2
+}

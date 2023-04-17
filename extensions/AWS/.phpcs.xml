@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<ruleset>
+	<file>.</file>
+	<arg name="extensions" value="php,php5,inc" />
+	<arg name="encoding" value="UTF-8" />
+
+	<rule ref="./vendor/mediawiki/mediawiki-codesniffer/MediaWiki">
+		<!-- NOTE: this should be fixed -->
+		<exclude name="MediaWiki.Usage.ForbiddenFunctions.is_resource" />
+
+		<!-- Don't want to apply this -->
+		<exclude name="MediaWiki.WhiteSpace.SpaceBeforeSingleLineComment.NewLineComment" />
+	</rule>
+
+	<rule ref="MediaWiki.NamingConventions.ValidGlobalName">
+		<properties>
+			<!-- Global variable $IP must be used directly in [AmazonS3HooksTest.php] -->
+			<property name="ignoreList" type="array" value="$IP" />
+		</properties>
+	</rule>
+
+	<!-- Don't check Composer-installed dependencies -->
+	<exclude-pattern type="relative">^vendor/</exclude-pattern>
+</ruleset>
+

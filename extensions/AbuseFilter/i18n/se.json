@@ -1,0 +1,32 @@
+{
+	"@metadata": {
+		"authors": [
+			"Jeblad",
+			"Linnea",
+			"Yupik",
+			"Kimberli Mäkäräinen (WMNO)"
+		]
+	},
+	"abuselog": "Boasttogeavahanfiltera logga",
+	"abusefilter-log-search-user": "Geavaheaddji:",
+	"abusefilter-log-search-wiki": "Wiki:",
+	"abusefilter-log-search-submit": "Oza",
+	"abusefilter-log-hide-show": "Čájet",
+	"abusefilter-log-hide-hide": "Čiega",
+	"abusefilter-deleted": "Sihkkojuvvon",
+	"abusefilter-list-options-deleted": "Sihkkojuvvon sillit:",
+	"abusefilter-tools-reautoconfirm-user": "Geavaheaddji:",
+	"abusefilter-edit-new": "Ođđa silli",
+	"abusefilter-edit-notes": "Lassedieđut:",
+	"abusefilter-edit-throttle-groups-help": "Geahča $1.",
+	"abusefilter-throttle-ip": "IP-čujuhus",
+	"abusefilter-history-user": "Geavaheaddji",
+	"abusefilter-history-deleted": "Sihkkojuvvon",
+	"abusefilter-history-filterid": "Silli",
+	"abusefilter-history-select-user": "Geavaheaddji:",
+	"abusefilter-action-block": "Hehtte",
+	"abusefilter-test-load": "Luđe",
+	"abusefilter-examine-submit": "Oza",
+	"abusefilter-log-noresults": "Eai bohtosat",
+	"abusefilter-diff-info": "Vuođđodieđut"
+}
