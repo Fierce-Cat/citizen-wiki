@@ -263,5 +263,5 @@ $wgAWSRepoHashLevels = '2';
 $wgAWSBucketTopSubdirectory = "/"; # leading slash is required
 
 #将链接文本显示为链接后页面名称
-
-
+$wgRedirectLinks = true; // 启用重定向页面转发功能
+$wgHideRedirectContent = false; // 显示重定向页面内容
