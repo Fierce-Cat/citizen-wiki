@@ -261,3 +261,6 @@ $wgAWSRepoHashLevels = '2';
 // While there are no more performance losses by using such a scheme, it might make things messy. Hence, it's
 // still a good idea to use one bucket per wiki unless you are approaching your 1,000 bucket per account limit.
 $wgAWSBucketTopSubdirectory = "/"; # leading slash is required
+
+#将链接文本显示为链接后页面名称
+$wgHideLinkTitles = true
