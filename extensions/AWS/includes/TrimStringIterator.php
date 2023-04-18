@@ -45,7 +45,7 @@ class TrimStringIterator extends IteratorIterator {
 		$this->lastBytesToStrip = $lastBytesToStrip;
 	}
 
-	public function current(): string {
+	public function current() {
 		$string = substr( parent::current(), $this->firstBytesToStrip );
 		if ( $this->lastBytesToStrip ) {
 			$string = substr( $string, 0, -$this->lastBytesToStrip );

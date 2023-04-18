@@ -242,21 +242,21 @@ $wgForeignFileRepos[] = [
 ];
 
 #AWS插件 | Cloudflare R2 储存桶配置
-// $wgAWSCredentials = [
-// 	'key' => $_ENV["S3Key"],
-// 	'secret' => $_ENV["S3Secret"],
-// 	'token' => false
-// ];
+$wgAWSCredentials = [
+	'key' => $_ENV["S3Key"],
+	'secret' => $_ENV["S3Secret"],
+	'token' => false
+];
 
-// $wgAWSRegion = $_ENV["S3Region"]; # Northern Virginia
+$wgAWSRegion = $_ENV["S3Region"]; # Northern Virginia
 
 // Replace <something> with the name of your S3 bucket, e.g. wonderfulbali234.
-// $wgAWSBucketName = $_ENV["S3BucketName"];
-// $wgAWSBucketDomain = $_ENV["S3BucketDomain"];
-// $wgFileBackends['s3']['endpoint'] = $_ENV["S3Endpoint"];
+$wgAWSBucketName = $_ENV["S3BucketName"];
+$wgAWSBucketDomain = $_ENV["S3BucketDomain"];
+$wgFileBackends['s3']['endpoint'] = $_ENV["S3Endpoint"];
 
 // If you anticipate using several hundred buckets, one per wiki, then it's probably better to use one bucket
 // with the top level subdirectory as the wiki's name, and permissions properly configured of course.
 // While there are no more performance losses by using such a scheme, it might make things messy. Hence, it's
 // still a good idea to use one bucket per wiki unless you are approaching your 1,000 bucket per account limit.
-// $wgAWSBucketTopSubdirectory = "/$wgDBname"; # leading slash is required
+$wgAWSBucketTopSubdirectory = ""; # leading slash is required

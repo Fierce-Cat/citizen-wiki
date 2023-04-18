@@ -52,12 +52,12 @@ class AmazonS3LocalCache {
 	 * @return FSFile
 	 */
 	public static function get( $virtualPath ) {
-		global $wgAWSLocalCacheDirectory, $wgAWSLocalCacheExcludeFileExtensions;
+		global $wgAWSLocalCacheDirectory;
 
 		$ext = FSFile::extensionFromPath( $virtualPath );
 		$file = null;
 
-		if ( $wgAWSLocalCacheDirectory && !in_array( $ext, $wgAWSLocalCacheExcludeFileExtensions ) ) {
+		if ( $wgAWSLocalCacheDirectory ) {
 			// Cache is enabled.
 			// Target file is a non-temporary file inside the cache directory.
 			$localPath = self::findLocalPath( $virtualPath );
