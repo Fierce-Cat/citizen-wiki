@@ -231,15 +231,15 @@ $wgShowExceptionDetails = true;
 // $wgShowDebug = true;
 
 #调用英文站图片
-$wgForeignFileRepos[] = [
-	'class' => ForeignAPIRepo::class,
-	'name' => 'StarCitizenTools', // Must be a distinct name
-	'apibase' => 'https://starcitizen.tools/api.php',
-	'hashLevels' => 2,
-	'fetchDescription' => true, // Optional
-	'descriptionCacheExpiry' => 43200, // 12 hours, optional (values are seconds)
-	'apiThumbCacheExpiry' => 86400, // 24 hours, optional, but required for local thumb caching
-];
+// $wgForeignFileRepos[] = [
+// 	'class' => ForeignAPIRepo::class,
+// 	'name' => 'StarCitizenTools', // Must be a distinct name
+// 	'apibase' => 'https://starcitizen.tools/api.php',
+// 	'hashLevels' => 2,
+// 	'fetchDescription' => true, // Optional
+// 	'descriptionCacheExpiry' => 43200, // 12 hours, optional (values are seconds)
+// 	'apiThumbCacheExpiry' => 86400, // 24 hours, optional, but required for local thumb caching
+// ];
 
 #AWS插件 | Cloudflare R2 储存桶配置
 $wgAWSCredentials = [
