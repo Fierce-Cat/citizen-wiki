@@ -175,13 +175,10 @@
 	},
 	"extra": {
 		"merge-plugin": {
-            "include": [
-                "extensions/*/composer.json",
-                "skins/*/composer.json"
-            ],
-			"recurse": true,
-            "replace": true,
-            "merge-dev": true
+			"include": [
+				"composer.local.json"
+			],
+			"merge-dev": false
 		}
 	}
 }
