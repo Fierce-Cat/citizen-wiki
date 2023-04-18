@@ -79,7 +79,7 @@ class AmazonS3FileBackend extends FileBackendStore {
 	private $containerSecurityCache = null;
 
 	/**
-	 * Cache used in doGetFileStat(). Avoids extra requests to doesObjectExist().
+	 * Cache used in doGetFileStat(). Avoids extra requests to headObject().
 	 * @var BagOStuff
 	 */
 	private $statCache = null;
@@ -140,6 +140,9 @@ class AmazonS3FileBackend extends FileBackendStore {
 
 		if ( isset( $config['endpoint'] ) ) {
 			$params['endpoint'] = $config['endpoint'];
+		}
+		if ( isset( $config['use_path_style_endpoint'] ) ) {
+			$params['use_path_style_endpoint'] = $config['use_path_style_endpoint'];
 		}
 
 		$this->client = new S3Client( $params );
@@ -303,7 +306,7 @@ class AmazonS3FileBackend extends FileBackendStore {
 		$ret = $this->runWithExceptionHandling( __FUNCTION__, function ()
 			use ( $params, $container, $bucket, $key, $contentType, $sha1Hash ) {
 			return $this->client->putObject( array_filter( [
-				//'ACL' => $this->isSecure( $container ) ? 'private' : 'public-read',
+				'ACL' => $this->isSecure( $container ) ? 'private' : 'public-read',
 				'Body' => $params['content'],
 				'Bucket' => $bucket,
 				'CacheControl' => $params['headers']['cache-control'],
@@ -412,7 +415,7 @@ class AmazonS3FileBackend extends FileBackendStore {
 		$ret = $this->runWithExceptionHandling( __FUNCTION__, function ()
 			use ( $dstContainer, $dstBucket, $params, $srcBucket, $srcKey, $dstKey ) {
 			return $this->client->copyObject( array_filter( [
-				//'ACL' => $this->isSecure( $dstContainer ) ? 'private' : 'public-read',
+				'ACL' => $this->isSecure( $dstContainer ) ? 'private' : 'public-read',
 				'Bucket' => $dstBucket,
 				'CacheControl' => $params['headers']['cache-control'],
 				'ContentDisposition' => $params['headers']['content-disposition'],
