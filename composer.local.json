@@ -2,8 +2,8 @@
     "extra": {
         "merge-plugin": {
             "include": [
-                "extensions/*/composer.json",
-                "skins/*/composer.json"
+                "extensions/AWS/composer.json",
+                "extensions/TemplateStyles/composer.json"
             ]
         }
     }
