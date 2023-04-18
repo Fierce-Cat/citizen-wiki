@@ -263,4 +263,4 @@ $wgAWSRepoHashLevels = '2';
 $wgAWSBucketTopSubdirectory = "/"; # leading slash is required
 
 #将链接文本显示为链接后页面名称
-$wgHideLinkTitles = true
+$wgHideLinkTitles = true ;
