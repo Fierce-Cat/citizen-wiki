@@ -227,8 +227,8 @@ $wgDefaultUserOptions['watchdefault'] = 0;
 
 #Debugging
 $wgShowExceptionDetails = true;
-$wgDebugToolbar = true;
-$wgShowDebug = true;
+// $wgDebugToolbar = true;
+// $wgShowDebug = true;
 
 #调用英文站图片
 // $wgForeignFileRepos[] = [
