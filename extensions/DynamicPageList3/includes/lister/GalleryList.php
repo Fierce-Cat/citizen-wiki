@@ -1,8 +1,8 @@
 <?php
 
-namespace MediaWiki\Extension\DynamicPageList3\Lister;
+namespace DPL\Lister;
 
-use MediaWiki\Extension\DynamicPageList3\Article;
+use DPL\Article;
 
 class GalleryList extends Lister {
 	/**

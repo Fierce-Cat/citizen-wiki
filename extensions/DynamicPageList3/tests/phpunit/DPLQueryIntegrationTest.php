@@ -1,11 +1,10 @@
 <?php
 
-namespace MediaWiki\Extension\DynamicPageList3\Tests;
+namespace DPL;
 
 /**
  * @group DynamicPageList3
  * @group Database
- * @covers \MediaWiki\Extension\DynamicPageList3\Query
  */
 class DPLQueryIntegrationTest extends DPLIntegrationTestCase {
 
@@ -32,10 +31,8 @@ class DPLQueryIntegrationTest extends DPLIntegrationTestCase {
 
 	public function testFindPagesNotInCategory(): void {
 		$results = $this->getDPLQueryResults( [
-			// NS_MAIN
-			'namespace' => '',
-			'notcategory' => 'DPLTestCategory',
-			'nottitle' => 'DPLTestOpenReferences'
+			'namespace' => '', // NS_MAIN
+			'notcategory' => 'DPLTestCategory'
 		] );
 
 		$this->assertContains( 'DPLTestArticleNoCategory', $results );
@@ -46,14 +43,13 @@ class DPLQueryIntegrationTest extends DPLIntegrationTestCase {
 
 	public function testFindPagesNotInCategoryByPrefix(): void {
 		$results = $this->getDPLQueryResults( [
-			// NS_MAIN
-			'namespace' => '',
+			'namespace' => '', // NS_MAIN
 			'titlematch' => 'DPLTest%',
 			'notcategory' => 'DPLTestCategory'
 		] );
 
 		$this->assertArrayEquals(
-			[ 'DPLTestArticleNoCategory', 'DPLTestArticleOtherCategoryWithInfobox', 'DPLTestOpenReferences' ],
+			[ 'DPLTestArticleNoCategory', 'DPLTestArticleOtherCategoryWithInfobox' ],
 			$results,
 			true
 		);
@@ -61,8 +57,7 @@ class DPLQueryIntegrationTest extends DPLIntegrationTestCase {
 
 	public function testFindPagesByPrefix(): void {
 		$results = $this->getDPLQueryResults( [
-			// NS_MAIN
-			'namespace' => '',
+			'namespace' => '', // NS_MAIN
 			'titlematch' => 'DPLTest%',
 		] );
 
@@ -104,17 +99,6 @@ class DPLQueryIntegrationTest extends DPLIntegrationTestCase {
 		);
 	}
 
-	public function testFindPagesInCategoryNotUsingTemplate(): void {
-		$this->assertArrayEquals(
-			[ 'DPLTestArticleMultipleCategories' ],
-			$this->getDPLQueryResults( [
-				'category' => 'DPLTestOtherCategory',
-				'notuses' => 'Template:DPLInfobox'
-			] ),
-			true
-		);
-	}
-
 	public function testFindPagesNotInCategoryUsingTemplate(): void {
 		$this->assertArrayEquals(
 			[ 'DPLTestArticle 1' ],
@@ -140,8 +124,7 @@ class DPLQueryIntegrationTest extends DPLIntegrationTestCase {
 		$this->assertArrayEquals(
 			[ 'DPLTestArticle 1', 'DPLTestArticle 2' ],
 			$this->getDPLQueryResults( [
-				// NS_MAIN
-				'namespace' => '',
+				'namespace' => '', // NS_MAIN
 				'titleregexp' => 'DPLTestArticle [12]'
 			] )
 		);
@@ -346,32 +329,5 @@ class DPLQueryIntegrationTest extends DPLIntegrationTestCase {
 			'DPLTestArticle 3 DPLTestAdmin',
 			'DPLTestArticleMultipleCategories DPLTestAdmin',
 		], $results );
-	}
-
-	public function testTotalPagesInHeader(): void {
-		$results = $this->runDPLQuery( [
-			'category' => 'DPLTestCategory',
-			'resultsheader' => 'TOTALPAGES: %TOTALPAGES%',
-			'count' => 2
-		] );
-
-		$this->assertStringContainsString( 'TOTALPAGES: 4', $results );
-	}
-
-	public function testOpenReferencesMissing(): void {
-		$results = $this->getDPLQueryResults( [
-			// NS_MAIN
-			'namespace' => '',
-			'openreferences' => 'missing',
-			'count' => 1
-		] );
-
-		$this->assertArrayEquals(
-			[
-				'RedLink',
-			],
-			$results,
-			true
-		);
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace MediaWiki\Extension\DynamicPageList3;
+namespace DPL;
 
 use MWException;
 
@@ -1123,7 +1123,7 @@ class ParametersData {
 	public function __construct() {
 		$this->setRichness( Config::getSetting( 'functionalRichness' ) );
 
-		if ( Hooks::isLikeIntersection() ) {
+		if ( DynamicPageListHooks::isLikeIntersection() ) {
 			$this->data['ordermethod'] = [
 				'default' => 'categoryadd',
 				'values' => [

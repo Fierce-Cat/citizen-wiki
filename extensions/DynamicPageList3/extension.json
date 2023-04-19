@@ -1,17 +1,17 @@
 {
 	"name": "DynamicPageList3",
-	"version": "3.5.1",
+	"version": "3.3.8",
 	"author": [
-		"'''Universal Omega'''",
 		"Alexia E. Smith",
-		"Gero Scholz"
+		"[https://meta.miraheze.org/wiki/User:Universal_Omega Universal Omega]",
+		"[https://de.wikipedia.org/wiki/Benutzer:Algorithmix Gero Scholz]"
 	],
 	"url": "https://www.mediawiki.org/wiki/Extension:DynamicPageList3",
 	"descriptionmsg": "dpl-desc",
 	"license-name": "GPL-3.0-or-later",
 	"type": "parserhook",
 	"requires": {
-		"MediaWiki": ">= 1.39.0"
+		"MediaWiki": ">= 1.35.0"
 	},
 	"GroupPermissions": {
 		"sysop": {
@@ -29,44 +29,61 @@
 		]
 	},
 	"ExtensionMessagesFiles": {
-		"DynamicPageList3Magic": "DynamicPageList3Magic.php"
+		"DynamicPageListMagic": "includes/DynamicPageListMagic.php"
 	},
 	"AutoloadClasses": {
-		"MediaWiki\\Extension\\DynamicPageList3\\Maintenance\\CreateTemplate": "maintenance/createTemplate.php",
-		"MediaWiki\\Extension\\DynamicPageList3\\Maintenance\\CreateView": "maintenance/createView.php"
-	},
-	"AutoloadNamespaces": {
-		"MediaWiki\\Extension\\DynamicPageList3\\": "includes/"
-	},
-	"TestAutoloadNamespaces": {
-		"MediaWiki\\Extension\\DynamicPageList3\\Tests\\": "tests/phpunit/"
+		"DPL\\Article": "includes/Article.php",
+		"DPL\\Config": "includes/Config.php",
+		"DPL\\Heading\\DefinitionHeading": "includes/heading/DefinitionHeading.php",
+		"DPL\\Heading\\Heading": "includes/heading/Heading.php",
+		"DPL\\Heading\\OrderedHeading": "includes/heading/OrderedHeading.php",
+		"DPL\\Heading\\TieredHeading": "includes/heading/TieredHeading.php",
+		"DPL\\Heading\\UnorderedHeading": "includes/heading/UnorderedHeading.php",
+		"DPL\\Lister\\CategoryList": "includes/lister/CategoryList.php",
+		"DPL\\Lister\\DefinitionList": "includes/lister/DefinitionList.php",
+		"DPL\\Lister\\GalleryList": "includes/lister/GalleryList.php",
+		"DPL\\Lister\\InlineList": "includes/lister/InlineList.php",
+		"DPL\\Lister\\Lister": "includes/lister/Lister.php",
+		"DPL\\Lister\\OrderedList": "includes/lister/OrderedList.php",
+		"DPL\\Lister\\SubPageList": "includes/lister/SubPageList.php",
+		"DPL\\Lister\\UnorderedList": "includes/lister/UnorderedList.php",
+		"DPL\\Lister\\UserFormatList": "includes/lister/UserFormatList.php",
+		"DPL\\Logger": "includes/Logger.php",
+		"DPL\\LST": "includes/LST.php",
+		"DPL\\Maintenance\\CreateTemplate": "maintenance/createTemplate.php",
+		"DPL\\Parameters": "includes/Parameters.php",
+		"DPL\\ParametersData": "includes/ParametersData.php",
+		"DPL\\Parse": "includes/Parse.php",
+		"DPL\\Query": "includes/Query.php",
+		"DPL\\UpdateArticle": "includes/UpdateArticle.php",
+		"DPL\\Variables": "includes/Variables.php",
+		"DPL\\DynamicPageListHooks": "includes/DynamicPageListHooks.php",
+		"DPL\\DPLIntegrationTestCase": "tests/phpunit/DPLIntegrationTestCase.php"
 	},
 	"Hooks": {
 		"ParserFirstCallInit": [
-			"MediaWiki\\Extension\\DynamicPageList3\\Hooks::onParserFirstCallInit"
+			"DPL\\DynamicPageListHooks::onParserFirstCallInit"
 		],
 		"LoadExtensionSchemaUpdates": [
-			"MediaWiki\\Extension\\DynamicPageList3\\Hooks::onLoadExtensionSchemaUpdates"
+			"DPL\\DynamicPageListHooks::onLoadExtensionSchemaUpdates"
 		]
 	},
 	"config": {
 		"DplSettings": {
-			"value": {
-				"allowedNamespaces": null,
-				"allowUnlimitedCategories": false,
-				"allowUnlimitedResults": false,
-				"categoryStyleListCutoff": 6,
-				"functionalRichness": 3,
-				"maxCategoryCount": 4,
-				"minCategoryCount": 0,
-				"maxResultCount": 500,
-				"recursiveTagParse": false,
-				"runFromProtectedPagesOnly": false,
-				"handleSectionTag": false,
-				"alwaysCacheResults": false,
-				"maxQueryTime": 10000,
-				"queryCacheTime": 0
-			}
+			"allowedNamespaces": null,
+			"allowUnlimitedCategories": false,
+			"allowUnlimitedResults": false,
+			"behavingLikeIntersection": false,
+			"categoryStyleListCutoff": 6,
+			"fixedCategories": [],
+			"functionalRichness": 3,
+			"maxCategoryCount": 4,
+			"minCategoryCount": 0,
+			"maxResultCount": 500,
+			"recursiveTagParse": false,
+			"runFromProtectedPagesOnly": false,
+			"handleSectionTag": false,
+			"alwaysCacheResults": false
 		}
 	},
 	"TrackingCategories": [
@@ -79,5 +96,5 @@
 		"dplchapter-parserfunc-tracking-category",
 		"dplmatrix-parserfunc-tracking-category"
 	],
-	"manifest_version": 2
+	"manifest_version": 1
 }
