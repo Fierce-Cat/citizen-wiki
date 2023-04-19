@@ -9,8 +9,12 @@
 #
 # Further documentation for configuration settings may be found at:
 # https://www.mediawiki.org/wiki/Manual:Configuration_settings
+# php debugging
+error_reporting( -1 );
+ini_set( 'display_errors', 1 );
 
 # Protect against web entry
+
 if ( !defined( 'MEDIAWIKI' ) ) {
 	exit;
 }
@@ -232,9 +236,9 @@ $wgMainPageIsDomainRoot = true;
 $wgLanguageSelector = true;
 
 #Debugging
-// $wgShowExceptionDetails = true;
-// $wgDebugToolbar = true;
-// $wgShowDebug = true;
+$wgShowExceptionDetails = true;
+$wgDebugToolbar = true;
+$wgShowDebug = true;
 
 #调用英文站图片
 $wgForeignFileRepos[] = [
