@@ -229,20 +229,6 @@ $wgMainPageIsDomainRoot = true;
 # 启用语言切换选项按钮
 $wgLanguageSelector = true;
 
-# 将链接文本显示为重定向后的页面标题
-
-$wgHooks['LinkBegin'][] = 'wfReplaceRedirectLinks';
-
-function wfReplaceRedirectLinks( $skin, &$target, &$text, &$html, &$customAttribs ) {
-    if ( $target instanceof Title && $target->isRedirect() ) {
-        $redirectTitle = $target->getRedirectTarget();
-        if ( $redirectTitle ) {
-            $text = $redirectTitle->getText();
-        }
-    }
-    return true;
-}
-
 #Debugging
 // $wgShowExceptionDetails = true;
 // $wgDebugToolbar = true;
