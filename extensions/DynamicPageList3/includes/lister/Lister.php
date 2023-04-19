@@ -1,13 +1,14 @@
 <?php
 
-namespace DPL\Lister;
+namespace MediaWiki\Extension\DynamicPageList3\Lister;
 
-use DPL\Article;
-use DPL\LST;
-use DPL\Parameters;
-use DPL\UpdateArticle;
+use MediaWiki\Extension\DynamicPageList3\Article;
+use MediaWiki\Extension\DynamicPageList3\LST;
+use MediaWiki\Extension\DynamicPageList3\Parameters;
+use MediaWiki\Extension\DynamicPageList3\UpdateArticle;
 use MediaWiki\MediaWikiServices;
 use Parser;
+use RequestContext;
 use Sanitizer;
 use Title;
 
@@ -624,7 +625,7 @@ class Lister {
 	 * @return string
 	 */
 	public function formatItem( Article $article, $pageText = null ) {
-		global $wgLang;
+		$lang = RequestContext::getMain()->getLanguage();
 
 		$item = '';
 
@@ -644,14 +645,14 @@ class Lister {
 
 		if ( $article->mSize != null ) {
 			$byte = 'B';
-			$pageLength = $wgLang->formatNum( $article->mSize );
+			$pageLength = $lang->formatNum( $article->mSize );
 			$item .= " [{$pageLength} {$byte}]";
 		}
 
 		if ( $article->mCounter !== null ) {
 			$contLang = MediaWikiServices::getInstance()->getContentLanguage();
 
-			$item .= ' ' . $contLang->getDirMark() . '(' . wfMessage( 'hitcounters-nviews', $wgLang->formatNum( $article->mCounter ) )->escaped() . ')';
+			$item .= ' ' . $contLang->getDirMark() . '(' . wfMessage( 'hitcounters-nviews', $lang->formatNum( $article->mCounter ) )->escaped() . ')';
 		}
 
 		if ( $article->mUserLink !== null ) {
@@ -1011,7 +1012,8 @@ class Lister {
 		$matchFailed = false;
 		$septag = [];
 
-		if ( empty( $this->pageTextMatch ) || $this->pageTextMatch[0] == '*' ) { // include whole article
+		// include whole article
+		if ( empty( $this->pageTextMatch ) || $this->pageTextMatch[0] == '*' ) {
 			$title = $article->mTitle->getPrefixedText();
 
 			if ( $this->getStyle() == self::LIST_USERFORMAT ) {

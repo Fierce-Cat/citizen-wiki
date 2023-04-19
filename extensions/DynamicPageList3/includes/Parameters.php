@@ -1,11 +1,12 @@
 <?php
 
-namespace DPL;
+namespace MediaWiki\Extension\DynamicPageList3;
 
 use MediaWiki\MediaWikiServices;
 use MWException;
 use PermissionsError;
 use RequestContext;
+use StringUtils;
 use Title;
 
 class Parameters extends ParametersData {
@@ -288,7 +289,7 @@ class Parameters extends ParametersData {
 		foreach ( $parameters as $parameter ) {
 			if ( $this->getData( $parameter )['default'] !== null && !( $this->getData( $parameter )['default'] === false && ( $this->getData( $parameter )['boolean'] ?? false ) === true ) ) {
 				if ( $parameter == 'debug' ) {
-					DynamicPageListHooks::setDebugLevel( $this->getData( $parameter )['default'] );
+					Hooks::setDebugLevel( $this->getData( $parameter )['default'] );
 				}
 
 				$this->setParameter( $parameter, $this->getData( $parameter )['default'] );
@@ -390,11 +391,7 @@ class Parameters extends ParametersData {
 	 * @return bool
 	 */
 	private function isRegexValid( $regexes, $forDb = false ) {
-		if ( !is_array( $regexes ) ) {
-			$regexes = [ $regexes ];
-		}
-
-		foreach ( $regexes as $regex ) {
+		foreach ( (array)$regexes as $regex ) {
 			if ( empty( trim( $regex ) ) ) {
 				continue;
 			}
@@ -403,12 +400,7 @@ class Parameters extends ParametersData {
 				$regex = '#' . str_replace( '#', '\#', $regex ) . '#';
 			}
 
-			// Purposely silencing the errors here since we are testing if preg_match
-			// would throw an error due to a bad regex from user input.
-
-			// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
-			if ( @preg_match( $regex, '' ) === false ) {
-				// @phan-suppress-previous-line PhanParamSuspiciousOrder
+			if ( !StringUtils::isValidPCRERegex( $regex ) ) {
 				return false;
 			}
 		}
@@ -434,13 +426,17 @@ class Parameters extends ParametersData {
 		$heading = false;
 		$notHeading = false;
 
-		if ( substr( $option, 0, 1 ) == '+' ) { // categories are headings
+		if ( substr( $option, 0, 1 ) == '+' ) {
+			// categories are headings
 			$heading = true;
+
 			$option = ltrim( $option, '+' );
 		}
 
-		if ( substr( $option, 0, 1 ) == '-' ) { // categories are NOT headings
+		if ( substr( $option, 0, 1 ) == '-' ) {
+			// categories are NOT headings
 			$notHeading = true;
+
 			$option = ltrim( $option, '-' );
 		}
 
@@ -648,8 +644,14 @@ class Parameters extends ParametersData {
 	 * @return bool
 	 */
 	public function _count( $option ) {
-		if ( !Config::getSetting( 'allowUnlimitedResults' ) && $option <= Config::getSetting( 'maxResultCount' ) && $option > 0 ) {
-			$this->setParameter( 'count', intval( $option ) );
+		if ( $option > 0 ) {
+			$max = Config::getSetting( 'maxResultCount' );
+
+			if ( Config::getSetting( 'allowUnlimitedResults' ) ) {
+				$max = INF;
+			}
+
+			$this->setParameter( 'count', min( max( intval( $option ), 0 ), $max ) );
 
 			return true;
 		}
@@ -747,7 +749,6 @@ class Parameters extends ParametersData {
 	 */
 	public function _ordermethod( $option ) {
 		$methods = explode( ',', $option );
-		$success = true;
 
 		foreach ( $methods as $method ) {
 			if ( !in_array( $method, $this->getData( 'ordermethod' )['values'] ) ) {
@@ -887,6 +888,18 @@ class Parameters extends ParametersData {
 	}
 
 	/**
+	 * Clean and test 'titlemaxlength' parameter.
+	 *
+	 * @param string|int $option
+	 * @return bool
+	 */
+	public function _titlemaxlength( $option ) {
+		$this->setParameter( 'titlemaxlen', intval( $option ) );
+
+		return true;
+	}
+
+	/**
 	 * Clean and test 'titleregexp' parameter.
 	 *
 	 * @param string $option
@@ -995,31 +1008,31 @@ class Parameters extends ParametersData {
 
 		// If scrolling is active we adjust the values for certain other parameters based on URL arguments
 		if ( $option === true ) {
-			global $wgRequest;
+			$request = RequestContext::getMain()->getRequest();
 
 			// The 'findTitle' option has argument over the 'fromTitle' argument.
-			$titlegt = $wgRequest->getVal( 'DPL_findTitle', '' );
+			$titlegt = $request->getVal( 'DPL_findTitle', '' );
 
 			if ( !empty( $titlegt ) ) {
 				$titlegt = '=_' . ucfirst( $titlegt );
 			} else {
-				$titlegt = $wgRequest->getVal( 'DPL_fromTitle', '' );
+				$titlegt = $request->getVal( 'DPL_fromTitle', '' );
 				$titlegt = ucfirst( $titlegt );
 			}
 
 			$this->setParameter( 'titlegt', str_replace( ' ', '_', $titlegt ) );
 
 			// Lets get the 'toTitle' argument.
-			$titlelt = $wgRequest->getVal( 'DPL_toTitle', '' );
+			$titlelt = $request->getVal( 'DPL_toTitle', '' );
 			$titlelt = ucfirst( $titlelt );
 
 			$this->setParameter( 'titlelt', str_replace( ' ', '_', $titlelt ) );
 
 			// Make sure the 'scrollDir' arugment is captured. This is mainly used for the Variables extension and in the header/footer replacements.
-			$this->setParameter( 'scrolldir', $wgRequest->getVal( 'DPL_scrollDir', '' ) );
+			$this->setParameter( 'scrolldir', $request->getVal( 'DPL_scrollDir', '' ) );
 
 			// Also set count limit from URL if not otherwise set.
-			$this->_count( $wgRequest->getInt( 'DPL_count' ) );
+			$this->_count( $request->getInt( 'DPL_count' ) );
 		}
 
 		// We do not return false since they could have just left it out. Who knows why they put the parameter in the list in the first place.
@@ -1053,7 +1066,7 @@ class Parameters extends ParametersData {
 	 */
 	public function _debug( $option ) {
 		if ( in_array( $option, $this->getData( 'debug' )['values'] ) ) {
-			DynamicPageListHooks::setDebugLevel( $option );
+			Hooks::setDebugLevel( $option );
 		} else {
 			return false;
 		}
@@ -1101,6 +1114,18 @@ class Parameters extends ParametersData {
 		}
 
 		$this->setParameter( 'seclabelsmatch', $regexes );
+
+		return true;
+	}
+
+	/**
+	 * Clean and test 'includemaxlength' parameter.
+	 *
+	 * @param string|int $option
+	 * @return bool
+	 */
+	public function _includemaxlength( $option ) {
+		$this->setParameter( 'includemaxlen', intval( $option ) );
 
 		return true;
 	}
@@ -1238,11 +1263,11 @@ class Parameters extends ParametersData {
 
 		for ( $i = 0; $i < count( $sectionLabels ); $i++ ) {
 			if ( $i == 0 ) {
-				$sectionSeparators[0] = "\n|-\n|" . $withHLink; // ."\n";
+				$sectionSeparators[0] = "\n|-\n|" . $withHLink;
 				$sectionSeparators[1] = '';
-				$multiSectionSeparators[0] = "\n|-\n|" . $withHLink; // ."\n";
+				$multiSectionSeparators[0] = "\n|-\n|" . $withHLink;
 			} else {
-				$sectionSeparators[2 * $i] = "\n|"; // ."\n";
+				$sectionSeparators[2 * $i] = "\n|";
 				$sectionSeparators[2 * $i + 1] = '';
 
 				if ( is_array( $sectionLabels[$i] ) && $sectionLabels[$i][0] == '#' ) {
@@ -1317,7 +1342,7 @@ class Parameters extends ParametersData {
 	 * @return bool
 	 */
 	public function _fixcategory( $option ) {
-		DynamicPageListHooks::fixCategory( $option );
+		Hooks::fixCategory( $option );
 
 		return true;
 	}

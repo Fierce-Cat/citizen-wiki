@@ -722,3 +722,88 @@ Many thanks to GreenReaper on GitHub for reporting and finding issues with core 
 * Restore MediaWiki 1.35 compatibility
 * Fix path to `Maintenance.php`
 * Fix second param to `preg_match`
+
+# Version 3.3.9
+* Add support for `openreferences=missing`
+* Fix usage of scroll and order in the same query
+* Minor documentation updates
+
+# Version 3.3.10
+* Fix MessagesDirs to prevent mergeMessageFileList issue
+
+# Version 3.4.0
+* Improved overall query performance
+* Added ability to set maximum query time using `maxQueryTime` configuration
+* Added support for query cache using `queryCacheTime` configuration
+* Added pool counter support to limit query concurrency
+* Fixed all `MediaWiki.ControlStructures.AssignmentInControlStructures.AssignmentInControlStructures` PHPCS violations and enabled it
+* Renamed `Query::$DB` property to `Query::$dbr`
+* Removed unused `Parse::$DB` property
+* Minor wording and markdown changes to README
+* Use Extension:DynamicPageList3 in logger
+* Added new pool counter error message to logger
+* Added missing error message for FATAL_NOTPROTECTED (dpl_log_24)
+* Added missing error message for FATAL_SQLBUILDERROR (dpl_log_25)
+* Additional minor wording and capitalisation changes to i18n messages
+* Re-namespaced all classes under `MediaWiki\Extension\DynamicPageList3` and uses `AutoloadNamespaces`
+* Replaced usages of global `$wgLang`, `$wgOut`, and `$wgRequest`
+* Bumped MediaWiki requirement to 1.35.3
+* Migrate extension.json to `manifest_version` 2
+* Some additional minor cleanup
+
+# Version 3.4.1
+* Used `StringUtils::isValidPCRERegex()` for checking valid regex
+* Fixed query error due to not adding quotes to '%'
+* Removed unused `Hooks::removeSectionMarkers()` function
+* Removed some unused code
+* Removed unimplimented configuration options (`behavingLikeIntersection` and `fixedCategories`)
+* Removed unused parameters from `UpdateArticle::editTemplateCall()`
+* Added `$wgDplSettings['alwaysCacheResults']` to README
+* Properly implemented `titlemaxlength` and `includemaxlength`
+
+# Version 3.4.2
+* Fixed `minoredits` parameter
+
+# Version 3.4.3
+* Fixed all `PEAR.Functions.ValidDefaultValue.NotAtEnd` PHPCS violations and enabled it
+* Used `quibble-with-apache` entrypoint in CI
+* Fixed `$wgDplSettings['allowUnlimitedResults']`
+* Fixed behavior for `$wgDplSettings['maxResultCount']`
+
+# Version 3.4.4
+* Fixed all `MediaWiki.WhiteSpace.SpaceBeforeSingleLineComment.NewLineComment` PHPCS violations and enabled it
+* Used `ExtensionRegistry::getInstance()->isLoaded()` for checking HitCounters
+* Fixed all `MediaWiki.Commenting.MissingCovers.MissingCovers` PHPCS violations and enabled it
+* Fixed `openreferences=missing` count
+* Only set `Query::sqlQuery` if used for debug
+* Fixed `firstrevisionsince` and `lastrevisionbefore` parameters
+
+# Version 3.4.5
+* Fixed `%TOTALPAGES%` usage
+
+# Version 3.4.6
+* Removed unused `LST::noop()` function
+* Fixed all `MediaWiki.Commenting.FunctionComment` PHPCS violations and enabled it
+* Updated CreateTemplate to mention DPL3, not DPL
+* Used database update maintenance script for creating VIEW
+* Added additional isset check for mTemplatePath
+
+# Version 3.5.0
+* Dropped `revision_actor_temp` support and completed actor migration
+* Added support for `templatelinks` migration
+* Added support for MediaWiki 1.39 and dropped support for older MediaWiki versions (before 1.39.0)
+* Dropped official support for PHP versions before PHP 7.4.3, because MediaWiki 1.39 does not support older PHP versions anymore
+* Fixed installing via composer version 2.2.1 and later
+* Fixed using imagecontainer with openreferences
+* Replaced usages of `intval()` with `(int)` in Query.php and Parse.php
+* Swapped order of mapping for `Query::addTables()` from `[ alias => table ]` to `[ table => alias ]`
+* Replaced usages of deprecated `wfGetDB()`
+* Replaced usages of deprecated `Parser::getTitle()`
+* Replaced usage of deprecated `Title::isProtected()`
+* Replaced usage of deprecated `User::matchEditToken()`
+* Replaced usage of deprecated `Article::doDelete()`
+* Added `null` checks on `Parser::getPage()` and `ParserOutput` before using to avoid fatals
+
+# Version 3.5.1
+* Added a fix for links migration: added a `JOIN` on `linktarget` for the `notuses` parameter
+* Added a PHPUnit test for the `notuses` parameter

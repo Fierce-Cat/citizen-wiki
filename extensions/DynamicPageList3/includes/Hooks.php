@@ -1,12 +1,14 @@
 <?php
 
-namespace DPL;
+namespace MediaWiki\Extension\DynamicPageList3;
 
 use DatabaseUpdater;
+use MediaWiki\Extension\DynamicPageList3\Maintenance\CreateTemplate;
+use MediaWiki\Extension\DynamicPageList3\Maintenance\CreateView;
 use Parser;
 use PPFrame;
 
-class DynamicPageListHooks {
+class Hooks {
 
 	public const FATAL_WRONGNS = 1001;
 
@@ -32,9 +34,11 @@ class DynamicPageListHooks {
 
 	public const FATAL_MISSINGPARAMFUNCTION = 1022;
 
-	public const FATAL_NOTPROTECTED = 1023;
+	public const FATAL_POOLCOUNTER = 1023;
 
-	public const FATAL_SQLBUILDERROR = 1024;
+	public const FATAL_NOTPROTECTED = 1024;
+
+	public const FATAL_SQLBUILDERROR = 1025;
 
 	public const WARN_UNKNOWNPARAM = 2013;
 
@@ -274,7 +278,7 @@ class DynamicPageListHooks {
 			// @phan-suppress-next-line PhanPluginMixedKeyNoKey
 			$parser->getPreprocessor()->preprocessToObj( $dplresult, 1 ),
 			'isLocalObj' => true,
-			'title' => $parser->getTitle()
+			'title' => $parser->getPage()
 		];
 	}
 
@@ -307,6 +311,11 @@ class DynamicPageListHooks {
 		return $num;
 	}
 
+	/**
+	 * @param Parser &$parser
+	 * @param string $cmd
+	 * @return string
+	 */
 	public static function dplVarParserFunction( &$parser, $cmd ) {
 		$parser->addTrackingCategory( 'dplvar-parserfunc-tracking-category' );
 		$args = func_get_args();
@@ -320,6 +329,10 @@ class DynamicPageListHooks {
 		return Variables::getVar( $cmd );
 	}
 
+	/**
+	 * @param string $needle
+	 * @return bool
+	 */
 	private static function isRegexp( $needle ) {
 		if ( strlen( $needle ) < 3 ) {
 			return false;
@@ -341,6 +354,13 @@ class DynamicPageListHooks {
 		return false;
 	}
 
+	/**
+	 * @param Parser &$parser
+	 * @param string $text
+	 * @param string $pat
+	 * @param string $repl
+	 * @return string
+	 */
 	public static function dplReplaceParserFunction( &$parser, $text, $pat = '', $repl = '' ) {
 		$parser->addTrackingCategory( 'dplreplace-parserfunc-tracking-category' );
 		if ( $text == '' || $pat == '' ) {
@@ -359,12 +379,31 @@ class DynamicPageListHooks {
 		return @preg_replace( $pat, $repl, $text );
 	}
 
+	/**
+	 * @param Parser &$parser
+	 * @param string $text
+	 * @param string $heading
+	 * @param int $maxLength
+	 * @param string $page
+	 * @param string $link
+	 * @param bool $trim
+	 * @return string
+	 */
 	public static function dplChapterParserFunction( &$parser, $text = '', $heading = ' ', $maxLength = -1, $page = '?page?', $link = 'default', $trim = false ) {
 		$parser->addTrackingCategory( 'dplchapter-parserfunc-tracking-category' );
 		$output = LST::extractHeadingFromText( $parser, $page, '?title?', $text, $heading, '', $sectionHeading, true, $maxLength, $link, $trim );
 		return $output[0];
 	}
 
+	/**
+	 * @param Parser &$parser
+	 * @param string $name
+	 * @param string $yes
+	 * @param string $no
+	 * @param string $flip
+	 * @param string $matrix
+	 * @return string
+	 */
 	public static function dplMatrixParserFunction( &$parser, $name = '', $yes = '', $no = '', $flip = '', $matrix = '' ) {
 		$parser->addTrackingCategory( 'dplmatrix-parserfunc-tracking-category' );
 		$lines = explode( "\n", $matrix );
@@ -473,28 +512,9 @@ class DynamicPageListHooks {
 		}
 	}
 
-	private static function dumpParsedRefs( $parser, $label ) {
-		echo '<pre>parser mLinks: ';
-		ob_start();
-		var_dump( $parser->getOutput()->mLinks );
-		$a = ob_get_contents();
-		ob_end_clean();
-		echo htmlspecialchars( $a, ENT_QUOTES );
-		echo '</pre>';
-		echo '<pre>parser mTemplates: ';
-		ob_start();
-		var_dump( $parser->getOutput()->mTemplates );
-		$a = ob_get_contents();
-		ob_end_clean();
-		echo htmlspecialchars( $a, ENT_QUOTES );
-		echo '</pre>';
-	}
-
-	// remove section markers in case the LabeledSectionTransclusion extension is not installed.
-	public static function removeSectionMarkers( $in, $assocArgs = [], $parser = null ) {
-		return '';
-	}
-
+	/**
+	 * @param string $cat
+	 */
 	public static function fixCategory( $cat ) {
 		if ( $cat != '' ) {
 			self::$fixedCategories[$cat] = 1;
@@ -519,7 +539,12 @@ class DynamicPageListHooks {
 		return self::$debugLevel;
 	}
 
-	// reset everything; some categories may have been fixed, however via fixcategory=
+	/**
+	 * Reset everything; some categories may have been fixed, however via fixcategory=
+	 *
+	 * @param Parser $parser
+	 * @param string $text
+	 */
 	public static function endReset( $parser, $text ) {
 		if ( !self::$createdLinks['resetdone'] ) {
 			self::$createdLinks['resetdone'] = true;
@@ -550,6 +575,10 @@ class DynamicPageListHooks {
 		}
 	}
 
+	/**
+	 * @param Parser $parser
+	 * @param string &$text
+	 */
 	public static function endEliminate( $parser, &$text ) {
 		// called during the final output phase; removes links created by DPL
 		if ( isset( self::$createdLinks ) ) {
@@ -597,15 +626,7 @@ class DynamicPageListHooks {
 	 * @param DatabaseUpdater $updater
 	 */
 	public static function onLoadExtensionSchemaUpdates( DatabaseUpdater $updater ) {
-		$extDir = __DIR__;
-
-		$updater->addPostDatabaseUpdateMaintenance( 'DPL\\Maintenance\\CreateTemplate' );
-
-		$db = $updater->getDB();
-		if ( !$db->tableExists( 'dpl_clview' ) ) {
-			// PostgreSQL doesn't have IFNULL, so use COALESCE instead
-			$sqlNullMethod = ( $db->getType() === 'postgres' ? 'COALESCE' : 'IFNULL' );
-			$db->query( "CREATE VIEW {$db->tablePrefix()}dpl_clview AS SELECT $sqlNullMethod(cl_from, page_id) AS cl_from, $sqlNullMethod(cl_to, '') AS cl_to, cl_sortkey FROM {$db->tablePrefix()}page LEFT OUTER JOIN {$db->tablePrefix()}categorylinks ON {$db->tablePrefix()}page.page_id=cl_from;" );
-		}
+		$updater->addPostDatabaseUpdateMaintenance( CreateTemplate::class );
+		$updater->addPostDatabaseUpdateMaintenance( CreateView::class );
 	}
 }
