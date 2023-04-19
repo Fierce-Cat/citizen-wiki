@@ -1,6 +1,6 @@
 <?php
 
-namespace DPL;
+namespace MediaWiki\Extension\DynamicPageList3;
 
 use Article;
 use CommentStoreComment;
@@ -9,17 +9,21 @@ use MediaWiki\Revision\SlotRecord;
 use ReadOnlyError;
 use RequestContext;
 use Title;
-use WikiPage;
 
 class UpdateArticle {
 	/**
-	 * this fucntion hast three tasks (depending on $exec):
+	 * This fucntion hast three tasks (depending on $exec):
 	 * (1) show an edit dialogue for template fields (exec = edit)
 	 * (2) set template parameters to values specified in the query (exec=set)v
 	 * (2) preview the source code including any changes of these parameters made in the edit form or with other changes (exec=preview)
 	 * (3) save the article with the changed value set or with other changes (exec=save)
 	 * "other changes" means that a regexp can be applied to the source text or arbitrary text can be
 	 * inserted before or after a pattern occuring in the text
+	 *
+	 * @param string $title
+	 * @param string $text
+	 * @param string $rulesText
+	 * @return string
 	 */
 	public static function updateArticleByRule( $title, $text, $rulesText ) {
 		// we use ; as command delimiter; \; stands for a semicolon
@@ -46,7 +50,6 @@ class UpdateArticle {
 		$optional = [];
 
 		$lastCmd = '';
-		$message = '';
 		$summary = '';
 		$editForm = false;
 		$action = '';
@@ -184,7 +187,8 @@ class UpdateArticle {
 			}
 
 			if ( $cmd[0] == 'exec' ) {
-				$exec = $arg; // desired action (set or edit or preview)
+				// desired action (set or edit or preview)
+				$exec = $arg;
 			}
 		}
 
@@ -218,9 +222,6 @@ class UpdateArticle {
 		}
 
 		// deal with template parameters =================================================
-
-		global $wgRequest;
-
 		$user = RequestContext::getMain()->getUser();
 
 		if ( $template != '' ) {
@@ -284,7 +285,6 @@ class UpdateArticle {
 							$myFormat = $format[$nr];
 						}
 
-						$myOptional = array_key_exists( $nr, $optional );
 						if ( $legendText != '' && $myToolTip == '' ) {
 							$myToolTip = preg_replace( '/^.*\<section\s+begin\s*=\s*' . preg_quote( $parm, '/' ) . '\s*\/\>/s', '', $legendText );
 
@@ -300,7 +300,7 @@ class UpdateArticle {
 							$myValue = $tpv[$call][$parm];
 						}
 
-						$form .= self::editTemplateCall( $text, $template, $call, $parm, $myType, $myValue, $myFormat, $myToolTip, $myInstruction, $myOptional, $fieldFormat );
+						$form .= self::editTemplateCall( $call, $parm, $myType, $myValue, $myFormat, $myToolTip, $myInstruction, $fieldFormat );
 					}
 
 					$form .= "</table>\n<br/><br/>";
@@ -310,7 +310,8 @@ class UpdateArticle {
 					$form .= "<input type='hidden' " . $hide . " />";
 				}
 
-				$form .= "<input type='hidden' name='wpEditToken' value='{$user->getEditToken()}'/>";
+				$csrfTokenSet = RequestContext::getMain()->getCsrfTokenSet();
+				$form .= "<input type='hidden' name='wpEditToken' value='{$csrfTokenSet->getToken()}'/>";
 				foreach ( $preview as $prev ) {
 					$form .= "<input type='submit' " . $prev . " /> ";
 				}
@@ -326,12 +327,14 @@ class UpdateArticle {
 					foreach ( $parameter as $nr => $parm ) {
 						// set parameters to values specified in the dpl source or get them from the http request
 						if ( $exec == 'set' ) {
-							$myvalue = $value[$nr];
+							$myValue = $value[$nr];
 						} else {
 							if ( $call >= $matchCount ) {
 								break;
 							}
-							$myValue = $wgRequest->getVal( urlencode( $call . '_' . $parm ), '' );
+
+							$request = RequestContext::getMain()->getRequest();
+							$myValue = $request->getVal( urlencode( $call . '_' . $parm ), '' );
 						}
 
 						$myOptional = array_key_exists( $nr, $optional );
@@ -354,7 +357,9 @@ class UpdateArticle {
 		if ( $exec == 'set' ) {
 			return self::doUpdateArticle( $title, $text, $summary );
 		} elseif ( $exec == 'preview' ) {
-			global $wgScriptPath, $wgRequest;
+			global $wgScriptPath;
+
+			$request = RequestContext::getMain()->getRequest();
 
 			$titleX = Title::newFromText( $title );
 			$articleX = new Article( $titleX );
@@ -371,7 +376,7 @@ class UpdateArticle {
 		<input type="hidden" name="wpSummary value="' . $summary . '" id="wpSummary" />
 		<input name="wpAutoSummary" type="hidden" value="" />
 		<input id="wpSave" name="wpSave" type="submit" value="Save page" accesskey="s" title="Save your changes [s]" />
-		<input type="hidden" value="' . $wgRequest->getVal( 'token' ) . '" name="wpEditToken" />
+		<input type="hidden" value="' . $request->getVal( 'token' ) . '" name="wpEditToken" />
 	</form>
 </html>';
 			return $form;
@@ -380,13 +385,19 @@ class UpdateArticle {
 		return "exec must be one of the following: edit, preview, set";
 	}
 
+	/**
+	 * @param string $title
+	 * @param string $text
+	 * @param string $summary
+	 * @return string
+	 */
 	private static function doUpdateArticle( $title, $text, $summary ) {
-		global $wgRequest, $wgOut;
+		$context = RequestContext::getMain();
+		$out = $context->getOutput();
+		$user = $context->getUser();
 
-		$user = RequestContext::getMain()->getUser();
-
-		if ( !$user->matchEditToken( $wgRequest->getVal( 'wpEditToken' ) ) ) {
-			$wgOut->addWikiMsg( 'sessionfailure' );
+		if ( !$context->getCsrfTokenSet()->matchTokenField( 'wpEditToken' ) ) {
+			$out->addWikiMsg( 'sessionfailure' );
 
 			return 'session failure';
 		}
@@ -396,14 +407,8 @@ class UpdateArticle {
 
 		if ( count( $permission_errors ) == 0 ) {
 			$services = MediaWikiServices::getInstance();
-			// MW 1.36+
-			if ( method_exists( $services, 'getWikiPageFactory' ) ) {
-				$wikiPageFactory = $services->getWikiPageFactory();
-				$page = $wikiPageFactory->newFromTitle( $titleX );
-			} else {
-				// @phan-suppress-next-line PhanDeprecatedFunction
-				$page = WikiPage::factory( $titleX );
-			}
+			$wikiPageFactory = $services->getWikiPageFactory();
+			$page = $wikiPageFactory->newFromTitle( $titleX );
 
 			$updater = $page->newPageUpdater( $user );
 			$content = $page->getContentHandler()->makeContent( $text, $titleX );
@@ -415,17 +420,28 @@ class UpdateArticle {
 				EDIT_UPDATE | EDIT_DEFER_UPDATES | EDIT_AUTOSUMMARY
 			);
 
-			$wgOut->redirect( $titleX->getFullUrl( $page->isRedirect() ? 'redirect=no' : '' ) );
+			$out->redirect( $titleX->getFullUrl( $page->isRedirect() ? 'redirect=no' : '' ) );
 
 			return '';
 		} else {
-			$wgOut->showPermissionsErrorPage( $permission_errors );
+			$out->showPermissionsErrorPage( $permission_errors );
 
 			return 'permission error';
 		}
 	}
 
-	private static function editTemplateCall( $text, $template, $call, $parameter, $type, $value, $format, $legend, $instruction, $optional, $fieldFormat ) {
+	/**
+	 * @param int $call
+	 * @param string $parameter
+	 * @param string $type
+	 * @param string $value
+	 * @param string $format
+	 * @param string $legend
+	 * @param string $instruction
+	 * @param string $fieldFormat
+	 * @return string
+	 */
+	private static function editTemplateCall( $call, $parameter, $type, $value, $format, $legend, $instruction, $fieldFormat ) {
 		$matches = [];
 		$nlCount = preg_match_all( '/\n/', $value, $matches );
 
@@ -450,7 +466,9 @@ class UpdateArticle {
 	}
 
 	/**
-	 * return an array of template invocations; each element is an associative array of parameter and value
+	 * @param string $text
+	 * @param string $template
+	 * @return array|string
 	 */
 	private static function getTemplateParmValues( $text, $template ) {
 		$matches = [];
@@ -525,8 +543,18 @@ class UpdateArticle {
 		return $tval;
 	}
 
-	/*
+	/**
 	 * Changes a single parameter value within a certain call of a template
+	 *
+	 * @param int &$matchCount
+	 * @param string $text
+	 * @param string $template
+	 * @param int $call
+	 * @param string $parameter
+	 * @param string $value
+	 * @param array $afterParm
+	 * @param bool $optional
+	 * @return string
 	 */
 	private static function updateTemplateCall( &$matchCount, $text, $template, $call, $parameter, $value, $afterParm, $optional ) {
 		// if parameter is optional and value is empty we leave everything as it is (i.e. we do not remove the parm)
@@ -575,7 +603,8 @@ class UpdateArticle {
 						$c = $text[$i];
 
 						if ( $c == '{' || $c == '[' ) {
-							$cbrackets++; // we count both types of brackets
+							// we count both types of brackets
+							$cbrackets++;
 						}
 
 						if ( $c == '}' || $c == ']' ) {
@@ -595,7 +624,8 @@ class UpdateArticle {
 									$parmValue = trim( $token[1] );
 
 									if ( $parmValue == $value ) {
-										break; // no need to change when values are identical
+										// no need to change when values are identical
+										break;
 									}
 
 									// keep spaces;
@@ -665,9 +695,13 @@ class UpdateArticle {
 		return substr( $text, 0, $beginSubst ) . ( $substitution ?? '' ) . substr( $text, $endSubst );
 	}
 
+	/**
+	 * @param string $title
+	 * @param string $text
+	 * @param string $rulesText
+	 * @return string
+	 */
 	public static function deleteArticleByRule( $title, $text, $rulesText ) {
-		global $wgOut;
-
 		// return "deletion of articles by DPL is disabled.";
 
 		// we use ; as command delimiter; \; stands for a semicolon
@@ -682,7 +716,8 @@ class UpdateArticle {
 
 		foreach ( $rules as $rule ) {
 			if ( preg_match( '/^\s*#/', $rule ) > 0 ) {
-				continue; // # is comment symbol
+				// # is comment symbol
+				continue;
 			}
 
 			$rule = preg_replace( '/^[\s]*/', '', $rule );
@@ -711,26 +746,35 @@ class UpdateArticle {
 		$titleX = Title::newFromText( $title );
 
 		if ( $exec ) {
-			$user = RequestContext::getMain()->getUser();
+			$context = RequestContext::getMain();
+			$out = $context->getOutput();
+			$user = $context->getUser();
 
 			# Check permissions
 			$permission_errors = MediaWikiServices::getInstance()->getPermissionManager()->getPermissionErrors( 'delete', $user, $titleX );
 			$isReadOnly = MediaWikiServices::getInstance()->getReadOnlyMode()->isReadOnly();
 
 			if ( count( $permission_errors ) > 0 ) {
-				$wgOut->showPermissionsErrorPage( $permission_errors );
+				$out->showPermissionsErrorPage( $permission_errors );
+
 				return 'permission error';
 			} elseif ( $isReadOnly ) {
 				throw new ReadOnlyError;
 			} else {
-				$articleX = new Article( $titleX );
-				$articleX->doDelete( $reason );
+				$wikiPageFactory = MediaWikiServices::getInstance()->getWikiPageFactory();
+				$deletePageFactory = MediaWikiServices::getInstance()->getDeletePageFactory();
+				$deletePage = $deletePageFactory->newDeletePage(
+					$wikiPageFactory->newFromTitle( $titleX ),
+					$user
+				);
+
+				$deletePage->deleteIfAllowed( $reason );
 			}
 		} else {
 			$message .= "set 'exec yes' to delete &#160; &#160; <big>'''$title'''</big>\n";
 		}
 
-		$message .= "<pre><nowiki>\n{$text}</nowiki></pre>"; // <pre><nowiki>\n";
+		$message .= "<pre><nowiki>\n{$text}</nowiki></pre>";
 
 		return $message;
 	}

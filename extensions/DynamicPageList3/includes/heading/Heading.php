@@ -1,10 +1,10 @@
 <?php
 
-namespace DPL\Heading;
+namespace MediaWiki\Extension\DynamicPageList3\Heading;
 
-use DPL\Article;
-use DPL\Lister\Lister;
-use DPL\Parameters;
+use MediaWiki\Extension\DynamicPageList3\Article;
+use MediaWiki\Extension\DynamicPageList3\Lister\Lister;
+use MediaWiki\Extension\DynamicPageList3\Parameters;
 use Sanitizer;
 
 class Heading {
@@ -177,7 +177,6 @@ class Heading {
 		$rowSize = $this->getParameters()->getParameter( 'rowsize' );
 		$rowColFormat = $this->getParameters()->getParameter( 'rowcolformat' );
 
-		$start = 0;
 		$count = 0;
 
 		$headings = Article::getHeadings();
@@ -228,7 +227,6 @@ class Heading {
 					$nstart += $hspace;
 					$portion = $headingCount;
 					$greml -= $hspace;
-					$listOutput = '';
 
 					do {
 						$greml -= $portion;
