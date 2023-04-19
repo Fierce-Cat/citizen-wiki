@@ -78,7 +78,7 @@ $wgMemCachedServers = [];
 
 ## To enable image uploads, make sure the 'images' directory
 ## is writable, then set this to true:
-$wgEnableUploads = true;
+// $wgEnableUploads = true;
 #$wgUseImageMagick = true;
 #$wgImageMagickConvertCommand = "/usr/bin/convert";
 
@@ -236,17 +236,17 @@ $wgDefaultUserOptions['watchdefault'] = 0;
 // 	'name' => 'StarCitizenTools', // Must be a distinct name
 // 	'apibase' => 'https://starcitizen.tools/api.php',
 // 	'hashLevels' => 2,
-// 	'fetchDescription' => true, // Optional
-// 	'descriptionCacheExpiry' => 43200, // 12 hours, optional (values are seconds)
-// 	'apiThumbCacheExpiry' => 86400, // 24 hours, optional, but required for local thumb caching
+// 	'fetchDescription' => false, // Optional
+// 	'descriptionCacheExpiry' => 0, // 12 hours, optional (values are seconds)
+// 	'apiThumbCacheExpiry' => 0, // 24 hours, optional, but required for local thumb caching
 // ];
 
 #AWS插件 | Cloudflare R2 储存桶配置
-$wgAWSCredentials = [
-	'key' => $_ENV["S3Key"],
-	'secret' => $_ENV["S3Secret"],
-	'token' => false
-];
+// $wgAWSCredentials = [
+// 	'key' => $_ENV["S3Key"],
+// 	'secret' => $_ENV["S3Secret"],
+// 	'token' => false
+// ];
 
 $wgAWSRegion = $_ENV["S3Region"]; # Northern Virginia
 
