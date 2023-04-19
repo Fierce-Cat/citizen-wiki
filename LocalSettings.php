@@ -182,7 +182,7 @@ wfLoadExtension( 'UserGroups' );
 wfLoadExtension( 'VisualEditor' );
 wfLoadExtension( 'WikiEditor' );
 wfLoadExtension( 'WikiSeo' );
-
+wfLoadExtension( 'Variables' );
 
 # End of automatically generated settings.
 # Add more configuration options below.
