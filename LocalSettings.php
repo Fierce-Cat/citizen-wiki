@@ -237,8 +237,7 @@ $wgForeignFileRepos[] = [
 	'apibase' => 'https://starcitizen.tools/api.php',
 	'hashLevels' => 2,
 	'fetchDescription' => false, // Optional
-	'descriptionCacheExpiry' => 0, // 12 hours, optional (values are seconds)
-	'apiThumbCacheExpiry' => 0, // 24 hours, optional, but required for local thumb caching
+	'apiThumbCacheExpiry' => 86400, // 24 hours, optional, but required for local thumb caching
 ];
 
 #AWS插件 | Cloudflare R2 储存桶配置
