@@ -1,0 +1,83 @@
+{
+	"name": "DynamicPageList3",
+	"version": "3.5.2",
+	"author": [
+		"'''Universal Omega'''",
+		"Alexia E. Smith",
+		"Gero Scholz"
+	],
+	"url": "https://www.mediawiki.org/wiki/Extension:DynamicPageList3",
+	"descriptionmsg": "dpl-desc",
+	"license-name": "GPL-3.0-or-later",
+	"type": "parserhook",
+	"requires": {
+		"MediaWiki": ">= 1.39.0"
+	},
+	"GroupPermissions": {
+		"sysop": {
+			"dpl_param_update_rules": true,
+			"dpl_param_delete_rules": true
+		}
+	},
+	"AvailableRights": [
+		"dpl_param_update_rules",
+		"dpl_param_delete_rules"
+	],
+	"MessagesDirs": {
+		"DynamicPageList3": [
+			"i18n"
+		]
+	},
+	"ExtensionMessagesFiles": {
+		"DynamicPageList3Magic": "DynamicPageList3Magic.php"
+	},
+	"AutoloadClasses": {
+		"MediaWiki\\Extension\\DynamicPageList3\\Maintenance\\CreateTemplate": "maintenance/createTemplate.php",
+		"MediaWiki\\Extension\\DynamicPageList3\\Maintenance\\CreateView": "maintenance/createView.php"
+	},
+	"AutoloadNamespaces": {
+		"MediaWiki\\Extension\\DynamicPageList3\\": "includes/"
+	},
+	"TestAutoloadNamespaces": {
+		"MediaWiki\\Extension\\DynamicPageList3\\Tests\\": "tests/phpunit/"
+	},
+	"Hooks": {
+		"ParserFirstCallInit": [
+			"MediaWiki\\Extension\\DynamicPageList3\\Hooks::onParserFirstCallInit"
+		],
+		"LoadExtensionSchemaUpdates": [
+			"MediaWiki\\Extension\\DynamicPageList3\\Hooks::onLoadExtensionSchemaUpdates"
+		]
+	},
+	"config": {
+		"DplSettings": {
+			"value": {
+				"allowedNamespaces": null,
+				"allowUnlimitedCategories": false,
+				"allowUnlimitedResults": false,
+				"categoryStyleListCutoff": 6,
+				"functionalRichness": 3,
+				"maxCategoryCount": 4,
+				"minCategoryCount": 0,
+				"maxResultCount": 500,
+				"recursiveTagParse": false,
+				"runFromProtectedPagesOnly": false,
+				"handleSectionTag": false,
+				"alwaysCacheResults": false,
+				"maxQueryTime": 10000,
+				"queryCacheTime": 0
+			}
+		}
+	},
+	"TrackingCategories": [
+		"dpl-tag-tracking-category",
+		"dpl-intersection-tracking-category",
+		"dpl-parserfunc-tracking-category",
+		"dplnum-parserfunc-tracking-category",
+		"dplvar-parserfunc-tracking-category",
+		"dplreplace-parserfunc-tracking-category",
+		"dplchapter-parserfunc-tracking-category",
+		"dplmatrix-parserfunc-tracking-category"
+	],
+	"manifest_version": 2
+}

@@ -151,7 +151,7 @@ wfLoadExtension( 'CiteThisPage' );
 wfLoadExtension( 'CodeEditor' );
 wfLoadExtension( 'CodeMirror' );
 wfLoadExtension( 'ConfirmEdit' );
-// wfLoadExtension( 'DynamicPageList3' );
+wfLoadExtension( 'DynamicPageList3' );
 // wfLoadExtension( 'Elastica' );
 wfLoadExtension( 'Gadgets' );
 wfLoadExtension( 'ImageMap' );
