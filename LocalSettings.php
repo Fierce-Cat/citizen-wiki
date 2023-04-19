@@ -243,7 +243,6 @@ function wfReplaceRedirectLinks( $skin, &$target, &$text, &$html, &$customAttrib
     return true;
 }
 
-
 #Debugging
 // $wgShowExceptionDetails = true;
 // $wgDebugToolbar = true;
