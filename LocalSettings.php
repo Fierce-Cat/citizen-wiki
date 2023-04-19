@@ -226,6 +226,8 @@ $wgVisualEditorUseSingleEditTab = true;
 $wgDefaultUserOptions['watchdefault'] = 0;
 # 将首页设置为根目录
 $wgMainPageIsDomainRoot = true;
+# 启用语言切换选项按钮
+$wgLanguageSelector = true;
 
 #Debugging
 // $wgShowExceptionDetails = true;
