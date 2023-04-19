@@ -183,7 +183,7 @@ wfLoadExtension( 'VisualEditor' );
 wfLoadExtension( 'WikiEditor' );
 wfLoadExtension( 'WikiSeo' );
 wfLoadExtension( 'Variables' );
-$wgDeprecationReleaseLimit = "1.35.0";
+$wgDeprecationReleaseLimit = "1.34.0";
 #关闭Variables的警告
 
 # End of automatically generated settings.
