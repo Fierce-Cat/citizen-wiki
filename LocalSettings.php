@@ -226,7 +226,7 @@ $wgVisualEditorUseSingleEditTab = true;
 $wgDefaultUserOptions['watchdefault'] = 0;
 
 #Debugging
-$wgShowExceptionDetails = true;
+// $wgShowExceptionDetails = true;
 // $wgDebugToolbar = true;
 // $wgShowDebug = true;
 
