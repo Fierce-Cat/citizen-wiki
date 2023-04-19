@@ -224,6 +224,8 @@ $wgVisualEditorEnableWikitext = true;
 $wgVisualEditorUseSingleEditTab = true;
 # 关闭默认编辑完毕监视页面
 $wgDefaultUserOptions['watchdefault'] = 0;
+# 将首页设置为根目录
+$wgMainPageIsDomainRoot = true;
 
 #Debugging
 // $wgShowExceptionDetails = true;
