@@ -121,13 +121,6 @@ $wgRightsUrl = "https://creativecommons.org/licenses/by-sa/4.0/";
 $wgRightsText = "知识共享署名-相同方式共享";
 $wgRightsIcon = "$wgResourceBasePath/resources/assets/licenses/cc-by-sa.png";
 
-$wgFooterIcons['poweredby']['railway'] = [
-	"src" => "$wgResourceBasePath/resources/assets/licenses/deploy on railway.svg",
-    // you may also use a direct path to the source, e.g. "http://example.com/my/custom/path/to/MyCustomLogo.png"
-	"url" => "http://railway.app/",
-	"alt" => "Deploy on Railway",
-];
-
 # Path to the GNU diff3 utility. Used for conflict resolution.
 $wgDiff3 = "/usr/bin/diff3";
 
