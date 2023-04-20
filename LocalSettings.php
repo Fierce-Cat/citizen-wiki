@@ -121,6 +121,17 @@ $wgRightsUrl = "https://creativecommons.org/licenses/by-sa/4.0/";
 $wgRightsText = "知识共享署名-相同方式共享";
 $wgRightsIcon = "$wgResourceBasePath/resources/assets/licenses/cc-by-sa.png";
 
+$wgFooterIcons = [
+	"poweredby" => [
+		"railway" => [
+			"icon" =>"$wgResourceBasePath/resources/assets/deploy on railway.svg",
+			"src" => null,
+			"url" => "https://railway.app/",
+			"alt" => "Powered by Railway",
+		]
+	],
+];
+
 # Path to the GNU diff3 utility. Used for conflict resolution.
 $wgDiff3 = "/usr/bin/diff3";
 
