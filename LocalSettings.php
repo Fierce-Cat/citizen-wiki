@@ -10,8 +10,7 @@
 # Further documentation for configuration settings may be found at:
 # https://www.mediawiki.org/wiki/Manual:Configuration_settings
 # php debugging
-# error_reporting( -1 );
-# ini_set( 'display_errors', 1 );
+$_ENV["php_debug_config"];
 
 # Protect against web entry
 
@@ -236,9 +235,9 @@ $wgMainPageIsDomainRoot = true;
 $wgLanguageSelector = true;
 
 #Debugging
-#$wgShowExceptionDetails = true;
-#$wgDebugToolbar = true;
-#$wgShowDebug = true;
+$wgShowExceptionDetails = $_ENV["wiki_debug"] || false;
+$wgDebugToolbar = $_ENV["wiki_debug"] || false;
+$wgShowDebug = $_ENV["wiki_debug"] || false;
 
 #调用英文站图片
 $wgForeignFileRepos[] = [
