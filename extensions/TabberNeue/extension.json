@@ -1,0 +1,153 @@
+{
+	"name": "TabberNeue",
+	"version": "1.7.5",
+	"author": [
+		"alistair3149",
+		"Eric Fortin",
+		"Alexia E. Smith",
+		"Ciencia Al Poder"
+	],
+	"url": "https://www.mediawiki.org/wiki/Extension:TabberNeue",
+	"descriptionmsg": "tabberneue-desc",
+	"type": "parserhook",
+	"license-name": "GPL-3.0-or-later",
+	"requires": {
+		"MediaWiki": ">= 1.39.0"
+	},
+	"MessagesDirs": {
+		"TabberNeue": [
+			"/i18n"
+		]
+	},
+	"AutoloadNamespaces": {
+		"MediaWiki\\Extension\\TabberNeue\\": "includes/"
+	},
+	"TrackingCategories": [
+		"tabberneue-tabber-category",
+		"tabberneue-tabbertransclude-category"
+	],
+	"ResourceModules": {
+		"ext.tabberNeue": {
+			"packageFiles": [
+				"ext.tabberNeue.js",
+				{
+					"name": "config.json",
+					"config": {
+						"enableAnimation": "TabberNeueEnableAnimation",
+						"updateLocationOnTabChange": "TabberNeueUpdateLocationOnTabChange"
+					}
+				}
+			],
+			"messages": [
+				"error"
+			],
+			"styles": [
+				"ext.tabberNeue.less"
+			],
+			"dependencies": [
+				"mediawiki.Uri",
+				"mediawiki.util"
+			],
+			"targets": [
+				"desktop",
+				"mobile"
+			]
+		},
+		"ext.tabberNeue.visualEditor": {
+			"scripts": [
+				"ve-tabberNeue/ve.ce.MWTabberNode.js",
+				"ve-tabberNeue/ve.dm.MWTabberNode.js",
+				"ve-tabberNeue/ve.ui.MWTabberContextItem.js",
+				"ve-tabberNeue/ve.ui.MWTabberDialog.js",
+				"ve-tabberNeue/ve.ui.MWTabberDialogTool.js",
+				"ve-tabberNeue/ve.ce.MWTabberTranscludeNode.js",
+				"ve-tabberNeue/ve.dm.MWTabberTranscludeNode.js",
+				"ve-tabberNeue/ve.ui.MWTabberTranscludeContextItem.js",
+				"ve-tabberNeue/ve.ui.MWTabberTranscludeInspector.js",
+				"ve-tabberNeue/ve.ui.MWTabberTranscludeInspectorTool.js"
+			],
+			"styles": [
+				"ve-tabberNeue/ve.ui.MWTabberDialog.less",
+				"ve-tabberNeue/ve.ui.MWTabberIcons.less"
+			],
+			"dependencies": [
+				"ext.visualEditor.mwcore"
+			],
+			"messages": [
+				"tabberneue-visualeditor-mwtabberdialog-title",
+				"tabberneue-visualeditor-mwtabberdialog-desc",
+				"tabberneue-visualeditor-mwtabbertranscludeinspector-title",
+				"tabberneue-visualeditor-mwtabbertranscludeinspector-desc"
+			],
+			"targets": [
+				"desktop",
+				"mobile"
+			]
+		},
+		"ext.tabberNeue.mobile.styles": {
+			"styles": [
+				"ext.tabberNeue.mobile.less"
+			],
+			"targets": [
+				"mobile"
+			]
+		},
+		"ext.tabberNeue.icons": {
+			"class": "ResourceLoaderImageModule",
+			"selector": ".tabber__header__{name}:after",
+			"images": {
+				"next": {
+					"file": {
+						"ltr": "ext.tabberNeue.icons/next-ltr.svg",
+						"rtl": "ext.tabberNeue.icons/next-rtl.svg"
+					}
+				},
+				"prev": {
+					"file": {
+						"ltr": "ext.tabberNeue.icons/previous-ltr.svg",
+						"rtl": "ext.tabberNeue.icons/previous-rtl.svg"
+					}
+				}
+			}
+		}
+	},
+	"ResourceFileModulePaths": {
+		"localBasePath": "modules",
+		"remoteExtPath": "TabberNeue/modules"
+	},
+	"config_prefix": "wg",
+	"config": {
+		"TabberNeueEnableAnimation": {
+			"value": false,
+			"description": "Enable or disable smooth scroll animation",
+			"public": true
+		},
+		"TabberNeueUpdateLocationOnTabChange": {
+			"value": true,
+			"description": "If enabled, when a tab is selected, the URL displayed on the browser changes. Opening this URL makes that tab initially selected.",
+			"public": true
+		}
+	},
+	"Hooks": {
+		"BeforePageDisplayMobile": "TabberHooks",
+		"ParserFirstCallInit": "TabberHooks"
+	},
+	"HookHandlers": {
+		"TabberHooks": {
+			"class": "MediaWiki\\Extension\\TabberNeue\\Hooks"
+		}
+	},
+	"attributes": {
+		"CodeMirror": {
+			"TagModes": {
+				"tabber": "text/mediawiki"
+			}
+		},
+		"VisualEditor": {
+			"PluginModules": [
+				"ext.tabberNeue.visualEditor"
+			]
+		}
+	},
+	"manifest_version": 2
+}

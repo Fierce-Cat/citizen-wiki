@@ -1,0 +1,261 @@
+@width-bounce-dot: 12px;
+@height-indicator: 2px;
+
+.tabber {
+	position: relative;
+	display: flex;
+
+	/* establish primary containing box */
+	overflow: hidden;
+	flex-direction: column;
+
+	&__tabs {
+		display: flex;
+		overflow: auto hidden;
+		scrollbar-width: none;
+
+		&::-webkit-scrollbar {
+			width: 0;
+			height: 0;
+		}
+	}
+
+	&__section {
+		display: grid;
+		overflow: hidden;
+		block-size: 100%;
+		grid-auto-columns: 100%;
+		grid-auto-flow: column;
+		scroll-snap-type: x mandatory;
+	}
+
+	&__header {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		/* defend against <section> needing 100% */
+		flex-shrink: 0;
+		box-shadow: inset 0 -1px 0 0 #a2a9b1;
+		/* fixes cross browser quarks */
+		min-block-size: fit-content;
+
+		&__prev {
+			left: 0;
+		}
+
+		&__next {
+			right: 0;
+		}
+
+		&__prev,
+		&__next {
+			position: absolute;
+			z-index: 1;
+			top: 0;
+			bottom: 0;
+			display: none;
+			width: 20px;
+			border-radius: 4px;
+			cursor: pointer;
+
+			&:after {
+				position: absolute;
+				top: 0;
+				bottom: 0;
+				width: inherit;
+				background-position: center;
+				background-repeat: no-repeat;
+				background-size: 14px;
+				content: '';
+			}
+		}
+
+		&--prev-visible .tabber__tabs {
+			-webkit-mask-image: linear-gradient( 90deg, transparent, #000 20% );
+			mask-image: linear-gradient( 90deg, transparent, #000 20% );
+		}
+
+		&--next-visible .tabber__tabs {
+			-webkit-mask-image: linear-gradient( 90deg, #000 80%, transparent );
+			mask-image: linear-gradient( 90deg, #000 80%, transparent );
+		}
+
+		&--prev-visible.tabber__header--next-visible .tabber__tabs {
+			-webkit-mask-image: linear-gradient( 90deg, transparent, #000 20%, #000 80%, transparent );
+			mask-image: linear-gradient( 90deg, transparent, #000 20%, #000 80%, transparent );
+		}
+
+		&--prev-visible .tabber__header__prev,
+		&--next-visible .tabber__header__next {
+			display: block;
+		}
+	}
+
+	&__indicator {
+		border-radius: @height-indicator;
+		margin-top: @height-indicator * -1;
+		background: #36c;
+		block-size: @height-indicator;
+		inline-size: 0;
+	}
+
+	&__header,
+	&__section {
+		scrollbar-width: none;
+
+		&::-webkit-scrollbar {
+			width: 0;
+			height: 0;
+		}
+	}
+
+	&__tab {
+		display: inline-flex;
+		align-items: center;
+		padding: 0.5em 0.75em;
+		color: #54595d;
+		font-weight: bold;
+		text-decoration: none;
+		white-space: nowrap;
+
+		&:visited {
+			color: #54595d;
+		}
+
+		&:hover,
+		&:active,
+		&:focus {
+			text-decoration: none;
+		}
+
+		&[ aria-selected='true' ],
+		&[ aria-selected='true' ]:visited {
+			color: #36c;
+		}
+	}
+
+	&__panel {
+		height: max-content;
+		overflow-x: auto;
+		scroll-snap-align: start;
+
+		// Hide edit buttons for non-transclusion tabs since they don't work
+		/* stylelint-disable-next-line selector-class-pattern */
+		&:not( [ data-tabber-page-title ] ) .mw-editsection {
+			display: none;
+		}
+	}
+
+	&__transclusion {
+		/*
+		 * Animation based on dots indicators from Wikimedia
+		 * T266028
+		 */
+		&--loading {
+			margin: 0.5em 0; // based on Vector
+			text-align: center;
+			white-space: nowrap;
+
+			.tabber__loading-indicator,
+			&:before,
+			&:after {
+				display: inline-block;
+				width: @width-bounce-dot;
+				height: @width-bounce-dot;
+				border-radius: 100%;
+				animation: bounce-delay 1600ms infinite ease-in-out both;
+				animation-delay: -160ms;
+				background-color: #36c;
+				content: '';
+			}
+
+			&:before {
+				margin-right: @width-bounce-dot / 4;
+				animation-delay: -330ms;
+			}
+
+			&:after {
+				margin-left: @width-bounce-dot / 4;
+				animation-delay: 0ms;
+			}
+		}
+	}
+}
+
+// Animations
+@keyframes bounce-delay {
+	0%,
+	50%,
+	100% {
+		transform: scale( 0.625 );
+	}
+
+	20% {
+		opacity: 0.87;
+		transform: scale( 1 );
+	}
+}
+
+@media ( hover: none ) {
+	// Need extra specificity to override
+	.tabber {
+		.tabber__header {
+			&__prev,
+			&__next {
+				pointer-events: none; // Disable arrow button
+
+				&:after {
+					background-image: none; // Remove arrow icon
+				}
+			}
+		}
+	}
+}
+
+@media ( hover: hover ) {
+	.tabber {
+		&__tab {
+			&:hover {
+				color: #447ff5;
+			}
+
+			&:active {
+				color: #2a4b8d;
+			}
+		}
+
+		&__header {
+			&__prev,
+			&__next {
+				&:hover {
+					background-color: rgba( 0, 24, 73, 0.03 );
+				}
+
+				&:active {
+					background-color: rgba( 0, 24, 73, 0.05 );
+				}
+			}
+		}
+	}
+}
+
+// Smooth scrolling through a large number of panels hurt performance on mobile
+// Also it will trigger unnessecary lazyloading as lazyload content show up momentarily
+@media ( prefers-reduced-motion: no-preference ) {
+	.tabber {
+		&__header {
+			scroll-behavior: smooth;
+		}
+	}
+
+	.tabber--animate {
+		.tabber {
+			&__section,
+			&__tabs {
+				@media ( min-width: 720px ) {
+					scroll-behavior: smooth;
+				}
+			}
+		}
+	}
+}

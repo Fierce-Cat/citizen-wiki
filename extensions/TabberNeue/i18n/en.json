@@ -1,0 +1,17 @@
+{
+    "@metadata": {
+        "authors": [
+            "alistair3149",
+            "Eric Fortin",
+            "Ciencia Al Poder"
+        ]
+    },
+    "tabberneue-desc": "Allows to create tabs within a page. Forked from [https://www.mediawiki.org/wiki/Extension:Tabber Extension:Tabber].",
+    "tabberneue-noscript": "Tabber requires Javascript to function.",
+    "tabberneue-tabber-category": "Pages using Tabber parser tag",
+    "tabberneue-tabbertransclude-category": "Pages using TabberTransclude parser tag",
+    "tabberneue-visualeditor-mwtabberdialog-title": "Tabber",
+    "tabberneue-visualeditor-mwtabberdialog-desc": "See the [https://www.mediawiki.org/wiki/Extension:TabberNeue#Simple_tabbers documentation] for usage.",
+    "tabberneue-visualeditor-mwtabbertranscludeinspector-title": "Tabber (transclusion)",
+    "tabberneue-visualeditor-mwtabbertranscludeinspector-desc": "See the [https://www.mediawiki.org/wiki/Extension:TabberNeue#Transclusion documentation] for usage."
+}
