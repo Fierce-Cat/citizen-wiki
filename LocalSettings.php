@@ -10,8 +10,7 @@
 # Further documentation for configuration settings may be found at:
 # https://www.mediawiki.org/wiki/Manual:Configuration_settings
 # php debugging
-# error_reporting( -1 );
-# ini_set( 'display_errors', 1 );
+$_ENV["php_debug_config"];
 
 # Protect against web entry
 
@@ -236,19 +235,19 @@ $wgMainPageIsDomainRoot = true;
 $wgLanguageSelector = true;
 
 #Debugging
-#$wgShowExceptionDetails = true;
-#$wgDebugToolbar = true;
-#$wgShowDebug = true;
+$wgShowExceptionDetails = $_ENV["wiki_debug"] || false;
+$wgDebugToolbar = $_ENV["wiki_debug"] || false;
+$wgShowDebug = $_ENV["wiki_debug"] || false;
 
 #调用英文站图片
-$wgForeignFileRepos[] = [
-	'class' => ForeignAPIRepo::class,
-	'name' => 'StarCitizenTools', // Must be a distinct name
-	'apibase' => 'https://starcitizen.tools/api.php',
-	'hashLevels' => 2,
-	'fetchDescription' => false, // Optional
-	'apiThumbCacheExpiry' => 86400, // 24 hours, optional, but required for local thumb caching
-];
+// $wgForeignFileRepos[] = [
+// 	'class' => ForeignAPIRepo::class,
+// 	'name' => 'StarCitizenTools', // Must be a distinct name
+// 	'apibase' => 'https://starcitizen.tools/api.php',
+// 	'hashLevels' => 2,
+// 	'fetchDescription' => false, // Optional
+// 	'apiThumbCacheExpiry' => 86400, // 24 hours, optional, but required for local thumb caching
+// ];
 
 #AWS插件 | Cloudflare R2 储存桶配置
 // $wgAWSCredentials = [
