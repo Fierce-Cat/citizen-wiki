@@ -156,7 +156,6 @@ wfLoadExtension( 'Gadgets' );
 wfLoadExtension( 'ImageMap' );
 wfLoadExtension( 'InputBox' );
 wfLoadExtension( 'intersection' );
-wfLoadExtension( 'Interwiki' );
 wfLoadExtension( 'Loops' );
 wfLoadExtension( 'Math' );
 wfLoadExtension( 'MultimediaViewer' );
@@ -191,6 +190,16 @@ $wgDeprecationReleaseLimit = "1.34.0";
 wfLoadExtension( 'TabberNeue' );
 # End of automatically generated settings.
 # Add more configuration options below.
+
+wfLoadExtension( 'Interwiki' );
+// To grant sysops permissions to edit interwiki data
+$wgGroupPermissions['sysop']['interwiki'] = true;
+
+// To create a new user group that may edit interwiki data
+// (bureaucrats can add users to this group)
+# $wgGroupPermissions['developer']['interwiki'] = true; // delete the comment indicator # as appropriate
+
+
 
 $wgDefaultUserOptions['usebetatoolbar'] = 1; // user option provided by WikiEditor extension
 $wgGroupPermissions['*']['edit'] = false;
