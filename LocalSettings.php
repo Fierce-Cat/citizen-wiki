@@ -234,6 +234,10 @@ $wgMainPageIsDomainRoot = true;
 # 启用语言切换选项按钮
 $wgLanguageSelector = true;
 
+# Interwiki settings https://www.mediawiki.org/wiki/Extension:Interwiki
+$wgGroupPermissions['管理员']['interwiki'] = true;
+
+
 #Debugging
 $_ENV["wiki_debug_config"];
 
