@@ -188,7 +188,7 @@ wfLoadExtension( 'WikiSeo' );
 wfLoadExtension( 'Variables' );
 $wgDeprecationReleaseLimit = "1.34.0";
 #关闭Variables的警告
-
+wfLoadExtension( 'TabberNeue' );
 # End of automatically generated settings.
 # Add more configuration options below.
 
@@ -235,9 +235,9 @@ $wgMainPageIsDomainRoot = true;
 $wgLanguageSelector = true;
 
 #Debugging
-$wgShowExceptionDetails = $_ENV["wiki_debug"] || false;
-$wgDebugToolbar = $_ENV["wiki_debug"] || false;
-$wgShowDebug = $_ENV["wiki_debug"] || false;
+$wgShowExceptionDetails = $_ENV["wiki_debug"];
+$wgDebugToolbar = $_ENV["wiki_debug"];
+$wgShowDebug = $_ENV["wiki_debug"];
 
 #调用英文站图片
 // $wgForeignFileRepos[] = [
