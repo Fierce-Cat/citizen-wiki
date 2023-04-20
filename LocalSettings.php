@@ -235,7 +235,7 @@ $wgMainPageIsDomainRoot = true;
 $wgLanguageSelector = true;
 
 # Interwiki settings https://www.mediawiki.org/wiki/Extension:Interwiki
-$wgGroupPermissions['管理员']['interwiki'] = true;
+$wgGroupPermissions['Admin']['interwiki'] = true;
 
 
 #Debugging
