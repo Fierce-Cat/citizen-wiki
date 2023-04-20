@@ -122,13 +122,21 @@ $wgRightsText = "知识共享署名-相同方式共享";
 $wgRightsIcon = "$wgResourceBasePath/resources/assets/licenses/cc-by-sa.png";
 
 $wgFooterIcons = [
+	"copyright" => [
+		"copyright" => [], // placeholder for the built in copyright icon
+	],
 	"poweredby" => [
+		"mediawiki" => [
+			"src" => "$wgResourceBasePath/resources/assets/poweredby_mediawiki_88x31.png",
+			"url" => "https://www.mediawiki.org/",
+			"alt" => "Powered by MediaWiki",
+		]
 		"railway" => [
-			"icon" =>"$wgResourceBasePath/resources/assets/deploy on railway.svg",
-			"src" => null,
+			"src" => "$wgResourceBasePath/resources/assets/deploy on railway.svg",
 			"url" => "https://railway.app/",
 			"alt" => "Powered by Railway",
 		]
+
 	],
 ];
 
