@@ -235,9 +235,9 @@ $wgMainPageIsDomainRoot = true;
 $wgLanguageSelector = true;
 
 #Debugging
-$wgShowExceptionDetails = $_ENV["wiki_debug"] || false;
-$wgDebugToolbar = $_ENV["wiki_debug"] || false;
-$wgShowDebug = $_ENV["wiki_debug"] || false;
+$wgShowExceptionDetails = $_ENV["wiki_debug"];
+$wgDebugToolbar = $_ENV["wiki_debug"];
+$wgShowDebug = $_ENV["wiki_debug"];
 
 #调用英文站图片
 // $wgForeignFileRepos[] = [
