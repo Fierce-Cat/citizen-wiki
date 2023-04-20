@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Ciencia Al Poder",
+			"Fitoschido",
+			"McDutchie\r * @author Sanbec\r */\r"
+		]
+	},
+	"purge": "Purgar",
+	"purge-descriptionmsg": "Añade una pestaña de purgado en todas las páginas normales que permite el purgado rápido de la antememoria",
+	"purge-failed": "Falló el purgado"
+}

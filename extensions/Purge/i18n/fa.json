@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Alireza Ivaz",
+			"Beginneruser",
+			"Huji"
+		]
+	},
+	"purge": "پاک‌سازی",
+	"purge-descriptionmsg": "افزودن یک زبانۀ پاک‌سازی روی همه صفحه‌های عادی، امکان پاک‌سازی سریع‌تر حافظۀ نهان را فراهم می‌کند.",
+	"purge-failed": "پاک‌سازی شکست خورد"
+}
