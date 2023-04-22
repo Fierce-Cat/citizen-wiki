@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"Vlad5250"
+		]
+	},
+	"purge": "Preučitaj",
+	"purge-descriptionmsg": "Dodaje karticu za čišćenje predmemorije na svim normalnim stranicama, što omogućuje brzo čišćenje predmemorije"
+}

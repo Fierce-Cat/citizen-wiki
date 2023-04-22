@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Ex13\r * @author SpeedyGonsales\r */\r",
+			"Hmxhmx",
+			"MaGa"
+		]
+	},
+	"purge": "očisti predmemoriju",
+	"purge-descriptionmsg": "Dodaje karticu za čišćenje predmemorije na svim običnim stranicama što omogućuje brzo čišćenje predmemorije",
+	"purge-failed": "Čišćenje nije uspjelo"
+}

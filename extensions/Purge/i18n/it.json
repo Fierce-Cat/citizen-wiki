@@ -1,0 +1,11 @@
+{
+	"@metadata": {
+		"authors": [
+			"Beta16",
+			"McDutchie\r * @author Pietrodn\r */\r"
+		]
+	},
+	"purge": "purga",
+	"purge-descriptionmsg": "Aggiunge un tab \"purga\" su tutte le pagine normali, permettendo uno svuotamento rapido della cache",
+	"purge-failed": "Aggiornamento fallito"
+}

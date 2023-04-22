@@ -81,7 +81,7 @@ $wgMemCachedServers = [];
 
 ## To enable image uploads, make sure the 'images' directory
 ## is writable, then set this to true:
-// $wgEnableUploads = true;
+$wgEnableUploads = true;
 #$wgUseImageMagick = true;
 #$wgImageMagickConvertCommand = "/usr/bin/convert";
 
@@ -166,6 +166,7 @@ wfLoadExtension( 'PageImages' );
 wfLoadExtension( 'ParserFunctions' );
 wfLoadExtension( 'PdfHandler' );
 wfLoadExtension( 'Poem' );
+wfLoadExtension( 'Purge' );
 wfLoadExtension( 'Renameuser' );
 wfLoadExtension( 'ReplaceText' );
 wfLoadExtension( 'SandboxLink' );
@@ -234,6 +235,10 @@ $wgMainPageIsDomainRoot = true;
 # 启用语言切换选项按钮
 $wgLanguageSelector = true;
 
+# Interwiki settings https://www.mediawiki.org/wiki/Extension:Interwiki
+$wgGroupPermissions['sysop']['interwiki'] = true;
+
+
 #Debugging
 $_ENV["wiki_debug_config"];
 
@@ -248,22 +253,22 @@ $_ENV["wiki_debug_config"];
 // ];
 
 #AWS插件 | Cloudflare R2 储存桶配置
-// $wgAWSCredentials = [
-// 	'key' => $_ENV["S3Key"],
-// 	'secret' => $_ENV["S3Secret"],
-// 	'token' => false
-// ];
+$wgAWSCredentials = [
+	'key' => $_ENV["S3Key"],
+	'secret' => $_ENV["S3Secret"],
+	'token' => false
+];
 
-// $wgAWSRegion = $_ENV["S3Region"]; # Northern Virginia
+$wgAWSRegion = $_ENV["S3Region"]; # Northern Virginia
 
 // Replace <something> with the name of your S3 bucket, e.g. wonderfulbali234.
-// $wgAWSBucketName = $_ENV["S3BucketName"];
-// $wgAWSBucketDomain = $_ENV["S3BucketDomain"];
-// $wgFileBackends['s3']['endpoint'] = $_ENV["S3Endpoint"];
-// $wgAWSRepoHashLevels = '2';
+$wgAWSBucketName = $_ENV["S3BucketName"];
+$wgAWSBucketDomain = $_ENV["S3BucketDomain"];
+$wgFileBackends['s3']['endpoint'] = $_ENV["S3Endpoint"];
+$wgAWSRepoHashLevels = '2';
 
 // If you anticipate using several hundred buckets, one per wiki, then it's probably better to use one bucket
 // with the top level subdirectory as the wiki's name, and permissions properly configured of course.
 // While there are no more performance losses by using such a scheme, it might make things messy. Hence, it's
 // still a good idea to use one bucket per wiki unless you are approaching your 1,000 bucket per account limit.
-// $wgAWSBucketTopSubdirectory = "/"; # leading slash is required
+$wgAWSBucketTopSubdirectory = "/"; # leading slash is required
