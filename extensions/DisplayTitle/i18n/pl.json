@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"SemanticPioneer"
+		]
+	},
+	"displaytitle-desc": "Używa właściwości strony displaytitle w tekście łącza, podtytule i tytule strony dyskusji; zapewnia funkcję parsera do wysyłania zapytań displaytitle.",
+	"displaytitle-talkpagetitle": "Dyskusja $1"
+}

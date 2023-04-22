@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"Elisardojm"
+		]
+	},
+	"displaytitle-desc": "Utiliza a propiedade de páxina «displaytitle» nos textos de ligazóns, os subtítulos e as páxinas de conversa. Proporciona unha función do analizador sintáctico para consultar «displaytitle»",
+	"displaytitle-talkpagetitle": "Conversa $1"
+}

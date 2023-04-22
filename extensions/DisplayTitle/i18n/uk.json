@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"Piramidion"
+		]
+	},
+	"displaytitle-desc": "Використовує властивість displaytitle сторінки у тексті посилання, підзаголовку і назві сторінки обговорення; забезпечує парсерну функцію для запитування displaytitle",
+	"displaytitle-talkpagetitle": "Обговорення $1"
+}

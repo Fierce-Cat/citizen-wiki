@@ -1,0 +1,10 @@
+{
+	"@metadata": {
+		"authors": [
+			"Dgstranz",
+			"Fitoschido"
+		]
+	},
+	"displaytitle-desc": "Utiliza la propiedad de página «displaytitle» en los textos de enlaces, los subtítulos y las páginas de discusión. Proporciona una función del analizador sintáctico para realizar consultas de «displaytitle»",
+	"displaytitle-talkpagetitle": "Habla sobre $1"
+}
