@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"!Silent"
+		]
+	},
+	"displaytitle-desc": "Usa a propriedade ''displaytitle'' da página em um link de texto, no subtítulo, e no título da página de discussão; fornece uma função do analisador sintático para consultar ''displaytitle''",
+	"displaytitle-talkpagetitle": "Discuta $1"
+}

@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"Hamilton Abreu"
+		]
+	},
+	"displaytitle-desc": "Usa a propriedade de página \"displaytitle\" no texto de hiperligações, no subtítulo e no título da página de discussão; fornece uma função do analisador sintático para consultar \"displaytitle\"",
+	"displaytitle-talkpagetitle": "Discutir $1"
+}

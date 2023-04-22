@@ -1,0 +1,10 @@
+{
+	"@metadata": {
+		"authors": [
+			"Kghbln",
+			"Metalhead64"
+		]
+	},
+	"displaytitle-desc": "Verwendet die Seiteneigenschaft „Anzeigetitel“ zur Anzeige von Linktext, Untertitel sowie Diskussionsseitentitel und stellt eine Parserfunktion zu deren Abfrage bereit",
+	"displaytitle-talkpagetitle": "Zu $1 diskutieren"
+}

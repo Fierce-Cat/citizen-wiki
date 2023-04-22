@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"Eleassar"
+		]
+	},
+	"displaytitle-desc": "Uporablja lastnost »displaytitle« strani v besedilu povezav, podnaslovu in naslovu pogovorne strani; zagotavlja funkcijo razčlenjevalnika za pridobitev vrednosti te lastnosti",
+	"displaytitle-talkpagetitle": "Razpravljajte o $1"
+}

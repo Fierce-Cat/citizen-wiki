@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"Red Winged Duck"
+		]
+	},
+	"displaytitle-desc": "Выкарыстоўвае ўласьцівасьць старонкі displaytitle ў тэкставых спасылках, падзагалоўку і назьве старонкі абмеркаваньня; забясьпечвае парсэрную функцыю для запыту displaytitle",
+	"displaytitle-talkpagetitle": "Абмеркаваньне $1"
+}
