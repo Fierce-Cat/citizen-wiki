@@ -160,6 +160,7 @@ wfLoadExtension( 'CodeEditor' );
 wfLoadExtension( 'CodeMirror' );
 wfLoadExtension( 'ConfirmEdit' );
 wfLoadExtension( 'DynamicPageList3' );
+wfLoadExtension( 'DisplayTitle' );
 // wfLoadExtension( 'Elastica' );
 wfLoadExtension( 'Gadgets' );
 wfLoadExtension( 'ImageMap' );
@@ -241,8 +242,8 @@ $wgVisualEditorUseSingleEditTab = true;
 $wgDefaultUserOptions['watchdefault'] = 0;
 # 将首页设置为根目录
 $wgMainPageIsDomainRoot = true;
-# 启用语言切换选项按钮
-$wgLanguageSelector = true;
+# 启用链接展示重定向后页面标题
+$wgDisplayTitleFollowRedirects = true;
 
 # Interwiki settings https://www.mediawiki.org/wiki/Extension:Interwiki
 $wgGroupPermissions['sysop']['interwiki'] = true;
