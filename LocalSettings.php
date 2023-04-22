@@ -123,7 +123,7 @@ $wgRightsIcon = "$wgResourceBasePath/resources/assets/licenses/cc-by-sa.png";
 
 #添加Railway标志
 $wgFooterIcons['poweredby']['railway'] = [
-	"src" => "$wgResourceBasePath/resources/assets/power_by_railway.png",
+	"src" => "$wgResourceBasePath/resources/assets/powered_by_railway.png",
 	"url" => "http://railway.app/",
 	"alt" => "Power by Railway",
 ];
