@@ -46,6 +46,8 @@ $wgLogos = [
 	'icon' => "$wgResourceBasePath/resources/assets/sitelogo.svg",
 ];
 
+$wgFavicon = "$wgResourceBasePath/resources/assets/favicon.ico";
+
 ## UPO means: this is also a user preference option
 
 $wgEnableEmail = false;
