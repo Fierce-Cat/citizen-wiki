@@ -1,0 +1,49 @@
+{
+	"name": "DisplayTitle",
+	"version": "3.2",
+	"author": [
+		"[https://www.mediawiki.org/wiki/User:Cindy.cicalese Cindy Cicalese]",
+		"[https://www.semantic-mediawiki.org/wiki/User:Oetterer Tobias Oetterer]"
+	],
+	"url": "https://www.mediawiki.org/wiki/Extension:DisplayTitle",
+	"descriptionmsg": "displaytitle-desc",
+	"type": "parserhook",
+	"license-name": "MIT",
+	"requires": {
+		"MediaWiki": ">= 1.35.0"
+	},
+	"MessagesDirs": {
+		"DisplayTitle": [
+			"i18n"
+		]
+	},
+	"ExtensionMessagesFiles": {
+		"DisplayTitleMagic": "includes/DisplayTitle.i18n.magic.php"
+	},
+	"AutoloadClasses": {
+		"DisplayTitleHooks": "includes/DisplayTitleHooks.php",
+		"DisplayTitleLuaLibrary": "includes/DisplayTitleLuaLibrary.php"
+	},
+	"Hooks": {
+		"ParserFirstCallInit": "DisplayTitleHooks::onParserFirstCallInit",
+		"ParserBeforeInternalParse": "DisplayTitleHooks::onParserBeforeInternalParse",
+		"ParserBeforePreprocess": "DisplayTitleHooks::onParserBeforeInternalParse",
+		"BeforePageDisplay": "DisplayTitleHooks::onBeforePageDisplay",
+		"SkinTemplateNavigation::Universal": "DisplayTitleHooks::onSkinTemplateNavigation__Universal",
+		"HtmlPageLinkRendererBegin": "DisplayTitleHooks::onHtmlPageLinkRendererBegin",
+		"ScribuntoExternalLibraries": "DisplayTitleHooks::onScribuntoExternalLibraries",
+		"SelfLinkBegin": "DisplayTitleHooks::onSelfLinkBegin"
+	},
+	"config": {
+		"DisplayTitleHideSubtitle": {
+			"value": false
+		},
+		"DisplayTitleExcludes": {
+			"value": []
+		},
+		"DisplayTitleFollowRedirects": {
+			"value": true
+		}
+	},
+	"manifest_version": 2
+}
