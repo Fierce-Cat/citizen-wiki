@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"WikiPhoenix"
+		]
+	},
+	"displaytitle-desc": "Använder sidegenskapen displaytitle i länktext, undertitel och diskussionsidtitel; tillhandahåller parserfunktionalitet för att begära displaytitle",
+	"displaytitle-talkpagetitle": "Diskutera $1"
+}

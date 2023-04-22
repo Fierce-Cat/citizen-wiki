@@ -1,0 +1,13 @@
+{
+	"@metadata": {
+		"authors": [
+			"Cindy.cicalese",
+			"Liuxinyu970226",
+			"Purodha",
+			"Shirayuki",
+			"Umherirrender"
+		]
+	},
+	"displaytitle-desc": "{{desc|name=Display Title|url=https://www.mediawiki.org/wiki/Extension:DisplayTitle}}",
+	"displaytitle-talkpagetitle": "Format string for the title of a talk page; $1 is the displaytitle of the subject page corresponding to the talk page.\n{{Identical|Discuss}}"
+}

@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"McDutchie"
+		]
+	},
+	"displaytitle-desc": "Usa le proprietate de pagina \"displaytitle\" in le textos de ligamines, subtitulos e paginas de discussion. Forni un function del analysator syntactic pro realisar consultas de \"displaytitle\".",
+	"displaytitle-talkpagetitle": "Discuter $1"
+}

@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"Liuxinyu970226"
+		]
+	},
+	"displaytitle-desc": "在链接文本、子标题和讨论页面标题中使用显示标题页面属性；提供解析器函数以查询显示标题",
+	"displaytitle-talkpagetitle": "讨论$1"
+}

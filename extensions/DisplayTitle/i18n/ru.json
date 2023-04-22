@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"Facenapalm"
+		]
+	},
+	"displaytitle-desc": "Использует свойство страницы displaytitle в тексте ссылки, подзаголовке и заголовке страницы обсуждения; предоставляет функцию парсера для запроса displaytitle.",
+	"displaytitle-talkpagetitle": "Обсудить $1"
+}

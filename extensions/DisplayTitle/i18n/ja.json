@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"Otokoume"
+		]
+	},
+	"displaytitle-desc": "リンクテキスト、サブタイトル、トークページ名に displaytitle プロパティを使用し、そのパーサー関数を提供する",
+	"displaytitle-talkpagetitle": "$1 について議論"
+}

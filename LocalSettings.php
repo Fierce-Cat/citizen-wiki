@@ -46,6 +46,8 @@ $wgLogos = [
 	'icon' => "$wgResourceBasePath/resources/assets/sitelogo.svg",
 ];
 
+$wgFavicon = "$wgResourceBasePath/resources/assets/favicon.ico";
+
 ## UPO means: this is also a user preference option
 
 $wgEnableEmail = false;
@@ -121,6 +123,13 @@ $wgRightsUrl = "https://creativecommons.org/licenses/by-sa/4.0/";
 $wgRightsText = "知识共享署名-相同方式共享";
 $wgRightsIcon = "$wgResourceBasePath/resources/assets/licenses/cc-by-sa.png";
 
+#添加Railway标志
+$wgFooterIcons['poweredby']['railway'] = [
+	"src" => "$wgResourceBasePath/resources/assets/powered_by_railway.png",
+	"url" => "http://railway.app/",
+	"alt" => "Power by Railway",
+];
+
 # Path to the GNU diff3 utility. Used for conflict resolution.
 $wgDiff3 = "/usr/bin/diff3";
 
@@ -151,6 +160,7 @@ wfLoadExtension( 'CodeEditor' );
 wfLoadExtension( 'CodeMirror' );
 wfLoadExtension( 'ConfirmEdit' );
 wfLoadExtension( 'DynamicPageList3' );
+wfLoadExtension( 'DisplayTitle' );
 // wfLoadExtension( 'Elastica' );
 wfLoadExtension( 'Gadgets' );
 wfLoadExtension( 'ImageMap' );
@@ -232,8 +242,8 @@ $wgVisualEditorUseSingleEditTab = true;
 $wgDefaultUserOptions['watchdefault'] = 0;
 # 将首页设置为根目录
 $wgMainPageIsDomainRoot = true;
-# 启用语言切换选项按钮
-$wgLanguageSelector = true;
+# 启用链接展示重定向后页面标题
+$wgDisplayTitleFollowRedirects = true;
 
 # Interwiki settings https://www.mediawiki.org/wiki/Extension:Interwiki
 $wgGroupPermissions['sysop']['interwiki'] = true;

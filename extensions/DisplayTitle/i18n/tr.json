@@ -1,0 +1,10 @@
+{
+	"@metadata": {
+		"authors": [
+			"Alikaan",
+			"Hedda"
+		]
+	},
+	"displaytitle-desc": "Bağlantı metni, altyazı ve tartışma sayfası başlığında displaytitle sayfa özelliğini kullanır; displaytitle'ı sorgulamak için ayrıştırıcı işlevi sağlar",
+	"displaytitle-talkpagetitle": "$1 tartış"
+}
