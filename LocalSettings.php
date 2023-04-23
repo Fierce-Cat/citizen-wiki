@@ -244,6 +244,9 @@ $wgFooterIcons['poweredby']['railway'] = [
 	"url" => "http://railway.app/",
 	"alt" => "Power by Railway",
 ];
+#搜索相关设置
+#禁用搜索建议器区分大小写
+$wgCirrusSearchCompletionSuggesterContext["case_sensitive"] = false;
 
 # Interwiki settings https://www.mediawiki.org/wiki/Extension:Interwiki
 $wgGroupPermissions['sysop']['interwiki'] = true;
