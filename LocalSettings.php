@@ -193,6 +193,7 @@ wfLoadExtension( 'Variables' );
 $wgDeprecationReleaseLimit = "1.34.0";
 #关闭Variables的警告
 wfLoadExtension( 'TabberNeue' );
+wfLoadExtension( 'SimpleBatchUpload' );
 # End of automatically generated settings.
 # Add more configuration options below.
 
