@@ -11,7 +11,9 @@
 # https://www.mediawiki.org/wiki/Manual:Configuration_settings
 # php debugging
 $_ENV["php_debug_config"];
-
+ini_set('post_max_size', '100M');
+ini_set('upload_max_filesize', '100M');
+ini_set('memory_limit', '1024M');
 # Protect against web entry
 
 if ( !defined( 'MEDIAWIKI' ) ) {
