@@ -195,8 +195,8 @@ $wgDeprecationReleaseLimit = "1.34.0";
 wfLoadExtension( 'TabberNeue' );
 wfLoadExtension( 'SimpleBatchUpload' );
 wfLoadExtension( 'NativeSvgHandler' );
-$wgMaxUploadSize = 0
-#关闭上传文件大小限制
+$wgMaxUploadSize = 500*1024*1024
+#上传文件大小限制改为500M
 # End of automatically generated settings.
 # Add more configuration options below.
 
