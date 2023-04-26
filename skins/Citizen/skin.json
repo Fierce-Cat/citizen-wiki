@@ -132,7 +132,7 @@
 				"resources/skins.citizen.scripts/tableOfContents.js"
 			],
 			"dependencies": [
-                                "ext.purge.init"
+                                "ext.purge.init",
 				"mediawiki.util",
 				"mediawiki.page.ready"
 			],
