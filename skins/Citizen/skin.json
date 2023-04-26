@@ -605,3 +605,15 @@
 	},
 	"manifest_version": 2
 }
+"sidebar": [
+    {
+        "type": "tools",
+        "title": "工具",
+        "items": [
+            {
+                "text": "刷新页面",
+                "href": "$wgScript?action=purge"
+            }
+        ]
+    }
+]
