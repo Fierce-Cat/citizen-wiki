@@ -247,6 +247,17 @@ $wgFooterIcons['poweredby']['railway'] = [
 	"url" => "http://railway.app/",
 	"alt" => "Power by Railway",
 ];
+# 启用刷新按钮
+
+wfLoadExtension( 'Purge' );
+```
+
+**启用刷新按钮**
+
+1. 在您的`LocalSettings.php`文件中添加以下代码以启用刷新按钮：
+
+```php
+$wgPurgeCacheEnableUrl = true;
 
 # Interwiki settings https://www.mediawiki.org/wiki/Extension:Interwiki
 $wgGroupPermissions['sysop']['interwiki'] = true;
