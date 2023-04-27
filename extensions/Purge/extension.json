@@ -1,18 +1,17 @@
 {
 	"name": "Purge",
-	"version": "2.1.0",
+	"version": "2.0.0",
 	"author": [
 		"[https://www.mediawiki.org/wiki/User:Ævar_Arnfjörð_Bjarmason Ævar Arnfjörð Bjarmason]",
 		"[https://www.mediawiki.org/wiki/User:Hutchy68 Tom Hutchison]",
-		"[https://www.mediawiki.org/wiki/User:Samwilson Sam Wilson]",
-		"NekoCharm"
+		"[https://www.mediawiki.org/wiki/User:Samwilson Sam Wilson]"
 	],
 	"url": "https://www.mediawiki.org/wiki/Extension:Purge",
 	"descriptionmsg": "purge-descriptionmsg",
-	"license-name": "GPL-2.0-or-later",
+	"license-name": "GPL-2.0+",
 	"type": "other",
 	"requires": {
-		"MediaWiki": ">= 1.35.0"
+		"MediaWiki": ">= 1.31.0"
 	},
 	"MessagesDirs": {
 		"Purge": [
@@ -21,29 +20,23 @@
 	},
 	"ResourceModules": {
 		"ext.purge": {
-			"localBasePath": "resources",
-			"remoteExtPath": "Purge",
 			"scripts": [
-				"ext.purge.js"
+				"resources/ext.purge.js"
 			],
 			"messages": [
 				"purge-failed"
-			],
-			"dependencies": [
-				"mediawiki.api"
 			]
 		}
 	},
-	"AutoloadNamespaces": {
-		"MediaWiki\\Extension\\Purge\\": "includes/"
+	"ResourceFileModulePaths": {
+		"localBasePath": "",
+		"remoteExtPath": "Purge"
+	},
+	"AutoloadClasses": {
+		"MediaWiki\\Extension\\Purge\\Hooks": "includes/Hooks.php"
 	},
 	"Hooks": {
-		"SkinTemplateNavigation::Universal": "skinHook"
-	},
-	"HookHandlers": {
-		"skinHook": {
-			"class": "MediaWiki\\Extension\\Purge\\Hooks"
-		}
+		"SkinTemplateNavigation": "MediaWiki\\Extension\\Purge\\Hooks::onSkinTemplateNavigation"
 	},
 	"manifest_version": 2
 }
