@@ -7,6 +7,6 @@
 		]
 	},
 	"purge": "Eidel maachen",
-	"purge-descriptionmsg": "Setzt e \"Purge\" Onglet op all normal Säiten derbäi, deen et erlaabt fir den Tëschespäicher (Cache) séier eidel ze maachen",
+	"descriptionmsg": "Setzt e \"Purge\" Onglet op all normal Säiten derbäi, deen et erlaabt fir den Tëschespäicher (Cache) séier eidel ze maachen",
 	"purge-failed": "Eidel maachen huet net funktionéiert"
 }

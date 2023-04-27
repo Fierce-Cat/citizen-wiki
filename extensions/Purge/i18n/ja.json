@@ -2,11 +2,10 @@
 	"@metadata": {
 		"authors": [
 			"Afaz",
-			"Fryed-peach\r * @author Kahusi\r * @author Shirayuki\r */\r",
-			"Omotecho"
+			"Fryed-peach\r * @author Kahusi\r * @author Shirayuki\r */\r"
 		]
 	},
-	"purge": "キャッシュを破棄",
-	"purge-descriptionmsg": "すべての通常ページに、迅速にキャッシュを削除するための「キャッシュを削除」タブを追加する",
-	"purge-failed": "キャッシュの破棄に失敗しました"
+	"purge": "キャッシュを削除",
+	"descriptionmsg": "すべての通常ページに、迅速にキャッシュを削除するための「キャッシュを削除」タブを追加する",
+	"purge-failed": "キャッシュの削除に失敗しました"
 }

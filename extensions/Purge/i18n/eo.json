@@ -6,6 +6,6 @@
 		]
 	},
 	"purge": "forviŝigi",
-	"purge-descriptionmsg": "Aldonas langeton por malplenigo de kaŝmemoro al ĉiuj normalaj paĝoj ebligante rapidan malplenigon de kaŝmemoro",
+	"descriptionmsg": "Aldonas langeton por malplenigo de kaŝmemoro al ĉiuj normalaj paĝoj ebligante rapidan malplenigon de kaŝmemoro",
 	"purge-failed": "Malplenigo de servila kaŝmemoro malsukcesis"
 }

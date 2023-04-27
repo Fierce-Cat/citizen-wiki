@@ -5,5 +5,5 @@
 		]
 	},
 	"purge": "očisti",
-	"purge-descriptionmsg": "Dodaje jezičak za čišćenje na svim običnim stranicama i zaobilazi provjeru čišćanja za anonimne korisnike omogućujući brzo pražnjenje keša"
+	"descriptionmsg": "Dodaje jezičak za čišćenje na svim običnim stranicama i zaobilazi provjeru čišćanja za anonimne korisnike omogućujući brzo pražnjenje keša"
 }

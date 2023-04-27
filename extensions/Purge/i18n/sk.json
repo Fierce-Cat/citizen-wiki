@@ -5,5 +5,5 @@
 		]
 	},
 	"purge": "prečistiť",
-	"purge-descriptionmsg": "Pridáva záložku „Prečistiť“ na všetky bežné stránky, čím umožňuje anonymným používateľom rýchle prečistenie vyrovnávacej pamäte"
+	"descriptionmsg": "Pridáva záložku „Prečistiť“ na všetky bežné stránky, čím umožňuje anonymným používateľom rýchle prečistenie vyrovnávacej pamäte"
 }

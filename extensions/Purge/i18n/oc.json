@@ -5,5 +5,5 @@
 		]
 	},
 	"purge": "purgar",
-	"purge-descriptionmsg": "Apond un onglet « Purgar » sus totas las paginas normalas e activa sa seleccion pels utilizaires anonims per una purga rapida de l'amagatal."
+	"descriptionmsg": "Apond un onglet « Purgar » sus totas las paginas normalas e activa sa seleccion pels utilizaires anonims per una purga rapida de l'amagatal."
 }

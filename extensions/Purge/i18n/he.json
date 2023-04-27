@@ -1,12 +1,9 @@
 {
 	"@metadata": {
 		"authors": [
-			"Amire80",
-			"Amire80\r * @author Rotemliss\r * @author YaronSh\r */\r",
-			"Ex-Diktator"
+			"Amire80\r * @author Rotemliss\r * @author YaronSh\r */\r"
 		]
 	},
-	"purge": "ניקוי מטמון",
-	"purge-descriptionmsg": "הוספת לשונית ניקוי מטמון לכל הדפים הרגילים שמאפשרת ניקוי זריז של המטמון",
-	"purge-failed": "הניקוי נכשל"
+	"purge": "רענון המטמון",
+	"descriptionmsg": "הוספת לשונית ריקון לכל הדפים הרגילים שמאפשרת ריקון זריז של המטמון"
 }

@@ -6,6 +6,6 @@
 		]
 	},
 	"purge": "Cache leeren",
-	"purge-descriptionmsg": "Ergänzt den Reiter „Purge“, der die schnelle Löschung des Seitencaches ermöglicht",
+	"descriptionmsg": "Ergänzt den Reiter „Purge“, der die schnelle Löschung des Seitencaches ermöglicht",
 	"purge-failed": "Leeren des Caches fehlgeschlagen"
 }

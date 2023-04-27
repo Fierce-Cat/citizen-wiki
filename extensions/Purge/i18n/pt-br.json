@@ -2,11 +2,10 @@
 	"@metadata": {
 		"authors": [
 			"Eduardo Addad de Oliveira",
-			"Eduardo.mps\r * @author McDutchie\r */\r",
-			"Eduardoaddad"
+			"Eduardo.mps\r * @author McDutchie\r */\r"
 		]
 	},
 	"purge": "purgar",
-	"purge-descriptionmsg": "Adiciona uma aba para purgar em todas as páginas normais, permitindo um purga rápida da cache",
+	"descriptionmsg": "Adiciona uma aba para purgar em todas as páginas normais, permitindo um purga rápida da cache",
 	"purge-failed": "A purga falhou"
 }

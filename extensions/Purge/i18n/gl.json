@@ -6,6 +6,6 @@
 		]
 	},
 	"purge": "Limpar",
-	"purge-descriptionmsg": "Engade a lapela \"Limpar\" en todas as páxinas normais, permitindo unha purga rápida da caché",
+	"descriptionmsg": "Engade a lapela \"Limpar\" en todas as páxinas normais, permitindo unha purga rápida da caché",
 	"purge-failed": "A purga fallou"
 }

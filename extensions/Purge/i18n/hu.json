@@ -5,5 +5,5 @@
 		]
 	},
 	"purge": "frissít",
-	"purge-descriptionmsg": "Új fület ad hozzá minden normál laphoz a gyorsítótár kiürítésére, és kihagyja az ürítettség-ellenőrzést nem bejelentkezett felhasználók esetén, ami lehetővé teszi a gyorsítótár gyors ürítését"
+	"descriptionmsg": "Új fület ad hozzá minden normál laphoz a gyorsítótár kiürítésére, és kihagyja az ürítettség-ellenőrzést nem bejelentkezett felhasználók esetén, ami lehetővé teszi a gyorsítótár gyors ürítését"
 }

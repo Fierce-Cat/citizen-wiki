@@ -5,5 +5,5 @@
 		]
 	},
 	"purge": "obnovit",
-	"purge-descriptionmsg": "Přidává na všechny běžné stránky záložku pro obnovení, čímž umožňuje rychlé obnovení cache"
+	"descriptionmsg": "Přidává na všechny běžné stránky záložku pro obnovení, čímž umožňuje rychlé obnovení cache"
 }

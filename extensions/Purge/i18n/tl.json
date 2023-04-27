@@ -5,5 +5,5 @@
 		]
 	},
 	"purge": "purgahin/linisin",
-	"purge-descriptionmsg": "Nagdaragdag ng isang laylayan ng pampurga sa ibabaw ng lahat ng pangkaraniwang mga pahina para sa maliksing pagpupurga ng taguan"
+	"descriptionmsg": "Nagdaragdag ng isang laylayan ng pampurga sa ibabaw ng lahat ng pangkaraniwang mga pahina para sa maliksing pagpupurga ng taguan"
 }

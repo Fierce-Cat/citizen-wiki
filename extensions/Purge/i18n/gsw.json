@@ -5,5 +5,5 @@
 		]
 	},
 	"purge": "Cache lääre",
-	"purge-descriptionmsg": "Ergänzt de Ryter „Purge“, wo e schnälli Cache-Leschig mögli macht."
+	"descriptionmsg": "Ergänzt de Ryter „Purge“, wo e schnälli Cache-Leschig mögli macht."
 }

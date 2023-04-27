@@ -6,6 +6,6 @@
 		]
 	},
 	"purge": "purga",
-	"purge-descriptionmsg": "Aggiunge un tab \"purga\" su tutte le pagine normali, permettendo uno svuotamento rapido della cache",
+	"descriptionmsg": "Aggiunge un tab \"purga\" su tutte le pagine normali, permettendo uno svuotamento rapido della cache",
 	"purge-failed": "Aggiornamento fallito"
 }

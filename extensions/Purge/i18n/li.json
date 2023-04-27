@@ -5,6 +5,6 @@
 		]
 	},
 	"purge": "Vernuuj",
-	"purge-descriptionmsg": "Veug e taabblaad \"vernuuj\" tou op alle normaal pagina's zoedet de cache snel kan waere vernuujd",
+	"descriptionmsg": "Veug e taabblaad \"vernuuj\" tou op alle normaal pagina's zoedet de cache snel kan waere vernuujd",
 	"purge-failed": "Vernujing mislök"
 }

@@ -5,5 +5,5 @@
 		]
 	},
 	"purge": "singkirkan",
-	"purge-descriptionmsg": "Membubuh tab singkirkan pada semua laman biasa untuk mempercepat penyingkiran cache"
+	"descriptionmsg": "Membubuh tab singkirkan pada semua laman biasa untuk mempercepat penyingkiran cache"
 }

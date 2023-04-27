@@ -7,6 +7,6 @@
 		]
 	},
 	"purge": "očisti predmemoriju",
-	"purge-descriptionmsg": "Dodaje karticu za čišćenje predmemorije na svim običnim stranicama što omogućuje brzo čišćenje predmemorije",
+	"descriptionmsg": "Dodaje karticu za čišćenje predmemorije na svim običnim stranicama što omogućuje brzo čišćenje predmemorije",
 	"purge-failed": "Čišćenje nije uspjelo"
 }

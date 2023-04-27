@@ -6,6 +6,6 @@
 		]
 	},
 	"purge": "Purgar",
-	"purge-descriptionmsg": "Adiciona um separador \"purgar\" a todas as páginas normais, permitindo uma purga rápida da ''cache''",
+	"descriptionmsg": "Adiciona um separador \"purgar\" a todas as páginas normais, permitindo uma purga rápida da ''cache''",
 	"purge-failed": "A purga falhou"
 }

@@ -7,6 +7,6 @@
 		]
 	},
 	"purge": "Odśwież",
-	"purge-descriptionmsg": "Dodaje zakładkę '''{{int:purge-purge}}''' na wszystkich zwykłych stronach aby szybko wyczyścić pamięć podręczną",
+	"descriptionmsg": "Dodaje zakładkę '''{{int:purge-purge}}''' na wszystkich zwykłych stronach aby szybko wyczyścić pamięć podręczną",
 	"purge-failed": "Odświeżanie nie powiodło się"
 }
