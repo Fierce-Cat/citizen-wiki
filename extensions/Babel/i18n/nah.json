@@ -1,0 +1,34 @@
+{
+	"@metadata": {
+		"authors": [
+			"Akapochtli",
+			"Fluence",
+			"Languaeditor",
+			"Purodha",
+			"Ricardo gs",
+			"Teòtlalili"
+		]
+	},
+	"babel": "Tlayolmelawalistli ika ni tekitiketl itlahtolwan",
+	"babel-desc": "Ica zan icel monextiz in ibabelpal in tequitiuhqui huan cualli motlaliliz tenemachiouh, ma motlalili in tlaixnehnehuilizcatequitqui <code>#babel</code>",
+	"babel-url": "Project:Babel",
+	"babel-footer-url": ":Category:Babel - Tequitiuhqueh ipal intlahtol",
+	"babel-autocreate-reason": "Mocelchihchiuhtica in [[$1|Babel]]tlahcuilolli ineneuhcayo",
+	"babel-autocreate-text-levels": "In tequitiuhqueh ipan inin neneuhcayotl quihtohqueh mach quimonehnehuilia $1 iuhqui ica tlahtolli $2",
+	"babel-autocreate-text-main": "In tequitiuhqueh ipan inin neneuhcayotl oquihtohqueh mach quixmatih in $1 tlahtolli",
+	"babel-0": "Inin tequitiuhqui [[$1|ahmo quinehnehuilia]] in [[$2|$3]] (nozo molhui quitequiyomati).",
+	"babel-1": "Inin tequitiuhqui [[$1|cemi chihton]] quixmati in [[$2|$3]].",
+	"babel-2": "Inin tequitiuhqui [[$1|quimamati]] tlahtoz ica in [[$2|$3]].",
+	"babel-3": "Inin tequitiuhqui [[$1|cualli]] tlahtoa ica in [[$2|$3]].",
+	"babel-4": "Ni tekitiketl saniloa [[$2|$3]] kensé [[$1|tlahtohketl]].",
+	"babel-5": "Ni tekitiketl saniloa [[$2|$3]] kensé [[$1|tlamachtihketl]].",
+	"babel-N": "Inin tequitiuhqui quipiya quen [[$1|nantlahtolli]] in [[$2|$3]].",
+	"babel-0-n": "Ni tekitiketl [[$1|axkanah saniloa]] [[$2|mexikatlahtolli]] (so owih kikwamachilia).",
+	"babel-1-n": "Ni tekitiketl [[$1|achikentsin]] saniloa [[$2|mexikatlahtolli]].",
+	"babel-2-n": "Ni tekitiketl [[$1|kentsin]] saniloa [[$2|mexikatlahtolli]].",
+	"babel-3-n": "Ni tekitiketl [[$1|sankwalli]] saniloa [[$2|mexikatlahtolli]].",
+	"babel-4-n": "Ni tekitiketl saniloa [[$2|mexikatlahtolli]] [[$1|kensé nawatlahtohketl]].",
+	"babel-5-n": "Ni tekitiketl saniloa [[$2|mexikatlahtolli]] [[$1|kensé tlamachtihketl]].",
+	"babel-N-n": "Ni tekitiketl kikwamachilia [[$2|mexikatlahtolli]] [[$1|kenwak inantlahtol]].",
+	"babel-footer": "Tequitiuhqueh ipal intlahtol"
+}
