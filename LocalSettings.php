@@ -248,7 +248,7 @@ $wgFooterIcons['poweredby']['railway'] = [
 	"alt" => "Power by Railway",
 ];
 # 启用刷新按钮
-wfLoadExtension( 'Purge' );
+$wgPurgeCacheEnableUrl = true;
 
 # Interwiki settings https://www.mediawiki.org/wiki/Extension:Interwiki
 $wgGroupPermissions['sysop']['interwiki'] = true;
