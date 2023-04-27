@@ -248,9 +248,7 @@ $wgFooterIcons['poweredby']['railway'] = [
 	"alt" => "Power by Railway",
 ];
 # 启用刷新按钮
-
 wfLoadExtension( 'Purge' );
-```
 
 **启用刷新按钮**
 
