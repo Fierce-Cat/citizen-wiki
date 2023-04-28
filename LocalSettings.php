@@ -251,6 +251,8 @@ $wgFooterIcons['poweredby']['railway'] = [
 
 # Interwiki settings https://www.mediawiki.org/wiki/Extension:Interwiki
 $wgGroupPermissions['sysop']['interwiki'] = true;
+# Enable MW native image lazy load
+$wgNativeImageLazyLoading  = true;
 
 
 #Debugging
