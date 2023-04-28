@@ -1,0 +1,30 @@
+{
+	"@metadata": {
+		"authors": [
+			"Lea.Fakauvea",
+			"Lea.fakauvea"
+		]
+	},
+	"babel": "Ko te 'u lea eau ilo'i",
+	"babel-desc": "Faka'aoga'i te <code>#babel</code> ke tohi te 'u lea e ke ilo'i ki tau pāsina",
+	"babel-url": "Project:Lea eau ilo'i",
+	"babel-footer-url": ":Fa'ahiga:Nātou e ilo'i te le'a",
+	"babel-autocreate-reason": "Fa'u fakahagatonu o he pāsina [[$1|Lea eau ilo'i]]",
+	"babel-autocreate-text-levels": "Eau nivo $1 i te lea $2",
+	"babel-autocreate-text-main": "Eau ilo'i te lea $1.",
+	"babel-0": "E [[$1|mole au ilo'i]] te lea [[$2|$3]] (pe faigata'a taku mahino ki ai)",
+	"babel-1": "Eau ilo'i [[$1|veliveli pē]] te [[$2|$3]].",
+	"babel-2": "Eau poto [[$1|siasia'a pē]] i te [[$2|$3]].",
+	"babel-3": "Eau ilo'i [[$1|lelei]] te [[$2|$3]].",
+	"babel-4": "Eau ilo'i [[$1|lelei 'osi]] te [[$2|$3]].",
+	"babel-5": "Eau [[$1|poto i te gaue aki]] te [[$2|$3]].",
+	"babel-N": "Eau [[$1|mahino lelei 'osi]] ki te [[$2|$3]].",
+	"babel-0-n": "E [[$1|mole au ilo'i]] te [[$2|Lea faka'uvea]] (pe faigata'a taku mahino ki ai).",
+	"babel-1-n": "Eau ilo'i [[$1|veliveli pe]] te [[$2|Lea faka'uvea]].",
+	"babel-2-n": "Eau poto [[$1|siasia'a pē]] i te [[$2|Lea faka'uvea]].",
+	"babel-3-n": "Eau ilo'i [[$1|lelei]] te [[$2|Lea faka'uvea]].",
+	"babel-4-n": "Eau ilo'i [[$1|lelei 'osi]] te [[$2|Lea faka'uvea]].",
+	"babel-5-n": "Eau [[$1|poto i te gaue]] i te [[$2|Lea faka'uvea]].",
+	"babel-N-n": "Eau [[$1|mahino lelei 'osi]] ki te  [[$2|Lea faka'uvea]].",
+	"babel-footer": "Nātou e ilo'i te lea"
+}

@@ -145,6 +145,7 @@ wfLoadSkin( 'Citizen' );
 # The following extensions were automatically enabled:
 wfLoadExtension( 'AbuseFilter' );
 wfLoadExtension( 'AWS' );
+wfLoadExtension( 'Babel' );
 wfLoadExtension( 'CategoryTree' );
 // wfLoadExtension( 'CirrusSearch' );
 wfLoadExtension( 'Cite' );
