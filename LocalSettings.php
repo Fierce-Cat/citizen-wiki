@@ -79,7 +79,7 @@ $wgSharedTables[] = "actor";
 
 
 ## Shared memory settings
-$wgMainCacheType = redis;
+$wgMainCacheType = 'redis';
 $wgSessionCacheType = 'redis';
 $wgMemCachedServers = [];
 
