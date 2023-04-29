@@ -36,7 +36,6 @@
 		"ext-pdo_pgsql": "*",
 		"ext-xmlreader": "*",
 		"ext-redis": "*",
-		"ext-imagick": "*",
 		"guzzlehttp/guzzle": "7.4.5",
 		"justinrainbow/json-schema": "5.2.11",
 		"liuggio/statsd-php-client": "1.0.18",
