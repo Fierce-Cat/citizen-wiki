@@ -92,6 +92,19 @@ $wgObjectCaches['redis'] = [
     'automaticFailOver' => true,
 ];
 
+$wgJobTypeConf['default'] = [
+	'class' => 'JobQueueRedis',
+	'order' => 'fifo',
+	'redisServer' => $_ENV["RedisAddress"],
+	'checkDelay' => true,
+	'daemonized' => true
+];
+
+$wgJobQueueAggregator = [
+	'class'       => 'JobQueueAggregatorRedis',
+	'redisServer' => $_ENV["RedisAddress"],
+];
+
 $wgMessageCacheType = 'redis';
 $wgParserCacheType = 'redis';
 $wgLanguageConverterCacheType = 'redis';
@@ -103,8 +116,13 @@ $wgShowIPinHeader = false;
 ## To enable image uploads, make sure the 'images' directory
 ## is writable, then set this to true:
 $wgEnableUploads = true;
-#$wgUseImageMagick = true;
+$wgUseImageMagick = true;
+$wgThumbnailEpoch = "20190815000000";
+$wgIgnoreImageErrors = true;
 #$wgImageMagickConvertCommand = "/usr/bin/convert";
+
+$wgMaxImageArea = 6.4e7;
+$wgUseTinyRGBForJPGThumbnails = true;
 
 # InstantCommons allows wiki to use images from https://commons.wikimedia.org
 $wgUseInstantCommons = false;
@@ -123,7 +141,7 @@ $wgLocaltimezone = "PRC";
 ## Set $wgCacheDirectory to a writable directory on the web server
 ## to make your wiki go slightly faster. The directory should not
 ## be publicly accessible from the web.
-#$wgCacheDirectory = "$IP/cache";
+$wgCacheDirectory = "$IP/cache";
 
 $wgSecretKey = $_ENV["SecretKey"];
 
@@ -220,6 +238,11 @@ wfLoadExtension( 'NativeSvgHandler' );
 # Add more configuration options below.
 
 $wgFileExtensions[] = 'svg'; // 允许上传svg文件
+$wgSVGConverter = 'ImageMagick'; // 使用ImageMagick转换svg文件
+
+#Open external link in new tab/window
+$wgExternalLinkTarget = '_blank';
+
 $wgDefaultUserOptions['usebetatoolbar'] = 1; // user option provided by WikiEditor extension
 $wgGroupPermissions['*']['edit'] = false;
 unset( $wgGroupPermissions['user'] );
@@ -308,3 +331,31 @@ $wgAWSRepoHashLevels = '2';
 // still a good idea to use one bucket per wiki unless you are approaching your 1,000 bucket per account limit.
 $wgAWSBucketTopSubdirectory = ""; # leading slash is required
 $wgResponsiveImages = false;
+
+# Cloudflare CDN
+# IP range: https://www.cloudflare.com/ips/
+$wgUseCdn = true;
+$wgCdnServersNoPurge = [
+	'173.245.48.0/20',
+	'103.21.244.0/22',
+	'103.22.200.0/22',
+	'103.31.4.0/22',
+	'141.101.64.0/18',
+	'108.162.192.0/18',
+	'190.93.240.0/20',
+	'188.114.96.0/20',
+	'197.234.240.0/22',
+	'198.41.128.0/17',
+	'162.158.0.0/15',
+	'104.16.0.0/13',
+	'104.24.0.0/14',
+	'172.64.0.0/13',
+	'131.0.72.0/22',
+	'2400:cb00::/32',
+	'2606:4700::/32',
+	'2803:f800::/32',
+	'2405:b500::/32',
+	'2405:8100::/32',
+	'2a06:98c0::/29',
+	'2c0f:f248::/32'
+];
