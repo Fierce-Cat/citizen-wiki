@@ -77,9 +77,28 @@ $wgDBTableOptions = "ENGINE=InnoDB, DEFAULT CHARSET=binary";
 # This has no effect unless $wgSharedDB is also set.
 $wgSharedTables[] = "actor";
 
+
 ## Shared memory settings
-$wgMainCacheType = CACHE_NONE;
+$wgMainCacheType = redis;
+$wgSessionCacheType = 'redis';
 $wgMemCachedServers = [];
+
+$wgObjectCaches['redis'] = [
+    'class'                => 'RedisBagOStuff',
+    'servers'              => [ 'containers-us-west-153.railway.app:6561' ],
+    'connectTimeout'    => 5,
+    'persistent'        => false,
+    'password'          => 'fTu5La8nrWkwqwRWdip3',
+    'automaticFailOver' => true,
+];
+
+$wgMessageCacheType = 'redis';
+$wgParserCacheType = 'redis';
+$wgLanguageConverterCacheType = 'redis';
+
+$wgUseFileCache = true; /* default: false */
+$wgFileCacheDirectory = "$IP/cache";
+$wgShowIPinHeader = false; 
 
 ## To enable image uploads, make sure the 'images' directory
 ## is writable, then set this to true:
