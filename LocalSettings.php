@@ -92,6 +92,19 @@ $wgObjectCaches['redis'] = [
     'automaticFailOver' => true,
 ];
 
+$wgJobTypeConf['default'] = [
+	'class' => 'JobQueueRedis',
+	'order' => 'fifo',
+	'redisServer' => $_ENV["RedisAddress"],
+	'checkDelay' => true,
+	'daemonized' => true
+];
+
+$wgJobQueueAggregator = [
+	'class'       => 'JobQueueAggregatorRedis',
+	'redisServer' => $_ENV["RedisAddress"],
+];
+
 $wgMessageCacheType = 'redis';
 $wgParserCacheType = 'redis';
 $wgLanguageConverterCacheType = 'redis';
