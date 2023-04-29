@@ -286,30 +286,16 @@ $wgGroupPermissions['sysop']['interwiki'] = true;
 #Debugging
 $_ENV["wiki_debug_config"];
 
-#调用英文站图片
-// $wgForeignFileRepos[] = [
-// 	'class' => ForeignAPIRepo::class,
-// 	'name' => 'StarCitizenTools', // Must be a distinct name
-// 	'apibase' => 'https://starcitizen.tools/api.php',
-// 	'hashLevels' => 2,
-// 	'fetchDescription' => false, // Optional
-// 	'apiThumbCacheExpiry' => 86400, // 24 hours, optional, but required for local thumb caching
-// ];
+//调用英文站图片
+ $wgForeignFileRepos[] = [
+	'class' => ForeignAPIRepo::class,
+	'name' => 'StarCitizenTools', // Must be a distinct name
+	'apibase' => 'https://starcitizen.tools/api.php',
+	'hashLevels' => 2,
+ 	'fetchDescription' => false, // Optional
+ 	'apiThumbCacheExpiry' => 86400, // 24 hours, optional, but required for local thumb caching
+ ];
 
-#AWS插件 | Cloudflare R2 储存桶配置
-$wgAWSCredentials = [
-	'key' => $_ENV["S3Key"],
-	'secret' => $_ENV["S3Secret"],
-	'token' => false
-];
-
-$wgAWSRegion = $_ENV["S3Region"]; # Northern Virginia
-
-// Replace <something> with the name of your S3 bucket, e.g. wonderfulbali234.
-$wgAWSBucketName = $_ENV["S3BucketName"];
-$wgAWSBucketDomain = $_ENV["S3BucketDomain"];
-$wgFileBackends['s3']['endpoint'] = $_ENV["S3Endpoint"];
-$wgAWSRepoHashLevels = '2';
 
 // If you anticipate using several hundred buckets, one per wiki, then it's probably better to use one bucket
 // with the top level subdirectory as the wiki's name, and permissions properly configured of course.
@@ -317,3 +303,4 @@ $wgAWSRepoHashLevels = '2';
 // still a good idea to use one bucket per wiki unless you are approaching your 1,000 bucket per account limit.
 $wgAWSBucketTopSubdirectory = ""; # leading slash is required
 $wgResponsiveImages = false;
+$wgUseInstantCommons = true;
