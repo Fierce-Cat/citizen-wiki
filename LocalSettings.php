@@ -77,9 +77,28 @@ $wgDBTableOptions = "ENGINE=InnoDB, DEFAULT CHARSET=binary";
 # This has no effect unless $wgSharedDB is also set.
 $wgSharedTables[] = "actor";
 
+
 ## Shared memory settings
-$wgMainCacheType = CACHE_ACCEL;
+$wgMainCacheType = 'redis';
+$wgSessionCacheType = 'redis';
 $wgMemCachedServers = [];
+
+$wgObjectCaches['redis'] = [
+    'class'                => 'RedisBagOStuff',
+    'servers'              => [ $_ENV["RedisAddress"] ],
+    'connectTimeout'    => 30,
+    'persistent'        => false,
+    'password'          => $_ENV["RedisPassword"],
+    'automaticFailOver' => true,
+];
+
+$wgMessageCacheType = 'redis';
+$wgParserCacheType = 'redis';
+$wgLanguageConverterCacheType = 'redis';
+
+$wgUseFileCache = true; /* default: false */
+$wgFileCacheDirectory = "$IP/cache";
+$wgShowIPinHeader = false; 
 
 ## To enable image uploads, make sure the 'images' directory
 ## is writable, then set this to true:
@@ -288,3 +307,4 @@ $wgAWSRepoHashLevels = '2';
 // While there are no more performance losses by using such a scheme, it might make things messy. Hence, it's
 // still a good idea to use one bucket per wiki unless you are approaching your 1,000 bucket per account limit.
 $wgAWSBucketTopSubdirectory = ""; # leading slash is required
+$wgResponsiveImages = false;
