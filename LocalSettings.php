@@ -85,10 +85,10 @@ $wgMemCachedServers = [];
 
 $wgObjectCaches['redis'] = [
     'class'                => 'RedisBagOStuff',
-    'servers'              => [ 'containers-us-west-153.railway.app:6561' ],
+    'servers'              => [ $_ENV["RedisAddress"] ],
     'connectTimeout'    => 30,
     'persistent'        => false,
-    'password'          => 'fTu5La8nrWkwqwRWdip3',
+    'password'          => $_ENV["RedisPassword"],
     'automaticFailOver' => true,
 ];
 
