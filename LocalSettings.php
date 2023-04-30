@@ -228,6 +228,7 @@ $wgDeprecationReleaseLimit = "1.34.0";
 wfLoadExtension( 'TabberNeue' );
 wfLoadExtension( 'SimpleBatchUpload' );
 wfLoadExtension( 'NativeSvgHandler' );
+wfLoadExtension( 'MultiPurge' );
 
 # End of automatically generated settings.
 # Add more configuration options below.
@@ -348,4 +349,14 @@ $wgCdnServersNoPurge = [
 	'2405:8100::/32',
 	'2a06:98c0::/29',
 	'2c0f:f248::/32'
+];
+
+# MultiPurge config https://github.com/octfx/mediawiki-extensions-MultiPurge/
+$wgMultiPurgeCloudFlareZoneId = $_ENV["wgMultiPurgeCloudFlareZoneId"];
+$wgMultiPurgeCloudFlareApiToken = $_ENV["wgMultiPurgeCloudFlareApiToken"];
+$wgMultiPurgeEnabledServices = [
+	'cloudflare'
+];
+$wgMultiPurgeServiceOrder = [
+	'cloudflare'
 ];
