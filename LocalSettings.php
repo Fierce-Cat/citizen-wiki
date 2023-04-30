@@ -349,3 +349,13 @@ $wgCdnServersNoPurge = [
 	'2a06:98c0::/29',
 	'2c0f:f248::/32'
 ];
+
+# MultiPurge config https://github.com/octfx/mediawiki-extensions-MultiPurge/
+$wgMultiPurgeCloudFlareZoneId = $_ENV["wgMultiPurgeCloudFlareZoneId"];
+$wgMultiPurgeCloudFlareApiToken = $_ENV["wgMultiPurgeCloudFlareApiToken"];
+$wgMultiPurgeEnabledServices = [
+	'cloudflare'
+];
+$wgMultiPurgeServiceOrder = [
+	'cloudflare'
+];
