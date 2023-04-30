@@ -228,6 +228,7 @@ $wgDeprecationReleaseLimit = "1.34.0";
 wfLoadExtension( 'TabberNeue' );
 wfLoadExtension( 'SimpleBatchUpload' );
 wfLoadExtension( 'NativeSvgHandler' );
+wfLoadExtension( 'MultiPurge' );
 
 # End of automatically generated settings.
 # Add more configuration options below.
