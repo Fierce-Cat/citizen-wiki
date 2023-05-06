@@ -281,6 +281,8 @@ $wgFooterIcons['poweredby']['railway'] = [
 	"url" => "http://railway.app/",
 	"alt" => "Power by Railway",
 ];
+#扩大创建略缩图限制
+$wgMaxImageArea = 2.5e7;
 
 # Interwiki settings https://www.mediawiki.org/wiki/Extension:Interwiki
 $wgGroupPermissions['sysop']['interwiki'] = true;
