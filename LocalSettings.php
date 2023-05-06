@@ -282,7 +282,7 @@ $wgFooterIcons['poweredby']['railway'] = [
 	"alt" => "Power by Railway",
 ];
 #扩大创建略缩图限制
-$wgMaxImageArea = 2.5e7;
+$wgMaxImageArea = 4.9e7;
 
 # Interwiki settings https://www.mediawiki.org/wiki/Extension:Interwiki
 $wgGroupPermissions['sysop']['interwiki'] = true;
