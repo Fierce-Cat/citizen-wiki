@@ -131,7 +131,7 @@ $wgPingback = true;
 $wgLanguageCode = "zh-cn";
 
 # Time zone
-$wgLocaltimezone = "Asia/Shanghai";
+$wgLocaltimezone = "PRC";
 
 ## Set $wgCacheDirectory to a writable directory on the web server
 ## to make your wiki go slightly faster. The directory should not
