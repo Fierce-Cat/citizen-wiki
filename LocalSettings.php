@@ -275,6 +275,8 @@ $wgDefaultUserOptions['watchdefault'] = 0;
 $wgMainPageIsDomainRoot = true;
 # 启用链接展示重定向后页面标题
 $wgDisplayTitleFollowRedirects = true;
+# 启用搜索展示重定向前页面标题
+$wgSearchDefaultRedirects = true;
 #添加Railway标志
 $wgFooterIcons['poweredby']['railway'] = [
 	"src" => "$wgResourceBasePath/resources/assets/powered_by_railway.png",
