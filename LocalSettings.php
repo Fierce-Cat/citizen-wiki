@@ -367,4 +367,4 @@ $wgMultiPurgeServiceOrder = [
 ];
 
 # Semantic MediaWiki config
-#enableSemantics( 'citizenwiki.cn' );
+enableSemantics( 'citizenwiki.cn' );
