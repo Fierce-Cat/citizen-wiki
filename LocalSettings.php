@@ -229,6 +229,7 @@ wfLoadExtension( 'TabberNeue' );
 wfLoadExtension( 'SimpleBatchUpload' );
 wfLoadExtension( 'NativeSvgHandler' );
 wfLoadExtension( 'MultiPurge' );
+wfLoadExtension( 'SemanticMediaWiki' );
 
 # End of automatically generated settings.
 # Add more configuration options below.
@@ -364,3 +365,6 @@ $wgMultiPurgeEnabledServices = [
 $wgMultiPurgeServiceOrder = [
 	'cloudflare'
 ];
+
+# Semantic MediaWiki config
+enableSemantics( 'citizenwiki.cn' );
