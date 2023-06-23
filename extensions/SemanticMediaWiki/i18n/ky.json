@@ -1,0 +1,24 @@
+{
+	"@metadata": {
+		"authors": [
+			"Bosogo",
+			"Growingup"
+		]
+	},
+	"smw_printername_template": "Калып",
+	"smw_purge": "Жаңыртуу",
+	"types": "Түрлөр",
+	"smw_ask_queryhead": "Суроо",
+	"smw-ask-delete": "[Өчүрүү]",
+	"smw_sbv_value": "Чоңдук:",
+	"browse": "Wikiни кароо",
+	"smw_result_prev": "Мурунку",
+	"smw_result_next": "Кийинки",
+	"smw-ui-tooltip-title-property": "Өзгөчөлүк",
+	"smw-ui-tooltip-title-quantity": "Сан",
+	"smw-ui-tooltip-title-info": "Маалымат",
+	"smw-ui-tooltip-title-warning": "Ката",
+	"smw-ui-tooltip-title-parameter": "Параметр",
+	"smw-livepreview-loading": "Жүктөлүүдө...",
+	"smw-listingcontinuesabbrev": "уланд."
+}

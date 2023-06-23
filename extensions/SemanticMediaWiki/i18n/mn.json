@@ -1,0 +1,18 @@
+{
+	"@metadata": {
+		"authors": [
+			"Chinneeb",
+			"Munkhzaya.E",
+			"Wisdom"
+		]
+	},
+	"smw-paramdesc-table-transpose": "table -ын толгойг босоогоор, үр дүнг хэвтээгээр",
+	"smw_browse_go": "Явах",
+	"smw_smwadmin_datarefreshstopconfirm": "Тийм, би {{GENDER:$1|итгэлтэй байна}}.",
+	"smw-ui-tooltip-title-quantity": "Нэгжийн шилжүүлэг",
+	"smw-livepreview-loading": "Уншиж байна...",
+	"smw-limitreport-intext-parsertime-value": "$1 секунд",
+	"smw-limitreport-pagepurge-storeupdatetime-value": "$1 секунд",
+	"smw-listingcontinuesabbrev": "-н үргэлжлэл",
+	"smw-showingresults": "Доор #'''$2'''-с эхлэсэн '''$1''' илэрцийг үзүүлж байна."
+}

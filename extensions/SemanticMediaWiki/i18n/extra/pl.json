@@ -1,0 +1,235 @@
+{
+    "@metadata": {
+        "authors": [
+            "Ostrzyciel",
+            "UnknownSkyrimPasserby"
+        ]
+    },
+    "fallback_language": "en",
+    "namespace": {
+        "labels": {
+            "SMW_NS_PROPERTY": "Atrybut",
+            "SMW_NS_PROPERTY_TALK": "Dyskusja_atrybutu",
+            "SMW_NS_CONCEPT": "Pojęcie",
+            "SMW_NS_CONCEPT_TALK": "Dyskusja_pojęcia",
+            "SMW_NS_SCHEMA": "Semantyczny_Schemat",
+            "SMW_NS_SCHEMA_TALK": "Dyskusja_semantycznego_schematu"
+        },
+        "aliases": []
+    },
+    "datatype": {
+        "labels": {
+            "_wpg": "Strona",
+            "_txt": "Tekst",
+            "_cod": "Kod",
+            "_boo": "Wartość logiczna",
+            "_num": "Liczba",
+            "_geo": "Współrzędne geograficzne",
+            "_tem": "Temperatura",
+            "_dat": "Data",
+            "_ema": "Email",
+            "_uri": "URL",
+            "_anu": "URI adnotacji",
+            "_tel": "Numer telefonu",
+            "_rec": "Rekord",
+            "_qty": "Wielkość",
+            "_mlt_rec": "Tekst z tagiem języka",
+            "_eid": "Identyfikator zewnętrzny",
+            "_keyw": "Słowo kluczowe",
+            "_ref_rec": "Przypis"
+        },
+        "aliases": {
+            "URI": "_uri",
+            "Liczba zmiennoprzecinkowa": "_num",
+            "Liczba całkowita": "_num",
+            "Wyliczenie": "_txt",
+            "Łańcuch znaków": "_txt"
+        }
+    },
+    "property": {
+        "labels": {
+            "_TYPE": "Ma typ",
+            "_URI": "Równoważne URI",
+            "_SUBP": "Jest podwłasnością",
+            "_SUBC": "Podkategoria",
+            "_UNIT": "Wyświetlane jednostki",
+            "_IMPO": "Zaimportowane z",
+            "_CONV": "Odpowiada",
+            "_SERV": "Zapewnia usługę",
+            "_PVAL": "Dopuszcza wartość",
+            "_MDAT": "Data modyfikacji",
+            "_CDAT": "Data utworzenia",
+            "_NEWP": "Jest nową stroną",
+            "_LEDT": "Ostatni redaktor to",
+            "_ERRP": "Ma niewłaściwą wartość",
+            "_LIST": "Ma pola",
+            "_SOBJ": "Ma podobiekt",
+            "_ASK": "Zawiera zapytanie",
+            "_ASKST": "Ciąg zapytania",
+            "_ASKFO": "Format zapytania",
+            "_ASKSI": "Rozmiar zapytania",
+            "_ASKDE": "Głębokość zapytania",
+            "_ASKDU": "Czas trwania zapytania",
+            "_ASKSC": "Źródło zapytania",
+            "_ASKPA": "Parametry zapytania",
+            "_ASKCO": "Status zapytania",
+            "_MEDIA": "Typ mediów",
+            "_MIME": "Typ Mime",
+            "_ERRC": "Ma błąd przetwarzania",
+            "_ERRT": "Ma błąd przetwarzania tekst",
+            "_ERR_TYPE": "Typ błędu przetwarzania",
+            "_PREC": "Wyświetl precyzję",
+            "_LCODE": "Kod języka",
+            "_TEXT": "Tekst",
+            "_PDESC": "Ma opis właściwości",
+            "_PVAP": "Zezwala na wzorzec",
+            "_PVALI": "Lista dopuszczalnych wartości",
+            "_DTITLE": "Wyświetla tytuł",
+            "_PVUC": "Ma unikalne ograniczenie",
+            "_PEID": "Identyfikator zewnętrzny",
+            "_PEFU": "Zewnętrzny formatyzator uri",
+            "_PPLB": "Preferowana etykieta właściwości",
+            "_EDIP": "Jest chroniony przed edycją",
+            "_CHGPRO": "Zmień propagację",
+            "_PPGR": "Jest grupą właściwości",
+            "_SCHEMA_DESC": "Opis schematu",
+            "_SCHEMA_TAG": "Tag schematu",
+            "_SCHEMA_TYPE": "Typ schematu",
+            "_SCHEMA_DEF": "Definicja schematu",
+            "_SCHEMA_LINK": "Link do schematu",
+            "_FORMAT_SCHEMA": "Schemat formatyzera",
+            "_CONSTRAINT_SCHEMA": "Schemat ograniczeń",
+            "_PROFILE_SCHEMA": "Schemat profilu",
+            "_ATTCH_LINK": "Link do załącznika",
+            "_FILE_ATTCH": "Załącznik",
+            "_CONT_TYPE": "Typ zawartości",
+            "_CONT_AUTHOR": "Autor zawartości",
+            "_CONT_LEN": "Długość zawartości",
+            "_CONT_LANG": "Język zawartości",
+            "_CONT_TITLE": "Tytuł zawartości",
+            "_CONT_DATE": "Data zawartości",
+            "_CONT_KEYW": "Słowo kluczowe zawartości",
+            "_TRANS": "Tłumaczenie",
+            "_TRANS_SOURCE": "Źródło tłumaczenia",
+            "_TRANS_GROUP": "Grupa tłumacząca"
+        },
+        "aliases": {
+            "Wyświetlana jednostka": "_UNIT"
+        }
+    },
+    "date": {
+        "months": [
+            [
+                "styczeń",
+                "sty",
+                "stycznia"
+            ],
+            [
+                "luty",
+                "lut",
+                "lutego"
+            ],
+            [
+                "marzec",
+                "mar",
+                "marca"
+            ],
+            [
+                "kwiecień",
+                "kwi",
+                "kwietnia"
+            ],
+            [
+                "maj",
+                "maj",
+                "maja"
+            ],
+            [
+                "czerwiec",
+                "cze",
+                "czerwca"
+            ],
+            [
+                "lipiec",
+                "lip",
+                "lipca"
+            ],
+            [
+                "sierpień",
+                "sie",
+                "sierpnia"
+            ],
+            [
+                "wrzesień",
+                "wrz",
+                "września"
+            ],
+            [
+                "październik",
+                "paź",
+                "października"
+            ],
+            [
+                "listopad",
+                "lis",
+                "listopada"
+            ],
+            [
+                "grudzień",
+                "gru",
+                "grudnia"
+            ]
+        ],
+        "days": [
+            [
+                "poniedziałek",
+                "pon."
+            ],
+            [
+                "wtorek",
+                "wt."
+            ],
+            [
+                "środa",
+                "śr."
+            ],
+            [
+                "czwartek",
+                "czw."
+            ],
+            [
+                "piątek",
+                "pt."
+            ],
+            [
+                "sobota",
+                "sob."
+            ],
+            [
+                "niedziela",
+                "niedz."
+            ]
+        ],
+        "precision": {
+            "SMW_PREC_Y": "Y",
+            "SMW_PREC_YM": "F Y",
+            "SMW_PREC_YMD": "j F Y",
+            "SMW_PREC_YMDT": "H:i:s, j F Y"
+        },
+        "format": [
+            [
+                "SMW_Y"
+            ],
+            [
+                "SMW_MY",
+                "SMW_YM"
+            ],
+            [
+                "SMW_DMY",
+                "SMW_YMD",
+                "SMW_MDY",
+                "SMW_YDM"
+            ]
+        ]
+    }
+}

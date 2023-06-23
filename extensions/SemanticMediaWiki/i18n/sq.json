@@ -1,0 +1,26 @@
+{
+	"@metadata": {
+		"authors": [
+			"Arianit",
+			"Besnik b",
+			"Edlira",
+			"GretaDoci",
+			"Liridon"
+		]
+	},
+	"smw_finallistconjunct": "dhe",
+	"smw_isspecprop": "Ky tipar është një tipar i veçantë në këtë wiki.",
+	"smw_concept_description": "Përshkrim i konceptit \"$1\"",
+	"smw_no_concept_namespace": "Konceptet mund të përcaktohen vetëm në faqet në namespace Concept:",
+	"smw_multiple_concepts": "Çdo faqe koncepti mund të ketë vetëm një përkufizim të konceptit.",
+	"smw_concept_cache_miss": "Koncepti \"$1\" nuk mund të përdoret në këtë moment, pasi konfigurimi i wiki kërkon që ai të llogaritet off-line.\nNëse problemi nuk do të iki pas një farë kohe, pyesni administratorin e faqes tuaj për ta vënë në dispozicion këtë koncept.",
+	"smw_noinvannot": "Vlerat nuk mund të caktohen për tiparet e anasjelltë.",
+	"smw_baduri": "URI të formës \"$1\" nuk lejohen.",
+	"smw_printername_csv": "Eksport CSV",
+	"smw_printername_dsv": "Eksport DSV",
+	"browse": "Shfletoni wiki",
+	"smw-admin-bugsreport": "Të metat mund të njoftohen te <a href=\"https://github.com/SemanticMediaWiki/SemanticMediaWiki/issues\">ndjekësi i problemeve</a>, faqja <a href=\"https://www.semantic-mediawiki.org/wiki/Help:Reporting_bugs\">e njoftimit të të metave</a> jep ca ndihmë mbi se si të shkruhet një raport efikas të mete.",
+	"smw-livepreview-loading": "Duke punuar…",
+	"smw-listingcontinuesabbrev": "vazh.",
+	"smw-showingresults": "Më poshtë tregohen {{PLURAL:$1|'''1''' përfundim|'''$1''' përfundime}} duke filluar nga #'''$2'''."
+}

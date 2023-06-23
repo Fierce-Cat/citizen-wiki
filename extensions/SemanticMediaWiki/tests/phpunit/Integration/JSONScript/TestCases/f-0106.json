@@ -1,0 +1,93 @@
+{
+	"description": "Test `format=plainlist` for 'default' parameter output with `#ask` and `#show` parser functions (#4363)",
+	"setup": [
+		{
+			"page": "Issue/4363/0",
+			"contents": "{{#ask: [[{{PAGENAME}}]] |default=hello }}"
+		},
+		{
+			"page": "Issue/4363/1",
+			"contents": "{{#ask: [[{{PAGENAME}}]] |?Has name= |mainlabel=- |default=hello }}"
+		},
+		{
+			"page": "Issue/4363/2",
+			"contents": "{{#ask: [[{{PAGENAME}}]] |?Has name= |mainlabel=- |default=hello |format=plainlist }}"
+		},
+		{
+			"page": "Issue/4363/3",
+			"contents": "{{#show: {{PAGENAME}} |?Has name= |mainlabel=- |default=hello }}"
+		},
+		{
+			"page": "Issue/4363/4",
+			"contents": "{{#show: {{PAGENAME}} |?Has name= |mainlabel=- |default=hello |format=plainlist }}"
+		}
+	],
+	"tests": [
+		{
+			"type": "parser",
+			"about": "#0 default should not be shown when there are values to display (including mainlabel)",
+			"subject": "Issue/4363/0",
+			"assert-output": {
+				"to-contain": [
+					"Issue/4363/0"
+				],
+				"not-contain": [
+					"hello"
+				]
+			}
+		},
+		{
+			"type": "parser",
+			"about": "#1 only the default should be shown when there are no values to display",
+			"subject": "Issue/4363/1",
+			"assert-output": {
+				"to-contain": [
+					"hello"
+				],
+				"not-contain": [
+					"Issue/4363/1"
+				]
+			}
+		},
+		{
+			"type": "parser",
+			"about": "#2 ask, printout, mainlabel hidden, plainlist specified",
+			"subject": "Issue/4363/2",
+			"assert-output": {
+				"to-contain": [
+					"hello"
+				]
+			}
+		},
+		{
+			"type": "parser",
+			"about": "#3 show, printout, mainlabel hidden",
+			"subject": "Issue/4363/3",
+			"assert-output": {
+				"to-contain": [
+					"hello"
+				]
+			}
+		},
+		{
+			"type": "parser",
+			"about": "#4 show, printout, mainlabel hidden, plainlist specified",
+			"subject": "Issue/4363/4",
+			"assert-output": {
+				"to-contain": [
+					"hello"
+				]
+			}
+		}
+	],
+	"settings": {
+		"smwgNamespacesWithSemanticLinks": {
+			"NS_MAIN": true
+		}
+	},
+	"meta": {
+		"version": "2",
+		"is-incomplete": false,
+		"debug": false
+	}
+}

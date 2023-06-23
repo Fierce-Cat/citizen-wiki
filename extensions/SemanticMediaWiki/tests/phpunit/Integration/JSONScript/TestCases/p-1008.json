@@ -1,0 +1,77 @@
+{
+	"description": "Test property page, parent type/subproperty type enforcement",
+	"setup": [
+		{
+			"namespace": "SMW_NS_PROPERTY",
+			"page": "Has page test",
+			"contents": "[[Has type::Page]]"
+		},
+		{
+			"namespace": "SMW_NS_PROPERTY",
+			"page": "Has page subproperty",
+			"contents": "[[Has type::Number]] [[Subproperty of::Has page test]]"
+		},
+		{
+			"namespace": "SMW_NS_PROPERTY",
+			"page": "Has URL subproperty",
+			"contents": "[[Subproperty of::URL]]"
+		}
+	],
+	"tests": [
+		{
+			"type": "parser",
+			"about": "#0 (show error on wrong type)",
+			"namespace": "SMW_NS_PROPERTY",
+			"subject": "Has page subproperty",
+			"assert-output": {
+				"onPageView": {
+					"parameters": {}
+				},
+				"to-contain": [
+					"<div id=\"smw-property-req-violation-forced-removal-annotated-type\" class=\"plainlinks smw-property-req-violation-forced-removal-annotated-type smw-callout smw-callout-error\">"
+				]
+			}
+		},
+		{
+			"type": "parser",
+			"about": "#1 (using predefined property, forced type URL)",
+			"namespace": "SMW_NS_PROPERTY",
+			"subject": "Has URL subproperty",
+			"store": {
+				"clear-cache": true
+			},
+			"assert-store": {
+				"semantic-data": {
+					"strictPropertyValueMatch": false,
+					"propertyCount": 4,
+					"propertyKeys": [
+						"_SUBP",
+						"_MDAT",
+						"_SKEY",
+						"_TYPE"
+					],
+					"propertyValues": [
+						"http://semantic-mediawiki.org/swivt/1.0#_uri"
+					]
+				}
+			}
+		}
+	],
+	"settings": {
+		"wgContLang": "en",
+		"wgLang": "en",
+		"smwgMandatorySubpropertyParentTypeInheritance": true,
+		"smwgPageSpecialProperties": [
+			"_MDAT"
+		],
+		"smwgNamespacesWithSemanticLinks": {
+			"NS_MAIN": true,
+			"SMW_NS_PROPERTY": true
+		}
+	},
+	"meta": {
+		"version": "2",
+		"is-incomplete": false,
+		"debug": false
+	}
+}

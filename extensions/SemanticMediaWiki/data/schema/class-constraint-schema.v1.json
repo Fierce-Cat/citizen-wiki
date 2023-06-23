@@ -1,0 +1,134 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://www.semantic-mediawiki.org/wiki/Help:Schema/Type/CLASS_CONSTRAINT_SCHEMA",
+	"type": "object",
+	"title": "Class constraint validation schema",
+	"required": [
+		"type",
+		"constraints"
+	],
+	"properties": {
+		"type": {
+			"$id": "#/properties/type",
+			"type": "string",
+			"enum": [
+				"CLASS_CONSTRAINT_SCHEMA"
+			],
+			"title": "Schema type",
+			"default": "CLASS_CONSTRAINT_SCHEMA"
+		},
+		"title_prefix": {
+			"$id": "#/properties/title_prefix",
+			"type": "string",
+			"enum": [
+				"Constraint"
+			],
+			"title": "Title prefix"
+		},
+		"tags": {
+			"$id": "#/properties/tags",
+			"type": "array",
+			"title": "tags",
+			"default": null,
+			"items": {
+				"$id": "#/properties/tags/items",
+				"type": "string",
+				"title": "tags, keywords etc.",
+				"default": "",
+				"pattern": "^(.*)$"
+			}
+		},
+		"constraints": {
+			"$id": "#/properties/constraints",
+			"type": "object",
+			"title": "constraint rules",
+			"minProperties": 1,
+			"propertyNames": {
+				"pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+			},
+			"properties": {
+				"mandatory_properties": {
+					"$ref": "#/definitions/mandatory_properties"
+				},
+				"shape_constraint": {
+					"$ref": "#/definitions/shape_constraint"
+				},
+				"custom_constraint": {
+					"$ref": "#/definitions/custom_constraint"
+				}
+			},
+			"additionalProperties": false
+		}
+	},
+	"definitions": {
+		"mandatory_properties": {
+			"$id": "#/definitions/mandatory_properties",
+			"type": "array",
+			"title": "Specifies required properties",
+			"minItems": 1,
+			"items": {
+				"type": "string"
+			}
+		},
+		"shape_constraint": {
+			"$id": "#/definitions/shape_constraint",
+			"type": "array",
+			"title": "Specifies required properties",
+			"minItems": 1,
+			"items": {
+				"$ref": "#/definitions/shape_item"
+			}
+		},
+		"shape_item": {
+			"$id": "#/definitions/shape_item",
+			"type": "object",
+			"title": "shape item rules",
+			"minProperties": 1,
+			"propertyNames": {
+				"pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+			},
+			"required": [ "property" ],
+			"properties": {
+				"property": {
+					"$ref": "#/definitions/property"
+				},
+				"property_type": {
+					"$ref": "#/definitions/property_type"
+				},
+				"max_cardinality": {
+					"$ref": "#/definitions/max_cardinality"
+				},
+				"min_textlength": {
+					"$ref": "#/definitions/min_textlength"
+				}
+			},
+			"additionalProperties": false
+		},
+		"custom_constraint": {
+			"$id": "#/definitions/custom_constraint",
+			"type": "object",
+			"title": "Specifies custom constraints to be implemented by a user"
+		},
+		"property": {
+			"$id": "#/definitions/property",
+			"type": "string",
+			"title": "Specifies the related property"
+		},
+		"property_type": {
+			"$id": "#/definitions/property_type",
+			"type": "string",
+			"title": "Specifies expected type of the property",
+			"enum": [ "Date", "Boolean", "Text", "Geo", "Page", "Number", "URI" ]
+		},
+		"max_cardinality": {
+			"$id": "#/definitions/max_cardinality",
+			"type": "number",
+			"title": "Specifies the maximum number of values a property can contain for the given context"
+		},
+		"min_textlength": {
+			"$id": "#/definitions/min_textlength",
+			"type": "number",
+			"title": "Specifies the minimum length of the characters expected for values assigned to the property"
+		}
+	}
+}

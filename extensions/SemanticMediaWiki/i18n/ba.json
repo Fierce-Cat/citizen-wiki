@@ -1,0 +1,20 @@
+{
+	"@metadata": {
+		"authors": [
+			"Lizalizaufa",
+			"Roustammr",
+			"Айсар",
+			"Ансар",
+			"Рустам Нурыев"
+		]
+	},
+	"smw-paramdesc-source": "Һорауҙың икенсе сығанағы",
+	"smw_ask_editquery": "Һорауҙы мөхәррирләү",
+	"browse": "Вики күҙәтеү",
+	"smw_browselink": "Үҙенсәлектәрҙе ҡарарға",
+	"smw-admin-setupsuccess": "Һаҡлау системаһы уңышлы ҡуйылды",
+	"smw-livepreview-loading": "Сығарыу...",
+	"smw-format-datatable-toolbar-export": "Экспорт",
+	"smw-listingcontinuesabbrev": "дауамы",
+	"smw-showingresults": "Түбәндә №&nbsp;<strong>$2</strong> һөҙөмтәнән башлап <strong>$1</strong> {{PLURAL:$1|һөҙөмтә}} күрһәтелгән."
+}

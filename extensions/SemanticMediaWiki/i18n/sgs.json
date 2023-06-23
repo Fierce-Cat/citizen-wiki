@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Hugo.arg"
+		]
+	},
+	"smw_purge": "Atšvėižintė",
+	"browse": "Poslapiu apveiza",
+	"smw-livepreview-loading": "Kraunama īr…",
+	"smw-listingcontinuesabbrev": "tes.",
+	"smw-showingresults": "Žemiau ruodoma lėgė '''$1''' {{PLURAL:$1|rezoltata|rezoltatu|rezoltatu}} pradedont #'''$2'''."
+}

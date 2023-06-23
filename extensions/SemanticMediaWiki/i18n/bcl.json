@@ -1,0 +1,20 @@
+{
+	"@metadata": {
+		"authors": [
+			"Brazal.dang",
+			"Daramlagon",
+			"Geopoet",
+			"ShimunUfesoj"
+		]
+	},
+	"smw-upgrade-error-why-title": "Tano ko nahihiling an pahinang ini?",
+	"smw-upgrade-error-how-title": "Pano ko papakarayon ang nasala?",
+	"smw-extensionload-error-why-title": "Tano ko nahihiling an pahina na ni?",
+	"smw-extensionload-error-how-title": "Pano ko papakarayon ang nasala?",
+	"smw-upgrade-maintenance-why-title": "Tano ko nahihiling an pahina na ni?",
+	"smw-paramdesc-table-transpose": "Ipahiling an mga pamayuhan kan lamesa sa paaging patindog asin an mga resulta sa paaging pahigda",
+	"browse": "Mag-browse sa wiki",
+	"smw-livepreview-loading": "Pigkakarga…",
+	"smw-listingcontinuesabbrev": "kasumpay",
+	"smw-showingresults": "Pigpapahiling sa babâ sagkod sa {{PLURAL:$1|'''1''' resulta|'''$1''' mga resulta}} poon sa #'''$2'''."
+}

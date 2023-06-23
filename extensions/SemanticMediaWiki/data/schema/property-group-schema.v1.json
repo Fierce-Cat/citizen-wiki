@@ -1,0 +1,116 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://www.semantic-mediawiki.org/wiki/Help:Schema/Type/PROPERTY_GROUP_SCHEMA",
+	"type": "object",
+	"title": "Property group validation schema",
+	"required": [
+		"type",
+		"groups"
+	],
+	"properties": {
+		"type": {
+			"$id": "#/properties/type",
+			"type": "string",
+			"enum": [
+				"PROPERTY_GROUP_SCHEMA"
+			],
+			"title": "Schema type",
+			"default": "PROPERTY_GROUP_SCHEMA"
+		},
+		"title_prefix": {
+			"$id": "#/properties/title_prefix",
+			"type": "string",
+			"enum": [
+				"Group"
+			],
+			"title": "Title prefix"
+		},
+		"manifest_version": {
+			"$id": "#/properties/manifest_version",
+			"type": "number",
+			"title": "Manifest version",
+			"default": 1
+		},
+		"tags": {
+			"$id": "#/properties/tags",
+			"type": "array",
+			"title": "tags",
+			"default": null,
+			"items": {
+				"$id": "#/properties/tags/items",
+				"type": "string",
+				"title": "tags, keywords etc.",
+				"default": "",
+				"pattern": "^(.*)$"
+			}
+		},
+		"groups": {
+			"$ref": "#/definitions/groups"
+		}
+	},
+	"definitions": {
+		"groups": {
+			"$id": "#/definitions/groups",
+			"type": "object",
+			"title": "Definition of groups",
+			"minProperties": 1,
+			"patternProperties": {
+				"^(.*)_group": {
+					"$ref": "#/definitions/group"
+				}
+			},
+			"additionalProperties": false
+		},
+		"group": {
+			"$id": "#/definitions/group",
+			"type": "object",
+			"title": "Group rules",
+			"minProperties": 1,
+			"propertyNames": {
+				"pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+			},
+			"required": [ "property_keys", "canonical_name" ],
+			"properties": {
+				"message_key": {
+					"$ref": "#/definitions/message_key"
+				},
+				"canonical_name": {
+					"$ref": "#/definitions/canonical_name"
+				},
+				"property_keys": {
+					"$ref": "#/definitions/property_keys"
+				}
+			},
+			"additionalProperties": false
+		},
+		"message_key": {
+			"$id": "#/definitions/message_key",
+			"type": "string",
+			"title": "Group name as message key",
+			"default": "",
+			"examples": [
+				"smw-property-group-label-schema-group"
+			],
+			"pattern": "^(smw|sar|sesp|sbl|scite|sg)-property-group-label-(.*)$"
+		},
+		"canonical_name": {
+			"$id": "#/definitions/canonical_name",
+			"type": "string",
+			"title": "Canonical group name",
+			"default": "",
+			"pattern": "^(.*)$"
+		},
+		"property_keys": {
+			"$id": "#/definitions/property_keys",
+			"type": "array",
+			"title": "List of properties keys",
+			"minItems": 1,
+			"items": {
+				"type": "string",
+				"title": "property",
+				"default": "",
+				"pattern": "^(.*)$"
+			}
+		}
+	}
+}
