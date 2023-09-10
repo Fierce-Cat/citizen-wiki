@@ -233,7 +233,7 @@ wfLoadExtension( 'MultiPurge' );
 # End of automatically generated settings.
 # Add more configuration options below.
 
-$wgFileExtensions[] = [ 'svg', 'gif','exe', ]; // 允许上传svg文件
+$wgFileExtensions[] = 'svg'; // 允许上传svg文件
 $wgDefaultUserOptions['usebetatoolbar'] = 1; // user option provided by WikiEditor extension
 $wgGroupPermissions['*']['edit'] = false;
 unset( $wgGroupPermissions['user'] );
