@@ -1,0 +1,116 @@
+{
+	"name": "PluggableAuth",
+	"version": "7.0.0",
+	"author": [
+		"[https://www.mediawiki.org/wiki/User:Cindy.cicalese Cindy Cicalese]"
+	],
+	"url": "https://www.mediawiki.org/wiki/Extension:PluggableAuth",
+	"descriptionmsg": "pluggableauth-desc",
+	"type": "other",
+	"license-name": "MIT",
+	"requires": {
+		"MediaWiki": ">= 1.35.0"
+	},
+	"AutoloadNamespaces": {
+		"MediaWiki\\Extension\\PluggableAuth\\": "includes/"
+	},
+	"TestAutoloadNamespaces": {
+		"MediaWiki\\Extension\\PluggableAuth\\Test\\": "tests/includes/"
+	},
+	"ServiceWiringFiles": [
+		"includes/ServiceWiring.php"
+	],
+	"SpecialPages": {
+		"PluggableAuthLogin": {
+			"class": "MediaWiki\\Extension\\PluggableAuth\\PluggableAuthLogin",
+			"services": [
+				"PluggableAuthFactory",
+				"AuthManager",
+				"PluggableAuth.GroupProcessorRunner"
+			]
+		},
+		"PluggableAuthLogout": {
+			"class": "MediaWiki\\Extension\\PluggableAuth\\PluggableAuthLogout"
+		}
+	},
+	"MessagesDirs": {
+		"PluggableAuth": [
+			"i18n"
+		]
+	},
+	"ExtensionMessagesFiles": {
+		"PluggableAuthAlias": "includes/PluggableAuth.alias.php"
+	},
+	"callback": "MediaWiki\\Extension\\PluggableAuth\\PluggableAuthHooks::onRegistration",
+	"HookHandlers": {
+		"main": {
+			"class": "MediaWiki\\Extension\\PluggableAuth\\PluggableAuthHooks",
+			"services": [
+				"PluggableAuthService"
+			]
+		}
+	},
+	"Hooks": {
+		"TitleReadWhitelist": "main",
+		"UserLogoutComplete": "main",
+		"AuthChangeFormFields": "main",
+		"SkinTemplateNavigation::Universal": "main",
+		"BeforeInitialize": "main",
+		"LocalUserCreated": "main",
+		"SpecialPage_initList": "main"
+	},
+	"AuthManagerAutoConfig": {
+		"primaryauth": {
+			"PluggableAuthPrimaryAuthenticationProvider": {
+				"class": "MediaWiki\\Extension\\PluggableAuth\\PrimaryAuthenticationProvider",
+				"services": [
+					"MainConfig",
+					"UserFactory",
+					"PluggableAuthFactory"
+				],
+				"sort": 0
+			}
+		}
+	},
+	"attributes": {
+		"PluggableAuth": {
+			"LoginSpecialPages": [
+				"PluggableAuthLogin",
+				"Userlogin",
+				"PluggableAuth.GroupProcessorRunner"
+			],
+			"GroupSyncs": {
+				"syncall": {
+					"class": "MediaWiki\\Extension\\PluggableAuth\\Group\\SyncAllGroups",
+					"services": [
+						"UserGroupManager"
+					]
+				},
+				"mapped": {
+					"class": "MediaWiki\\Extension\\PluggableAuth\\Group\\MapGroups",
+					"services": [
+						"UserGroupManager"
+					]
+				}
+			}
+		}
+	},
+	"config": {
+		"PluggableAuth_EnableAutoLogin": {
+			"value": false
+		},
+		"PluggableAuth_EnableLocalLogin": {
+			"value": false
+		},
+		"PluggableAuth_EnableLocalProperties": {
+			"value": false
+		},
+		"PluggableAuth_EnableFastLogout": {
+			"value": false
+		},
+		"PluggableAuth_Config": {
+			"value": []
+		}
+	},
+	"manifest_version": 2
+}

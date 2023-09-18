@@ -1,0 +1,11 @@
+{
+	"@metadata": {
+		"authors": [
+			"NikosLikomitros",
+			"Nikosgranturismogt",
+			"Pablothecat"
+		]
+	},
+	"pluggableauth-not-authorized": "Ο {{GENDER:$1|Χρήστης}} $1 δεν είναι εξουσιοδοτημένος.",
+	"pluggableauthlogout": "Αποσύνδεση"
+}

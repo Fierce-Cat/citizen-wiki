@@ -1,0 +1,53 @@
+{
+	"name": "mediawiki/pluggable-auth",
+	"extra": {
+		"installer-name": "PluggableAuth"
+	},
+	"license": "MIT",
+	"type": "mediawiki-extension",
+	"homepage": "https://www.mediawiki.org/wiki/Extension:PluggableAuth",
+	"description": "An authentication framework for MediaWiki",
+	"keywords": [
+		"extension",
+		"wiki",
+		"mediawiki",
+		"authentication"
+	],
+	"authors": [
+		{
+			"name": "Cindy Cicalese",
+			"email": "cindom@gmail.com",
+			"role": "Contributor"
+		}
+	],
+	"require": {
+		"composer/installers": ">=1.0.1|~2"
+	},
+	"config": {
+		"allow-plugins": {
+			"composer/installers": true
+		}
+	},
+	"require-dev": {
+		"mediawiki/mediawiki-codesniffer": "41.0.0",
+		"mediawiki/minus-x": "1.1.1",
+		"php-parallel-lint/php-console-highlighter": "1.0.0",
+		"php-parallel-lint/php-parallel-lint": "1.3.2",
+		"phpmd/phpmd": "~2.1"
+	},
+	"scripts": {
+		"phpunit": "php $MW_INSTALL_PATH/tests/phpunit/phpunit.php -c .phpunit.xml.dist",
+		"phpdbg": "phpdbg -qrr $MW_INSTALL_PATH/tests/phpunit/phpunit.php -c .phpunit.xml.dist",
+		"test": [
+			"parallel-lint . --exclude vendor --exclude node_modules",
+			"minus-x check .",
+			"phpmd includes text .phpmd.xml || :",
+			"@phpcs"
+		],
+		"fix": [
+			"minus-x fix .",
+			"phpcbf"
+		],
+		"phpcs": "phpcs -sp --cache"
+	}
+}

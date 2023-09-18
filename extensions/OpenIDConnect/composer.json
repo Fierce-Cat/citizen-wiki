@@ -1,0 +1,42 @@
+{
+	"name": "mediawiki/openidconnect",
+	"type": "mediawiki-extension",
+	"description": "Provides authentication using OpenID Connect in conjunction with PluggableAuth",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Cindy Cicalese",
+			"email": "cicalese@mitre.org"
+		}
+	],
+	"require": {
+		"jumbojett/openid-connect-php": "0.9.10",
+		"composer/installers": "~1.0|~2"
+	},
+	"require-dev": {
+		"mediawiki/mediawiki-codesniffer": "41.0.0",
+		"mediawiki/minus-x": "1.1.1",
+		"php-parallel-lint/php-console-highlighter": "1.0.0",
+		"php-parallel-lint/php-parallel-lint": "1.3.2"
+	},
+	"scripts": {
+		"test": [
+			"parallel-lint . --exclude vendor --exclude node_modules",
+			"@phpcs",
+			"minus-x check ."
+		],
+		"fix": [
+			"minus-x fix .",
+			"phpcbf"
+		],
+		"phpcs": "phpcs -sp --cache"
+	},
+	"extra": {
+		"installer-name": "OpenIDConnect"
+	},
+	"config": {
+		"allow-plugins": {
+			"composer/installers": true
+		}
+	}
+}

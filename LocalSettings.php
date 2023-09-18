@@ -229,6 +229,8 @@ wfLoadExtension( 'TabberNeue' );
 wfLoadExtension( 'SimpleBatchUpload' );
 wfLoadExtension( 'NativeSvgHandler' );
 wfLoadExtension( 'MultiPurge' );
+wfLoadExtension( 'PluggableAuth' );
+wfLoadExtension( 'OpenIDConnect' );
 
 # End of automatically generated settings.
 # Add more configuration options below.
@@ -363,4 +365,19 @@ $wgMultiPurgeEnabledServices = [
 ];
 $wgMultiPurgeServiceOrder = [
 	'cloudflare'
+];
+
+# PluggableAuth
+$wgPluggableAuth_EnableAutoLogin = false;
+$wgPluggableAuth_EnableLocalLogin = true;
+$wgOpenIDConnect_MigrateUsersByEmail = true;
+$wgOpenIDConnect_SingleLogout = true;
+$wgPluggableAuth_Config[] = [
+    'plugin' => 'OpenIDConnect',
+	'buttonLabelMessage' => 'CitizenCat Passport',
+    'data' => [
+        'providerURL' => $_ENV["OpenIDConnectProviderUrl"],
+        'clientID' => $_ENV["OpenIDConnectClientID"],
+        'clientsecret' => $_ENV["OpenIDConnectClientSecret"],
+    ]
 ];
