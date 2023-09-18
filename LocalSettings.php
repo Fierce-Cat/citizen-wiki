@@ -372,6 +372,7 @@ $wgMultiPurgeServiceOrder = [
 $wgPluggableAuth_EnableAutoLogin = false;
 $wgPluggableAuth_EnableLocalLogin = true;
 $wgOpenIDConnect_MigrateUsersByEmail = true;
+$wgOpenIDConnect_MigrateUsersByUserName = true;
 $wgOpenIDConnect_SingleLogout = true;
 $wgPluggableAuth_Config[] = [
     'plugin' => 'OpenIDConnect',
