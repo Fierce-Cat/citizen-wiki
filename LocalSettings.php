@@ -268,6 +268,7 @@ $wgGroupPermissions['确认用户']['editinterface'] = true;
 $wgGroupPermissions['确认用户']['editmyoptions'] = true;
 $wgGroupPermissions['确认用户']['editmyprivateinfo'] = true;
 $wgGroupPermissions['确认用户']['editmywatchlist'] = true;
+$wgGroupPermissions['确认用户']['upload'] = true;
 # 启用VisualEditor的Wikitext
 $wgVisualEditorEnableWikitext = true;
 # 启用编辑模式选择列表
