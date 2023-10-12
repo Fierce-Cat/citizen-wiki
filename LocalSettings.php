@@ -289,6 +289,8 @@ $wgFooterIcons['poweredby']['railway'] = [
 ];
 #扩大创建略缩图限制
 $wgMaxImageArea = 4.9e7;
+#新窗口中打开外部链接
+$wgExternalLinkTarget = '_blank';
 
 # Interwiki settings https://www.mediawiki.org/wiki/Extension:Interwiki
 $wgGroupPermissions['sysop']['interwiki'] = true;
