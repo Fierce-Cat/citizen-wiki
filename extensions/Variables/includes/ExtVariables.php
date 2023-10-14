@@ -193,10 +193,19 @@ class ExtVariables {
 	 *
 	 * @param string $varName
 	 * @param string $value will be converted to string if no string is given
+	 * 
+	 * Author: @Fierce-Cat
+	 * This function is refactored to follow the php-81 deprecated syntax
+	 * Now with Null coalescing Operator
+	 * https://www.php.net/manual/en/language.operators.comparison.php#language.operators.comparison.coalesce
+	 * public function setVarValue( $varName, $value = '' ) {
+	 * 	$this->mVariables[ trim( $varName ) ] = trim( $value );
+	 * }
 	 */
 	public function setVarValue( $varName, $value = '' ) {
-		$this->mVariables[ trim( $varName ) ] = trim( $value );
+		$this->mVariables[ trim( $varName ) ] = trim( $value ?? '' );
 	}
+
 
 	/**
 	 * Returns a variables value or null if it doesn't exist.
