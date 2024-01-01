@@ -299,7 +299,7 @@ $wgNativeImageLazyLoading  = true;
 
 
 #Debugging
-//$_ENV["wiki_debug_config"];
+#$_ENV["wiki_debug_config"];
 $wgShowExceptionDetails = true; 
 $wgShowDebug = true;
 
