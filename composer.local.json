@@ -2,7 +2,11 @@
     "extra": {
         "merge-plugin": {
             "include": [
-                "extensions/*/composer.json"
+                "extensions/TemplateStyles/composer.json",
+                "extensions/OpenIDConnect/composer.json",
+                "extensions/AWS/composer.json",
+                "extensions/TemplateStyles/composer.json",
+                "extensions/SemanticMediaWiki/composer.json"
             ]
         }
     }
