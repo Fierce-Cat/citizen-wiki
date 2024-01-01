@@ -299,7 +299,9 @@ $wgNativeImageLazyLoading  = true;
 
 
 #Debugging
-$_ENV["wiki_debug_config"];
+#$_ENV["wiki_debug_config"];
+$wgShowExceptionDetails = true; 
+$wgShowDebug = true;
 
 #调用英文站图片
 // $wgForeignFileRepos[] = [
