@@ -1,4 +1,4 @@
-providers = ["..."]
+providers = ["...", "node"]
 
 [phase.build]
 cmds = ["...","cd /app/extensions/TemplateStyles && composer update --no-dev", "cd /app/extensions/AWS && composer update --no-dev", "cd /app/extensions/OpenIDConnect && composer update --no-dev", "sudo chmod -R 755 /app/extensions"]
