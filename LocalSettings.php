@@ -388,3 +388,7 @@ $wgPluggableAuth_Config[] = [
         'clientsecret' => $_ENV["OpenIDConnectClientSecret"],
     ]
 ];
+
+# Semantic Mediawiki
+wfLoadExtension( 'SemanticMediaWiki' );
+enableSemantics( $_ENV["SiteDomain"] );
