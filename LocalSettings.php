@@ -21,6 +21,7 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 
 ## Uncomment this to disable output compression
 # $wgDisableOutputCompression = true;
+$wgReadOnly = 'Maintenance is underway. Website is on read-only mode. 维护正在进行中， 网站处于只读模式。若需帮助请咨询QQ群：669376880';
 
 $wgSitename = $_ENV["SiteName"];
 
